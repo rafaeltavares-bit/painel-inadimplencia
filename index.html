@@ -430,22 +430,32 @@ function atualizarTudo() {
 // MÓDULO DE ATUALIZAÇÃO AUTOMÁTICA DO GOOGLE SHEETS
 // ============================================================================
 
+// IDs das planilhas compartilhadas como "Qualquer pessoa com o link"
+// Lendo por NOME DE ABA via gviz - imune a republicação/mudança de gids
+const SHEET_ID_PRINCIPAL = '1OholQy3Km1og9z5M8RRFVLiixGsBvIX5';
+const SHEET_ID_INAD_DIARIA = '1g09aZMt-9CWw4jjNGxCAoSZ_YXEhR9eb';
+
+function gvizCsvUrl(sheetId, tabName) {
+  // gviz endpoint - lê por nome de aba, retorna CSV
+  return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tabName)}`;
+}
+
 const SHEETS_CSV = {
-  grafico_historico: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=600934161&single=true&output=csv',
-  grafico_2:         'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=877448340&single=true&output=csv',
-  slide_1:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1035863859&single=true&output=csv',
-  slide_2:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=92295571&single=true&output=csv',
-  slide_3:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1202024710&single=true&output=csv',
-  slide_4:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1401861579&single=true&output=csv',
-  slide_tier:        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1300140854&single=true&output=csv',
-  base_completa:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1226744429&single=true&output=csv',
-  analitico_inad:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=2008666985&single=true&output=csv',
+  grafico_historico: gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Grafico - historico Inad 1'),
+  grafico_2:         gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Grafico 2'),
+  slide_1:           gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide 1'),
+  slide_2:           gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide 2'),
+  slide_3:           gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide 3'),
+  slide_4:           gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide 4'),
+  slide_tier:        gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide Tier'),
+  base_completa:     gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Base Completa'),
+  analitico_inad:    gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Analitico de inadimplencia'),
   // Inadimplência diária - 5 abas (uma por safra-mês)
-  inad_diaria_jan: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=166563011&single=true&output=csv',
-  inad_diaria_fev: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=1108189352&single=true&output=csv',
-  inad_diaria_mar: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=1849676582&single=true&output=csv',
-  inad_diaria_abr: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=37078878&single=true&output=csv',
-  inad_diaria_mai: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=95940782&single=true&output=csv',
+  inad_diaria_jan:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Janeiro'),
+  inad_diaria_fev:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Fevereiro'),
+  inad_diaria_mar:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Março'),
+  inad_diaria_abr:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Abril'),
+  inad_diaria_mai:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Maio'),
 };
 
 // Map safra -> URL
