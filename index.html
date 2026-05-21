@@ -530,6 +530,19 @@ function parseNum(s) {
   return isNaN(n) ? 0 : n;
 }
 
+// parsePct: retorna o valor em pontos percentuais (3.5 para 3.5%)
+// Aceita "3,5%", "3.5%", "0.035" (decimal), "3,5", "3.5"
+function parsePct(s) {
+  if (s == null || s === '') return 0;
+  const original = String(s).trim();
+  if (original === '' || original === '-') return 0;
+  const hadPercent = original.includes('%');
+  const n = parseNum(original);
+  if (hadPercent) return n;  // "3,5%" → 3.5
+  // Sem %: pode ser decimal (0.035) ou já em pp (3.5). Heurística: < 1 = decimal.
+  return n < 1 ? n * 100 : n;
+}
+
 // Detectar safra "YYYY-MM" a partir de string "11/1/2025" ou "2025-11-01"
 function parseSafra(s) {
   if (!s) return null;
@@ -682,8 +695,7 @@ function processarSlide(rows, catInfo) {
   const lerPct = (row, mapa, safra) => {
     const col = mapa[safra];
     if (col == null) return 0;
-    const n = parseNum(row[col]);
-    return n < 1 ? n * 100 : n;
+    return parsePct(row[col]);
   };
   
   for (let i = dataStart; i < rows.length; i++) {
@@ -765,21 +777,18 @@ function processarHistorico(rows) {
     const faturado = parseNum(r[1]);
     if (faturado <= 0) continue;
     
-    // Colunas C-I = percentuais (decimal: 0.018 = 1.8%)
-    const toPct = (s) => { const n = parseNum(s); return n < 1 ? n * 100 : n; };
-    
     historico.push({
       safra: safra,
       safra_label: formatSafraLabel(safra),
       valor_faturado: faturado,
-      pct_dia_vencimento: toPct(r[2]),
-      pct_ultimo_dia_mes: toPct(r[3]),
-      pct_30_dias: toPct(r[4]),
-      pct_60_dias: toPct(r[5]),
-      pct_90_dias: toPct(r[6]),
-      pct_120_dias: toPct(r[7]),
-      pct_inadimplencia_atual: toPct(r[8]),
-      pct_semana_anterior: r[11] ? toPct(r[11]) : toPct(r[8]),
+      pct_dia_vencimento: parsePct(r[2]),
+      pct_ultimo_dia_mes: parsePct(r[3]),
+      pct_30_dias: parsePct(r[4]),
+      pct_60_dias: parsePct(r[5]),
+      pct_90_dias: parsePct(r[6]),
+      pct_120_dias: parsePct(r[7]),
+      pct_inadimplencia_atual: parsePct(r[8]),
+      pct_semana_anterior: r[11] ? parsePct(r[11]) : parsePct(r[8]),
     });
   }
   return historico;
