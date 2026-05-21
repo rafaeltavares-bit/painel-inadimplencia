@@ -499,10 +499,17 @@ function parseNum(s) {
   if (s == null || s === '') return 0;
   s = String(s).trim();
   if (s === '' || s === '-') return 0;
-  // Se tem vírgula, é decimal PT-BR
+  // Remover R$, %, espaços
+  s = s.replace(/[R$\s%]/g, '');
+  if (s === '' || s === '-') return 0;
+  // Se tem vírgula, é decimal PT-BR: "1.673.277,45" → "1673277.45"
   if (s.includes(',')) {
     s = s.replace(/\./g, '').replace(',', '.');
+  } else if ((s.match(/\./g) || []).length > 1) {
+    // Tem múltiplos pontos sem vírgula: "1.673.277" → "1673277" (separador de milhar PT-BR)
+    s = s.replace(/\./g, '');
   }
+  // Se chegou aqui com 1 ponto e sem vírgula, é decimal US: "1673.45" → fica como está
   const n = parseFloat(s);
   return isNaN(n) ? 0 : n;
 }
@@ -534,11 +541,75 @@ async function fetchCsv(url) {
 }
 
 // ========== PROCESSAMENTO: Slides 1-4 e Slide Tier ==========
-// Estrutura dos Slides: 25 colunas (janela móvel rolou: Nov/25 saiu, Mai/26 entrou)
-// Linha 1: headers em branco / "R$ FATURADO" / "R$ INADIMPLÊNCIA" / "% INADIMPLÊNCIA"
-// Linha 2: " "/PARC/DEZ..MAI..TOTAL (faturado) / NOV..ABR..TOTAL (inadimp R$, defasado 1 mês) / DEZ..MAI..TOTAL (%)
+// ROBUSTO À ORDEM DAS COLUNAS: detecta colunas pelo nome do mês (DEZ, JAN, FEV...) no header
+// Estrutura típica:
+// Linha 1: headers de bloco em branco / "R$ FATURADO" / "R$ INADIMPLÊNCIA" / "% INADIMPLÊNCIA"
+// Linha 2: " "/PARC/<6 meses>/TOTAL (faturado) / <6 meses>/TOTAL (inad R$) / <6 meses>/TOTAL (%)
 // Linha 3+: parceiros
 // Última: Total
+
+// Mapa nome de mês PT-BR → número
+const NOME_MES_PARA_NUM = {
+  'JAN': 1, 'FEV': 2, 'MAR': 3, 'ABR': 4, 'MAI': 5, 'JUN': 6,
+  'JUL': 7, 'AGO': 8, 'SET': 9, 'OUT': 10, 'NOV': 11, 'DEZ': 12,
+};
+
+// Detecta safra (YYYY-MM) a partir de uma célula tipo "DEZ", "dez.", "dez/25", "Dezembro", "01/12/2025"
+function detectarSafraColuna(cell, anoCorrente = 2026) {
+  if (!cell) return null;
+  const s = String(cell).trim().toUpperCase();
+  if (!s) return null;
+  
+  // Caso 1: data completa "01/12/2025" ou "12/1/2025"
+  let m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (m) {
+    // O Sheets exporta como M/D/YYYY na maioria dos casos, mas tem casos D/M/YYYY
+    const a = parseInt(m[1]), b = parseInt(m[2]), ano = m[3];
+    // Se o primeiro número for > 12, é dia (formato D/M/YYYY)
+    // Se o segundo número for > 12, é dia (formato M/D/YYYY)
+    // Se ambos <= 12, ambíguo — assumir M/D/YYYY (padrão Sheets EN)
+    const mes = (b > 12) ? a : (a > 12 ? b : a);
+    return `${ano}-${String(mes).padStart(2, '0')}`;
+  }
+  
+  // Caso 2: ISO "2025-12" ou "2025-12-01"
+  m = s.match(/^(\d{4})-(\d{2})/);
+  if (m) return `${m[1]}-${m[2]}`;
+  
+  // Caso 3: nome do mês "DEZ", "DEZ.", "DEZ/25", "Dezembro/25"
+  // Limpar pontuação e pegar 3 primeiras letras
+  const limpo = s.replace(/[^A-Z]/g, '').substring(0, 3);
+  if (NOME_MES_PARA_NUM[limpo]) {
+    const mes = NOME_MES_PARA_NUM[limpo];
+    // Tentar achar ano dentro da string (ex: "dez/25", "DEZ-25")
+    const matchAno = s.match(/(\d{2,4})/);
+    let ano = anoCorrente;
+    if (matchAno) {
+      const a = parseInt(matchAno[1]);
+      ano = a < 100 ? 2000 + a : a;
+    } else {
+      // Heurística: dez tipicamente é ano anterior em janelas que terminam meio de ano
+      // Como Mai/26 é o corrente e Dez é o início da janela: Dez = 2025
+      if (mes >= 7) ano = anoCorrente - 1; // jul-dez do ano anterior
+    }
+    return `${ano}-${String(mes).padStart(2, '0')}`;
+  }
+  
+  return null;
+}
+
+// Detectar a qual bloco (faturado/inad_rs/pct) pertence uma coluna
+// Olha pra linha de header acima
+function detectarBlocoColuna(rowHeader, col) {
+  // Procurar à esquerda da coluna até achar texto não-vazio (cabeçalho do bloco)
+  for (let j = col; j >= 0; j--) {
+    const txt = String(rowHeader[j] || '').toUpperCase();
+    if (/FATUR/.test(txt)) return 'faturado';
+    if (/%.*INAD|INAD.*%/.test(txt)) return 'pct';
+    if (/INAD|R\$/.test(txt)) return 'inad_rs';
+  }
+  return null;
+}
 
 function processarSlide(rows, catInfo) {
   // Achar a linha de header (a que tem "PARC" ou "TIER")
@@ -549,9 +620,55 @@ function processarSlide(rows, catInfo) {
   }
   if (headerRowIdx === -1) headerRowIdx = 1;
   
+  // Detectar mapeamento coluna → {bloco, safra}
+  const headerRow = rows[headerRowIdx] || [];
+  const blocoHeaderRow = rows[headerRowIdx - 1] || []; // linha acima tem "R$ FATURADO", etc
+  
+  // Mapas: bloco -> { 'YYYY-MM': colIndex }
+  const mapFaturado = {};
+  const mapInadRs = {};
+  const mapPct = {};
+  
+  for (let j = 0; j < headerRow.length; j++) {
+    const cell = headerRow[j];
+    const safra = detectarSafraColuna(cell);
+    if (!safra) continue;
+    
+    const bloco = detectarBlocoColuna(blocoHeaderRow, j);
+    if (bloco === 'faturado') mapFaturado[safra] = j;
+    else if (bloco === 'inad_rs') mapInadRs[safra] = j;
+    else if (bloco === 'pct') mapPct[safra] = j;
+  }
+  
+  // FALLBACK: se não detectou nada (header sem bloco), tenta ordem antiga (compatibilidade)
+  const detectouAlgo = Object.keys(mapFaturado).length > 0 || Object.keys(mapPct).length > 0;
+  if (!detectouAlgo) {
+    console.warn(`[Slide ${catInfo.nome}] Não detectou colunas pelo header. Usando ordem fixa (legado).`);
+    const safrasOrdenadas = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
+    safrasOrdenadas.forEach((s, idx) => {
+      mapFaturado[s] = 2 + idx;
+      mapInadRs[s] = 10 + idx;
+      mapPct[s] = 18 + idx;
+    });
+  }
+  
+  const safrasAlvo = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
+  
   const dataStart = headerRowIdx + 1;
   const parceiros = [];
   let totalRow = null;
+  
+  // Helper: lê valor de um row pra uma safra usando mapa
+  const lerValor = (row, mapa, safra) => {
+    const col = mapa[safra];
+    return col != null ? parseNum(row[col]) : 0;
+  };
+  const lerPct = (row, mapa, safra) => {
+    const col = mapa[safra];
+    if (col == null) return 0;
+    const n = parseNum(row[col]);
+    return n < 1 ? n * 100 : n;
+  };
   
   for (let i = dataStart; i < rows.length; i++) {
     const r = rows[i];
@@ -561,45 +678,20 @@ function processarSlide(rows, catInfo) {
     if (!nome) continue;
     if (/^total/i.test(nome)) { totalRow = r; continue; }
     
-    // Faturado: colunas 2-7 (DEZ JAN FEV MAR ABR MAI), col 8 = TOTAL (ignorar)
-    const faturado = {
-      '2025-12': parseNum(r[2]),
-      '2026-01': parseNum(r[3]),
-      '2026-02': parseNum(r[4]),
-      '2026-03': parseNum(r[5]),
-      '2026-04': parseNum(r[6]),
-      '2026-05': parseNum(r[7]),
-    };
-    faturado.total = faturado['2025-12'] + faturado['2026-01'] + faturado['2026-02'] + faturado['2026-03'] + faturado['2026-04'] + faturado['2026-05'];
-    
-    // R$ Inadimplência: colunas 10-15 (NOV DEZ JAN FEV MAR ABR), col 16 = TOTAL (ignorar)
-    // ⚠ Bloco defasado 1 mês em relação ao faturado
-    const inadRs = {
-      '2025-11': parseNum(r[10]),
-      '2025-12': parseNum(r[11]),
-      '2026-01': parseNum(r[12]),
-      '2026-02': parseNum(r[13]),
-      '2026-03': parseNum(r[14]),
-      '2026-04': parseNum(r[15]),
-    };
-    inadRs.total = inadRs['2025-11'] + inadRs['2025-12'] + inadRs['2026-01'] + inadRs['2026-02'] + inadRs['2026-03'] + inadRs['2026-04'];
-    
-    // % Inadimplência: colunas 18-23 (DEZ JAN FEV MAR ABR MAI), col 24 = TOTAL
-    // Importante: valores podem vir como "0.018208" (decimal) ou "1,82%" (string). Detectar.
-    const parsePct = (s) => {
-      const n = parseNum(s);
-      // Se for menor que 1, é decimal (0.018 = 1.8%); senão já é percentual
-      return n < 1 ? n * 100 : n;
-    };
-    const pctInad = {
-      '2025-12': parsePct(r[18]),
-      '2026-01': parsePct(r[19]),
-      '2026-02': parsePct(r[20]),
-      '2026-03': parsePct(r[21]),
-      '2026-04': parsePct(r[22]),
-      '2026-05': parsePct(r[23]),
-      total:     parsePct(r[24]),
-    };
+    const faturado = {};
+    const inadRs = {};
+    const pctInad = {};
+    let somaF = 0, somaI = 0;
+    safrasAlvo.forEach(s => {
+      faturado[s] = lerValor(r, mapFaturado, s);
+      inadRs[s] = lerValor(r, mapInadRs, s);
+      pctInad[s] = lerPct(r, mapPct, s);
+      somaF += faturado[s];
+      somaI += inadRs[s];
+    });
+    faturado.total = somaF;
+    inadRs.total = somaI;
+    pctInad.total = somaF > 0 ? (somaI / somaF * 100) : 0;
     
     parceiros.push({
       nome: nome,
@@ -609,38 +701,27 @@ function processarSlide(rows, catInfo) {
     });
   }
   
-  // Processar linha Total
+  // Processar linha Total usando os mesmos mapas detectados
   let total = null;
   if (totalRow) {
-    const parsePct = (s) => { const n = parseNum(s); return n < 1 ? n * 100 : n; };
+    const faturado = {};
+    const inadRs = {};
+    const pctInad = {};
+    let somaF = 0, somaI = 0;
+    safrasAlvo.forEach(s => {
+      faturado[s] = lerValor(totalRow, mapFaturado, s);
+      inadRs[s] = lerValor(totalRow, mapInadRs, s);
+      pctInad[s] = lerPct(totalRow, mapPct, s);
+      somaF += faturado[s];
+      somaI += inadRs[s];
+    });
+    faturado.total = somaF;
+    inadRs.total = somaI;
+    pctInad.total = somaF > 0 ? (somaI / somaF * 100) : 0;
     total = {
-      faturado: {
-        '2025-12': parseNum(totalRow[2]),
-        '2026-01': parseNum(totalRow[3]),
-        '2026-02': parseNum(totalRow[4]),
-        '2026-03': parseNum(totalRow[5]),
-        '2026-04': parseNum(totalRow[6]),
-        '2026-05': parseNum(totalRow[7]),
-        total:     parseNum(totalRow[8]),
-      },
-      inadimplencia_rs: {
-        '2025-11': parseNum(totalRow[10]),
-        '2025-12': parseNum(totalRow[11]),
-        '2026-01': parseNum(totalRow[12]),
-        '2026-02': parseNum(totalRow[13]),
-        '2026-03': parseNum(totalRow[14]),
-        '2026-04': parseNum(totalRow[15]),
-        total:     parseNum(totalRow[16]),
-      },
-      pct_inadimplencia: {
-        '2025-12': parsePct(totalRow[18]),
-        '2026-01': parsePct(totalRow[19]),
-        '2026-02': parsePct(totalRow[20]),
-        '2026-03': parsePct(totalRow[21]),
-        '2026-04': parsePct(totalRow[22]),
-        '2026-05': parsePct(totalRow[23]),
-        total:     parsePct(totalRow[24]),
-      },
+      faturado: faturado,
+      inadimplencia_rs: inadRs,
+      pct_inadimplencia: pctInad,
     };
   }
   
