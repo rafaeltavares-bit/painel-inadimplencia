@@ -515,11 +515,17 @@ function parseNum(s) {
   // Se tem vírgula, é decimal PT-BR: "1.673.277,45" → "1673277.45"
   if (s.includes(',')) {
     s = s.replace(/\./g, '').replace(',', '.');
-  } else if ((s.match(/\./g) || []).length > 1) {
-    // Tem múltiplos pontos sem vírgula: "1.673.277" → "1673277" (separador de milhar PT-BR)
-    s = s.replace(/\./g, '');
+  } else if (s.includes('.')) {
+    // Sem vírgula mas com ponto(s). Em PT-BR isso é separador de milhar.
+    // "14.993" → 14993, "1.673.277" → 1673277
+    // Heurística: se o último grupo após o ponto tem exatamente 3 dígitos, é separador de milhar
+    const parts = s.split('.');
+    const lastPart = parts[parts.length - 1];
+    if (lastPart.length === 3 && /^\d+$/.test(lastPart)) {
+      s = s.replace(/\./g, '');
+    }
+    // Se não, deixa como está (ex: "1.5" é decimal US válido)
   }
-  // Se chegou aqui com 1 ponto e sem vírgula, é decimal US: "1673.45" → fica como está
   const n = parseFloat(s);
   return isNaN(n) ? 0 : n;
 }
