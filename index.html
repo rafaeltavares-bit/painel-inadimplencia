@@ -431,15 +431,15 @@ function atualizarTudo() {
 // ============================================================================
 
 const SHEETS_CSV = {
-  grafico_historico: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1049578160&single=true&output=csv',
-  grafico_2:         'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1272236275&single=true&output=csv',
-  slide_1:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1027444674&single=true&output=csv',
-  slide_2:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=649080489&single=true&output=csv',
-  slide_3:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=397934655&single=true&output=csv',
-  slide_4:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1602620813&single=true&output=csv',
-  slide_tier:        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1059459318&single=true&output=csv',
-  base_completa:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=144874226&single=true&output=csv',
-  analitico_inad:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=2063110073&single=true&output=csv',
+  grafico_historico: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=600934161&single=true&output=csv',
+  grafico_2:         'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=877448340&single=true&output=csv',
+  slide_1:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1035863859&single=true&output=csv',
+  slide_2:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=92295571&single=true&output=csv',
+  slide_3:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1202024710&single=true&output=csv',
+  slide_4:           'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1401861579&single=true&output=csv',
+  slide_tier:        'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1300140854&single=true&output=csv',
+  base_completa:     'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=1226744429&single=true&output=csv',
+  analitico_inad:    'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyzQxhV--0RNBjmlHOI6igwgmlh5A0rfx04_lgph9IuS7tKUSI5LnBnqKwlXHHPw/pub?gid=2008666985&single=true&output=csv',
   // Inadimplência diária - 5 abas (uma por safra-mês)
   inad_diaria_jan: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=166563011&single=true&output=csv',
   inad_diaria_fev: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQWA_VaIn7fmPHscetQRHulLa6XJbdzlfsK3kZDdHBYRRUR17LxFr8dvnBArZY36w/pub?gid=1108189352&single=true&output=csv',
