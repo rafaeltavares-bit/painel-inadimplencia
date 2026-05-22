@@ -2240,7 +2240,7 @@ function renderGerencial() {
     },
     options: {
       responsive: true, maintainAspectRatio: false,
-      layout: {padding: {top: 28, right: 16, bottom: 8, left: 16}},
+      layout: {padding: {top: 40, right: 16, bottom: 8, left: 16}},
       plugins: {
         legend: { display: false },
         tooltip: { callbacks: { label: ctx => fmtPct(ctx.parsed.y) } }
@@ -2266,9 +2266,12 @@ function renderGerencial() {
           if (val == null) return;
           ctx.save();
           ctx.fillStyle = idx === safraIdx12 ? '#b03020' : '#163d78';
-          ctx.font = idx === safraIdx12 ? 'bold 13px Outfit' : 'bold 11px Outfit';
+          // V29.1: rótulos maiores e mês selecionado ainda mais destacado
+          ctx.font = idx === safraIdx12 ? 'bold 17px Outfit' : 'bold 13px Outfit';
           ctx.textAlign = 'center';
-          ctx.fillText(fmtPct(val, 1), point.x, point.y - 14);
+          // mês selecionado: 26px acima (afasta do ponto grande); demais: 16px acima
+          const offY = idx === safraIdx12 ? -26 : -16;
+          ctx.fillText(fmtPct(val, 1), point.x, point.y + offY);
           ctx.restore();
         });
       }
@@ -2366,9 +2369,9 @@ function renderGerencial() {
           if (val == null) return;
           ctx.save();
           ctx.fillStyle = idx === safraIdx12 ? '#b03020' : '#9a6c18';
-          ctx.font = idx === safraIdx12 ? 'bold 12px Outfit' : 'bold 11px Outfit';
+          ctx.font = idx === safraIdx12 ? 'bold 15px Outfit' : 'bold 13px Outfit';
           ctx.textAlign = 'center';
-          ctx.fillText(fmtPct(val, 1), point.x, point.y - 14);
+          ctx.fillText(fmtPct(val, 1), point.x, point.y - 16);
           ctx.restore();
         });
         
@@ -2379,9 +2382,9 @@ function renderGerencial() {
           if (val == null) return;
           ctx.save();
           ctx.fillStyle = idx === safraIdx12 ? '#b03020' : '#1976D2';
-          ctx.font = idx === safraIdx12 ? 'bold 12px Outfit' : 'bold 11px Outfit';
+          ctx.font = idx === safraIdx12 ? 'bold 15px Outfit' : 'bold 13px Outfit';
           ctx.textAlign = 'center';
-          ctx.fillText(fmtPct(val, 1), point.x, point.y - 14);
+          ctx.fillText(fmtPct(val, 1), point.x, point.y - 16);
           ctx.restore();
         });
         
@@ -2392,9 +2395,9 @@ function renderGerencial() {
           if (val == null) return;
           ctx.save();
           ctx.fillStyle = idx === safraIdx12 ? '#b03020' : '#1a1612';
-          ctx.font = idx === safraIdx12 ? 'bold 13px Outfit' : 'bold 11px Outfit';
+          ctx.font = idx === safraIdx12 ? 'bold 15px Outfit' : 'bold 13px Outfit';
           ctx.textAlign = 'center';
-          ctx.fillText(fmtPct(val, 1), point.x, point.y + 20);
+          ctx.fillText(fmtPct(val, 1), point.x, point.y + 22);
           ctx.restore();
         });
       }
