@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v20</title>
+<title>Painel · Inadimplência · v21</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -847,6 +847,7 @@ function processarAnalitico(rows) {
     vlrFat: header.findIndex(h => /Vlr.*Fatur/i.test(h)),
     fatura: header.findIndex(h => /^Fatura$/i.test(h)),
     aging: header.findIndex(h => /Aging.*Dias/i.test(h)),
+    dtVenc: header.findIndex(h => /Dt.*Venc/i.test(h)),
   };
   
   // Agrupamento por cliente (CNPJ + Razão Social)
@@ -869,11 +870,15 @@ function processarAnalitico(rows) {
         valor_devido: 0,
         qtd_faturas: 0,
         max_dias_atraso: 0,
+        dt_venc: '',
       };
     }
     porCliente[cnpj].valor_devido += valor;
     porCliente[cnpj].qtd_faturas += 1;
-    if (aging > porCliente[cnpj].max_dias_atraso) porCliente[cnpj].max_dias_atraso = aging;
+    if (aging > porCliente[cnpj].max_dias_atraso) {
+      porCliente[cnpj].max_dias_atraso = aging;
+      porCliente[cnpj].dt_venc = String(r[idx.dtVenc] || '').trim();
+    }
   }
   
   // Top devedores (top 50)
@@ -1002,10 +1007,15 @@ function processarBaseCompleta(rows) {
             razao_social: String(r[idx.razaoSocial] || '').trim() || 'SEM NOME',
             tier: String(r[idx.tier] || '').trim() || 'Sem Classificação',
             valor: 0, qtd: 0,
+            max_aging: 0, dt_venc: '',
           };
         }
         drillAgg[key].valor += valor;
         drillAgg[key].qtd += 1;
+        if (agingDias > drillAgg[key].max_aging) {
+          drillAgg[key].max_aging = agingDias;
+          drillAgg[key].dt_venc = String(r[idx.dtVenc] || '').trim();
+        }
       }
     } else if (sit === 'PAGA EM ATRASO') {
       qtdAtraso += 1;
@@ -1042,6 +1052,8 @@ function processarBaseCompleta(rows) {
       valor: Math.round(item.valor * 100) / 100,
       qtd: item.qtd,
       tier: item.tier,
+      dt_venc: item.dt_venc,
+      aging_dias: item.max_aging,
     });
   });
   // Ordenar cada lista
@@ -2527,15 +2539,17 @@ function abrirDrillParceiro(parc, safra) {
       <div class="tc-wrap">
         <table class="in">
           <thead>
-            <tr><th>#</th><th>CNPJ</th><th>Razão Social</th><th>Tier</th><th>Valor Devido</th><th>Qtd. Faturas</th></tr>
+            <tr><th style="min-width:28px">#</th><th style="min-width:140px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Tier</th><th>Vencto</th><th style="min-width:80px">Atraso</th><th>Valor</th><th>Faturas</th></tr>
           </thead>
           <tbody>
             ${clientes.map((c,i) => `
               <tr${i < 3 ? ' style="background:rgba(176,48,32,.04);"' : ''}>
                 <td>${i+1}</td>
-                <td>${fmtCnpj(c.cnpj)}</td>
-                <td class="b" style="text-align:left">${c.razao_social}</td>
+                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(c.cnpj)}</td>
+                <td class="b" style="text-align:left;white-space:normal;max-width:280px">${c.razao_social}</td>
                 <td>${c.tier}</td>
+                <td style="white-space:nowrap;font-size:12px">${c.dt_venc || '—'}</td>
+                <td class="${(c.aging_dias||0) >= 90 ? 'neg' : (c.aging_dias||0) >= 30 ? 'warn' : ''}" style="white-space:nowrap">${c.aging_dias ? c.aging_dias + ' d' : '—'}</td>
                 <td class="neg">${fmtR(c.valor)}</td>
                 <td>${c.qtd}</td>
               </tr>
@@ -2702,19 +2716,20 @@ function renderDevedores() {
       <div class="tc-wrap">
         <table class="in">
           <thead>
-            <tr><th>#</th><th>CNPJ</th><th>Razão Social</th><th>Parceiro</th><th>Tier</th><th>Valor</th><th>Faturas</th><th>Máx. atraso</th></tr>
+            <tr><th style="min-width:28px">#</th><th style="min-width:140px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Parceiro</th><th>Tier</th><th>Vencto</th><th>Valor</th><th>Faturas</th><th>Atraso</th></tr>
           </thead>
           <tbody id="tbody-dev">
             ${top.map((d,i) => `
               <tr data-search="${(d.razao_social + ' ' + d.cnpj).toLowerCase()}">
                 <td>${i+1}</td>
-                <td>${fmtCnpj(d.cnpj)}</td>
-                <td class="b" style="text-align:left;white-space:normal;max-width:380px">${d.razao_social}</td>
+                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(d.cnpj)}</td>
+                <td class="b" style="text-align:left;white-space:normal;max-width:280px">${d.razao_social}</td>
                 <td>${d.parceiro}</td>
                 <td>${d.tier}</td>
+                <td style="white-space:nowrap;font-size:12px">${d.dt_venc || '—'}</td>
                 <td class="neg">${fmtR(d.valor_devido)}</td>
                 <td>${d.qtd_faturas}</td>
-                <td class="${d.max_dias_atraso >= 60 ? 'neg' : d.max_dias_atraso >= 30 ? 'warn' : ''}">${d.max_dias_atraso} dias</td>
+                <td class="${d.max_dias_atraso >= 90 ? 'neg' : d.max_dias_atraso >= 30 ? 'warn' : ''}" style="white-space:nowrap">${d.max_dias_atraso} dias</td>
               </tr>
             `).join('')}
           </tbody>
