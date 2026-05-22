@@ -1532,16 +1532,22 @@ function renderGerencial() {
     }
   }
   
-  // === ESCOLA 2: comparação por D+ equivalente, não por média histórica ===
-  // Busca outras safras no MESMO D+ (ou D+ mais próximo dentro de tolerância de 2 dias)
+  // FIX v18c: removido o texto comparativo do hero ("X de Y safras comparáveis...").
+  // Motivos: (a) usava logica de D+ que nao respeitava as datas escolhidas pelo usuario
+  // nas caixinhas; (b) o farol no topo ja entrega essa informacao corretamente.
+  // Mantemos apenas o calculo de comparaveis para preservar a variavel ranking
+  // que e usada mais abaixo (mas o textoComp agora fica vazio).
   let comparaveis = [];
   let textoComp = '';
+  let corHero = '';
+  let ranking = null;
+  let totalComp = null;
+  // Calcula comparaveis apenas para preservar a variavel ranking usada adiante
   if (dPlusAtual !== null && DATA.inad_diaria) {
-    const TOLERANCIA = 2; // aceita D+ a até 2 dias de distância
+    const TOLERANCIA = 2;
     Object.keys(DATA.inad_diaria).forEach(safra => {
-      if (safra === MES_CORRENTE) return; // pula a própria safra
+      if (safra === MES_CORRENTE) return;
       const obs = DATA.inad_diaria[safra];
-      // Acha a observação com D+ mais próximo do atual
       let melhor = null;
       let menorDiff = Infinity;
       obs.forEach(o => {
@@ -1555,25 +1561,11 @@ function renderGerencial() {
         comparaveis.push({safra, pct: melhor.pct, d_plus: melhor.d_plus, data_label: melhor.data_label});
       }
     });
-  }
-  
-  // Decide cor do hero pela posição relativa
-  let corHero, ranking, totalComp;
-  if (comparaveis.length >= 2) {
-    // Ranking: quantas safras comparáveis tinham % MAIOR que a atual (= atual está melhor)
-    const piores = comparaveis.filter(c => c.pct > pctAtual).length;
-    totalComp = comparaveis.length;
-    ranking = totalComp - piores; // 1 = melhor, totalComp = pior
-    const pctMelhor = piores / totalComp;
-    if (pctMelhor >= 0.66) corHero = 'green';      // melhor que 2/3 ou mais
-    else if (pctMelhor >= 0.33) corHero = 'warn';  // no meio
-    else corHero = '';                              // entre os piores
-    textoComp = `<b>${piores} de ${totalComp}</b> safras comparáveis estavam piores no mesmo período, em datas equivalentes`;
-  } else {
-    // Fallback: comparação antiga vs média 12m (quando não há dados de D+ suficientes)
-    corHero = pctAtual < media12 * 0.9 ? 'green' : 
-              pctAtual > media12 * 1.1 ? '' : 'warn';
-    textoComp = `Média 12m: <b>${fmtPct(media12)}</b>`;
+    if (comparaveis.length >= 2) {
+      const piores = comparaveis.filter(c => c.pct > pctAtual).length;
+      totalComp = comparaveis.length;
+      ranking = totalComp - piores;
+    }
   }
   
   let html = `
@@ -1586,7 +1578,7 @@ function renderGerencial() {
         <div class="hero-info">
           <div class="hero-mes">${kpi.safra_label}</div>
           <div class="hero-comp-sub">
-            Faturado: <b>${fmtRk(kpi.faturado)}</b> · ${textoComp}
+            Faturado: <b>${fmtRk(kpi.faturado)}</b>
           </div>
         </div>
         <div class="hero-side">
