@@ -310,6 +310,82 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 </head>
 <body>
+<div id="login-screen" style="
+  position:fixed;inset:0;z-index:99999;
+  background:#f5f0e8;
+  display:flex;align-items:center;justify-content:center;
+">
+  <div style="
+    background:#fff;border-radius:12px;
+    box-shadow:0 4px 32px rgba(0,0,0,.12);
+    padding:48px 40px;width:100%;max-width:380px;
+    text-align:center;
+  ">
+    <div style="font-size:28px;margin-bottom:8px">🔒</div>
+    <div style="font-size:20px;font-weight:700;color:#1a2233;margin-bottom:4px">Painel de Inadimplência</div>
+    <div style="font-size:13px;color:#888;margin-bottom:28px">BONSAI / REDE OK</div>
+    <input
+      id="senha-input"
+      type="password"
+      placeholder="Digite a senha"
+      onkeydown="if(event.key==='Enter') verificarSenha()"
+      style="
+        width:100%;box-sizing:border-box;
+        padding:12px 16px;font-size:15px;
+        border:1.5px solid #ddd;border-radius:8px;
+        outline:none;margin-bottom:12px;
+        font-family:inherit;
+      "
+    />
+    <div id="senha-erro" style="
+      font-size:12px;color:#c0392b;
+      min-height:18px;margin-bottom:8px;
+    "></div>
+    <button
+      onclick="verificarSenha()"
+      style="
+        width:100%;padding:13px;
+        background:#1a2233;color:#fff;
+        border:none;border-radius:8px;
+        font-size:15px;font-weight:600;
+        cursor:pointer;font-family:inherit;
+      "
+    >Entrar</button>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Foco automático no campo
+  window.addEventListener('load', function() {
+    document.getElementById('senha-input').focus();
+  });
+
+  window.verificarSenha = function() {
+    const input = document.getElementById('senha-input');
+    const erro = document.getElementById('senha-erro');
+    // Hash simples para não expor a senha em texto claro
+    const h = Array.from(input.value).reduce((a,c) => Math.imul(31,a)+c.charCodeAt(0)|0, 0);
+    if (h === 1612612507) { // hash de "bonsai2026"
+      document.getElementById('login-screen').style.display = 'none';
+      sessionStorage.setItem('auth','ok');
+    } else {
+      erro.textContent = 'Senha incorreta. Tente novamente.';
+      input.value = '';
+      input.focus();
+    }
+  };
+
+  // Se já autenticou nessa sessão, pular tela
+  if (sessionStorage.getItem('auth') === 'ok') {
+    document.addEventListener('DOMContentLoaded', function() {
+      const ls = document.getElementById('login-screen');
+      if (ls) ls.style.display = 'none';
+    });
+  }
+})();
+</script>
+
 
 <div class="header">
   <div class="hl">
