@@ -3075,7 +3075,7 @@ function renderTier() {
         ctx.font = 'bold 11px Outfit, sans-serif';
         ctx.fillStyle = '#b03020';
         ctx.textAlign = 'right';
-        ctx.fillText(\`\${pctRefGeral.toFixed(2).replace('.',',')}% · inad. geral \${labelRefGeral}\`, right - 8, yRef - 5);
+        ctx.fillText(pctRefGeral.toFixed(2).replace('.',',') + '% · inad. geral ' + labelRefGeral, right - 8, yRef - 5);
       }
 
       // Linha vertical mediana (mais discreta)
