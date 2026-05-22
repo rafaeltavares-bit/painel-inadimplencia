@@ -323,7 +323,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   ">
     <div style="font-size:28px;margin-bottom:8px">🔒</div>
     <div style="font-size:20px;font-weight:700;color:#1a2233;margin-bottom:4px">Painel de Inadimplência</div>
-    <div style="font-size:13px;color:#888;margin-bottom:28px">BONSAI / REDE OK</div>
+    <div style="margin-bottom:28px"></div>
     <input
       id="senha-input"
       type="password"
@@ -1215,32 +1215,30 @@ function diasEntre(d1, d2) {
 //   Linha 3+: data | %Jan | %Fev | %Mar | %Abr | %Mai | " " | R$Jan | R$Fev | ... | qtd | valor | queda
 // IMPORTANTE: cada aba (Jan/Fev/Mar/Abr/Mai) é um SNAPSHOT no tempo daquele mês.
 // Eu preciso pegar apenas a coluna da SAFRA correspondente àquela aba.
+// Parseia uma aba do Sheets e extrai pontos de UMA safra específica
+// Cada aba tem: col A = data, colunas B,C,D... = safras (Fevereiro, Março, etc.)
+// O mesmo parser é chamado para todas as abas para montar a curva completa de cada safra
 function processarInadDiaria(rows, safraAlvo) {
-  // safraAlvo = "2026-01" / "2026-02" etc
-  // Mapa safra -> nome do mês no header
   const SAFRA_PARA_NOME = {
     '2026-01': /^Janeiro$/i,
     '2026-02': /^Fevereiro$/i,
     '2026-03': /^Mar[çc]o$/i,
     '2026-04': /^Abril$/i,
     '2026-05': /^Maio$/i,
+    '2026-06': /^Junho$/i,
+    '2026-07': /^Julho$/i,
+    '2026-08': /^Agosto$/i,
   };
   const regexNome = SAFRA_PARA_NOME[safraAlvo];
-  if (!regexNome) return [];
-  
-  // Achar a linha do header (a que tem o nome do mês)
+  if (!regexNome || !rows || rows.length === 0) return [];
+
+  // Achar coluna da safra alvo no bloco % (primeira ocorrência = bloco %, antes do bloco R$)
   let headerRowIdx = -1;
   let colPct = -1;
   for (let i = 0; i < Math.min(5, rows.length); i++) {
     const r = rows[i] || [];
-    // Procurar pela coluna do mês alvo no bloco "Inadimplência em %"
-    // O bloco % vem antes do bloco R$, então pego a PRIMEIRA ocorrência
     for (let j = 0; j < r.length; j++) {
       if (regexNome.test(String(r[j] || '').trim())) {
-        // Verificar se é o bloco % (não o R$): olhar header acima (linha i-1)
-        const headerAcima = rows[i-1] ? String(rows[i-1][j] || rows[i-1][Math.max(0,j-1)] || '') : '';
-        // Se a célula acima tem "%" ou está em branco mas a célula seguinte tem "Fevereiro" também é OK
-        // Estratégia simples: pegar a PRIMEIRA ocorrência (bloco % vem primeiro)
         headerRowIdx = i;
         colPct = j;
         break;
@@ -1248,63 +1246,54 @@ function processarInadDiaria(rows, safraAlvo) {
     }
     if (colPct !== -1) break;
   }
-  
-  if (colPct === -1) {
-    console.warn(`[inad_diaria ${safraAlvo}] Coluna do mês não encontrada`);
-    return [];
-  }
-  
-  // Calcular d_plus: dias desde o 1º dia do mês da safra
+  if (colPct === -1) return []; // esta aba não tem esta safra
+
   const [anoSafra, mesSafra] = safraAlvo.split('-').map(Number);
   const dia1Safra = new Date(anoSafra, mesSafra - 1, 1);
   const diaSemMap = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  
-  // Parser de data PT-BR ("4-mai", "15/05/2026", "2026-05-15")
   const MES_ABREV = {'jan':1,'fev':2,'mar':3,'abr':4,'mai':5,'jun':6,'jul':7,'ago':8,'set':9,'out':10,'nov':11,'dez':12};
+
   const parseDataPtBr = (s) => {
     s = String(s).trim().toLowerCase();
     if (!s) return null;
-    // "4-mai" ou "4-mai." (assume ano da safra)
+    // "4-mai." ou "4-mai"
     let m = s.match(/^(\d{1,2})[-\/](jan|fev|mar|abr|mai|jun|jul|ago|set|out|nov|dez)\.?/);
     if (m) {
       const dia = parseInt(m[1]);
       const mes = MES_ABREV[m[2]];
-      // Inferir ano: se mês <= mesSafra, é o mesmo ano da safra OU posterior
-      // Regra simples: usar o ano da safra (planilha de Maio tem datas de Maio principalmente)
-      return new Date(anoSafra, mes - 1, dia);
+      // Inferir ano: se mes >= mesSafra assume mesmo ano da safra, senão ano seguinte
+      const ano = mes >= mesSafra ? anoSafra : anoSafra + 1;
+      return new Date(ano, mes - 1, dia);
     }
-    // "15/05/2026" ou "15/5/2026"
     m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
     if (m) return new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1]));
-    // ISO: "2026-05-15"
     m = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
     if (m) return new Date(parseInt(m[1]), parseInt(m[2]) - 1, parseInt(m[3]));
     return null;
   };
-  
+
   const pontos = [];
-  const dataStart = headerRowIdx + 1;
-  for (let i = dataStart; i < rows.length; i++) {
+  for (let i = headerRowIdx + 1; i < rows.length; i++) {
     const r = rows[i];
     if (!r || r.length === 0) continue;
     const cellData = r[0];
     if (!cellData || String(cellData).trim() === '') continue;
     const data = parseDataPtBr(cellData);
     if (!data) continue;
-    
+
     const pctRaw = r[colPct];
     if (pctRaw == null || String(pctRaw).trim() === '' || String(pctRaw).trim() === '-') continue;
-    // % pode vir como "2,15%" ou "0,0215" ou "2.15"
     let pct = parseNum(pctRaw);
-    if (pct < 1 && pct > 0) pct = pct * 100; // decimal -> percentual
-    if (pct === 0) continue; // pula linhas zeradas
-    
+    if (pct < 1 && pct > 0) pct = pct * 100;
+    if (pct === 0) continue;
+
     const dataIso = data.toISOString().slice(0, 10);
     const dia = String(data.getDate()).padStart(2, '0');
     const mes = String(data.getMonth() + 1).padStart(2, '0');
     const ano = data.getFullYear();
     const d_plus = Math.round((data - dia1Safra) / (1000*60*60*24));
-    
+    if (d_plus < 0) continue; // ignora datas antes do início da safra
+
     pontos.push({
       data: dataIso,
       data_label: `${dia}/${mes}/${ano}`,
@@ -1313,10 +1302,29 @@ function processarInadDiaria(rows, safraAlvo) {
       d_plus: d_plus,
     });
   }
-  
-  // Ordenar por data
-  pontos.sort((a, b) => a.data.localeCompare(b.data));
   return pontos;
+}
+
+// Monta curva completa de cada safra buscando em TODAS as abas e concatenando
+// todasAbas = array de arrays de rows, uma entrada por aba do Sheets
+function processarTodasSafrasInadDiaria(todasAbas, safras) {
+  const resultado = {};
+  for (const safra of safras) {
+    const todosPontos = [];
+    const datasVistas = new Set();
+    for (const rows of todasAbas) {
+      const pts = processarInadDiaria(rows, safra);
+      for (const p of pts) {
+        if (!datasVistas.has(p.data)) {
+          datasVistas.add(p.data);
+          todosPontos.push(p);
+        }
+      }
+    }
+    todosPontos.sort((a, b) => a.data.localeCompare(b.data));
+    if (todosPontos.length > 0) resultado[safra] = todosPontos;
+  }
+  return resultado;
 }
 
 // ========== ORQUESTRAÇÃO ==========
@@ -1381,8 +1389,19 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     DATA.categorias = categorias;
     DATA.top_devedores = ana.top_devedores;
     DATA.tiers = ana.tiers;
-    DATA.inadimplencia_rs_por_safra = ana.inadimplencia_rs_por_safra; // FIX v19-B: foto do analítico por safra
-    // FIX v20-E: data do extrato = maior data disponível em inad_diaria[MES_CORRENTE]
+    DATA.inadimplencia_rs_por_safra = ana.inadimplencia_rs_por_safra;
+
+    // 6b. Inadimplência diária — declarado aqui para estar disponível antes do uso abaixo
+    const novaInadDiaria = {...(DATA.inad_diaria || {})};
+    const todasAbas = [inadJan, inadFev, inadMar, inadAbr, inadMai].filter(Boolean);
+    const safrasAlvo = ['2026-01','2026-02','2026-03','2026-04','2026-05'];
+    const novasSafras = processarTodasSafrasInadDiaria(todasAbas, safrasAlvo);
+    for (const [safra, pontos] of Object.entries(novasSafras)) {
+      if (pontos.length > 0) novaInadDiaria[safra] = pontos;
+    }
+    DATA.inad_diaria = novaInadDiaria;
+
+    // FIX v20-E: data do extrato
     try {
       const pts = novaInadDiaria[MES_CORRENTE] || novaInadDiaria['2026-05'];
       if (pts && pts.length > 0) {
@@ -1399,20 +1418,7 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     DATA.aging = bc.aging;
     DATA.recuperacao = bc.recuperacao;
     
-    // 6b. Inadimplência diária (5 abas, uma por safra)
-    const novaInadDiaria = {...(DATA.inad_diaria || {})}; // preservar safras antigas embutidas
-    const novosPontosJan = processarInadDiaria(inadJan, '2026-01');
-    const novosPontosFev = processarInadDiaria(inadFev, '2026-02');
-    const novosPontosMar = processarInadDiaria(inadMar, '2026-03');
-    const novosPontosAbr = processarInadDiaria(inadAbr, '2026-04');
-    const novosPontosMai = processarInadDiaria(inadMai, '2026-05');
-    
-    if (novosPontosJan.length > 0) novaInadDiaria['2026-01'] = novosPontosJan;
-    if (novosPontosFev.length > 0) novaInadDiaria['2026-02'] = novosPontosFev;
-    if (novosPontosMar.length > 0) novaInadDiaria['2026-03'] = novosPontosMar;
-    if (novosPontosAbr.length > 0) novaInadDiaria['2026-04'] = novosPontosAbr;
-    if (novosPontosMai.length > 0) novaInadDiaria['2026-05'] = novosPontosMai;
-    DATA.inad_diaria = novaInadDiaria;
+
     
     // Atualizar safras disponíveis e datas_default
     const safrasComDados = Object.keys(novaInadDiaria).filter(s => novaInadDiaria[s] && novaInadDiaria[s].length > 0).sort();
@@ -1489,6 +1495,22 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
       };
     });
     
+    // Garantir entrada no kpis_por_safra para safras ativas (ex: Mai/26 sem histórico)
+    DATA.meses_disponiveis.forEach(m => {
+      if (!DATA.kpis_por_safra[m.safra]) {
+        // Buscar último % disponível no inad_diaria
+        const pts = DATA.inad_diaria && DATA.inad_diaria[m.safra];
+        const ultimoPct = pts && pts.length > 0 ? pts[pts.length - 1].pct : 0;
+        DATA.kpis_por_safra[m.safra] = {
+          safra_label: m.label,
+          faturado: 0,
+          pct_inadimplencia: ultimoPct,
+          pct_semana_anterior: ultimoPct,
+          inadimplencia_rs_estimada: 0,
+        };
+      }
+    });
+
     // categorias_por_safra
     DATA.categorias_por_safra = {};
     ['2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'].forEach(safra => {
@@ -1659,10 +1681,22 @@ let MOSTRAR_CURVAS = false; // toggle para curvas D+
 
 function renderGerencial() {
   const kpi = DATA.kpis_por_safra[MES_CORRENTE];
+  // Guard: se kpi não existe para o mês corrente, usar dados do inad_diaria
+  if (!kpi) {
+    const pts = DATA.inad_diaria && DATA.inad_diaria[MES_CORRENTE];
+    const ultimoPct = pts && pts.length > 0 ? pts[pts.length - 1].pct : 0;
+    DATA.kpis_por_safra[MES_CORRENTE] = {
+      safra_label: DATA.meses_disponiveis.find(m => m.safra === MES_CORRENTE)?.label || MES_CORRENTE,
+      faturado: 0,
+      pct_inadimplencia: ultimoPct,
+      pct_semana_anterior: ultimoPct,
+      inadimplencia_rs_estimada: 0,
+    };
+  }
   const media12 = DATA.estatisticas.media_historica_12m;
   
   const dataAtual = DATAS_COMPARACAO[MES_CORRENTE];
-  let pctAtual = kpi.pct_inadimplencia;
+  let pctAtual = DATA.kpis_por_safra[MES_CORRENTE].pct_inadimplencia;
   let labelData = 'oficial';
   let dPlusAtual = null;
   
@@ -2283,19 +2317,32 @@ function renderGerencial() {
       '2025-11': '#777777',
     };
     
+    // Calcular range X real: do máximo d_plus disponível entre todas as safras
+    let maxDplus = 30;
+    SAFRAS_COMPARACAO.forEach(safra => {
+      const obs = DATA.inad_diaria[safra] || [];
+      if (obs.length > 0) {
+        const m = obs[obs.length - 1].d_plus;
+        if (m > maxDplus) maxDplus = m;
+      }
+    });
+
     const datasets = SAFRAS_COMPARACAO.map(safra => {
       const obs = DATA.inad_diaria[safra] || [];
+      if (obs.length === 0) return null;
+      // Adiciona ponto D+0 = 0% para alinhar início de todas as safras
+      const pontos = [{x: 0, y: 0}, ...obs.map(o => ({x: o.d_plus, y: o.pct}))];
       return {
         label: safraLabel(safra),
-        data: obs.map(o => ({x: o.d_plus, y: o.pct})),
+        data: pontos,
         borderColor: corSafra[safra] || '#6b6258',
         backgroundColor: 'transparent',
         borderWidth: safra === MES_CORRENTE ? 4 : 2.5,
         tension: 0.3,
-        pointRadius: safra === MES_CORRENTE ? 4 : 2.5,
+        pointRadius: (ctx) => ctx.dataIndex === 0 ? 0 : (safra === MES_CORRENTE ? 4 : 2.5),
         pointBackgroundColor: corSafra[safra] || '#6b6258'
       };
-    }).filter(d => d.data.length > 0);
+    }).filter(Boolean);
     
     CHARTS['curvas'] = new Chart(document.getElementById('ch-curvas'), {
       type: 'line',
@@ -2305,6 +2352,7 @@ function renderGerencial() {
         plugins: {
           legend: { position: 'top', labels: { padding: 14, font: {size: 12}, usePointStyle: true } },
           tooltip: { 
+            filter: item => item.dataIndex > 0, // oculta tooltip do ponto D+0 artificial
             callbacks: { 
               title: ctx => 'D+' + ctx[0].parsed.x,
               label: ctx => ctx.dataset.label + ': ' + fmtPct(ctx.parsed.y) 
@@ -2313,7 +2361,7 @@ function renderGerencial() {
         },
         scales: {
           y: { beginAtZero: true, ticks: { callback: v => v + '%', font: {size: 11} }, grid: { color: 'rgba(0,0,0,0.05)' }, title: { display: true, text: '% Inadimplência', font: {size: 11} } },
-          x: { type: 'linear', title: { display: true, text: 'Dias desde o início da safra (D+)', font: {size: 11} }, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: {size: 11}, callback: v => 'D+' + v } }
+          x: { type: 'linear', min: 0, max: maxDplus + 2, title: { display: true, text: 'Dias desde o dia 1 da safra (D+)', font: {size: 11} }, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: {size: 11}, callback: v => 'D+' + v } }
         }
       }
     });
