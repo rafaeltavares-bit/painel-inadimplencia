@@ -976,6 +976,7 @@ function processarBaseCompleta(rows) {
   let somaDias = 0, qtdComDias = 0;
   let somaJuros = 0;
   const diasAtraso = [];
+  let dtMinRec = null, dtMaxRec = null;
   const recBuckets = {'1-7 dias':{qtd:0,valor:0}, '8-15 dias':{qtd:0,valor:0}, '16-30 dias':{qtd:0,valor:0}, '31-60 dias':{qtd:0,valor:0}, '61-90 dias':{qtd:0,valor:0}, '90+ dias':{qtd:0,valor:0}};
   
   // Para drill: agrupar VENCIDA por parceiro × safra × cliente
@@ -987,6 +988,12 @@ function processarBaseCompleta(rows) {
     const sit = String(r[idx.sitFatura] || '').trim().toUpperCase();
     const valor = parseNum(r[idx.vlrFat]);
     const agingDias = parseNum(r[idx.agingDias]);
+    // Capturar período (primeira e última data de emissão da planilha)
+    const dEmissaoLoop = String(r[idx.dtEmissao] || '').trim();
+    if (dEmissaoLoop) {
+      if (!dtMinRec || dEmissaoLoop < dtMinRec) dtMinRec = dEmissaoLoop;
+      if (!dtMaxRec || dEmissaoLoop > dtMaxRec) dtMaxRec = dEmissaoLoop;
+    }
     
     if (sit === 'VENCIDA') {
       // Aging
@@ -1023,6 +1030,9 @@ function processarBaseCompleta(rows) {
       qtdAtraso += 1;
       // Juros = diferença positiva entre pago e faturado
       const vlrPago = parseNum(r[idx.vlrPago]);
+      // Período coberto
+      const dEmissaoRec = String(r[idx.dtEmissao] || '').trim();
+      if (dEmissaoRec) { if (!dtMinRec || dEmissaoRec < dtMinRec) dtMinRec = dEmissaoRec; if (!dtMaxRec || dEmissaoRec > dtMaxRec) dtMaxRec = dEmissaoRec; }
       if (vlrPago > valor && valor > 0) somaJuros += (vlrPago - valor);
       // Calcular dias de atraso a partir das datas
       const dPag = r[idx.dtPagamento];
@@ -1092,6 +1102,7 @@ function processarBaseCompleta(rows) {
     tempo_medio_dias: qtdComDias > 0 ? Math.round((somaDias/qtdComDias) * 10) / 10 : 0,
     tempo_mediano_dias: medianaReal,
     tempo_moda_dias: modaReal,
+    periodo_estudo: dtMinRec && dtMaxRec ? { de: dtMinRec, ate: dtMaxRec } : null,
     qtd_pagas_atraso: qtdAtraso,
     qtd_pagas_prazo: qtdPagas,
     juros_recuperados: Math.round(somaJuros * 100) / 100,
@@ -2813,18 +2824,54 @@ function filtrarDevedores() {
 }
 
 // === ABA 5: RECUPERAÇÃO === (igual v02)
+
+function fmtPeriodoRec(p) {
+  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  function fmtD(s) {
+    if (!s) return '?';
+    try {
+      if (s.includes('/')) {
+        const parts = s.split('/');
+        // dd/mm/yyyy
+        const m = parseInt(parts[1]) - 1;
+        const y = parts[2] ? parts[2].slice(2) : '??';
+        return meses[m] + '/' + y;
+      } else {
+        // yyyy-mm-dd
+        const parts = s.split('-');
+        const m = parseInt(parts[1]) - 1;
+        const y = parts[0] ? parts[0].slice(2) : '??';
+        return meses[m] + '/' + y;
+      }
+    } catch(e) { return s; }
+  }
+  if (!p || !p.de || !p.ate) return '—';
+  return fmtD(p.de) + ' a ' + fmtD(p.ate);
+}
 function renderRecuperacao() {
   const r = DATA.recuperacao;
   let html = `
     <div class="note-box info">
-      <div class="ni">💡</div>
-      <div class="nt"><b>Curva de Recuperação:</b> análise de quanto e em quanto tempo o time recupera faturas que vencem.</div>
+      <div class="ni">📅</div>
+      <div class="nt"><b>Período de estudo: ${fmtPeriodoRec(r.periodo_estudo)}</b> · Títulos liquidados (no prazo ou com atraso) emitidos neste intervalo. Faturas ainda em aberto em ${DATA.data_extrato_analitico || '—'} não entram nos indicadores abaixo.</div>
     </div>
     <div class="cat-cards">
       <div class="cat-card blue">
-        <div class="cc-title">Atraso mais frequente</div>
-        <div class="cc-pct green">${r.tempo_moda_dias} <span style="font-size:18px">dias</span></div>
-        <div class="cc-info"><span>Moda · Mediana: ${r.tempo_mediano_dias}d · Média: ${r.tempo_medio_dias}d</span></div>
+        <div class="cc-title">Prazo de atraso</div>
+        <div style="padding:2px 16px 0">
+          <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Mais comum</div>
+          <div style="font-size:28px;font-weight:700;color:var(--pos);line-height:1.1">${r.tempo_moda_dias} <span style="font-size:16px;font-weight:400">dias</span></div>
+          <div style="display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+            <div style="flex:1;text-align:center">
+              <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Metade paga em até</div>
+              <div style="font-size:16px;font-weight:600;color:var(--ink2)">${r.tempo_mediano_dias}d</div>
+            </div>
+            <div style="flex:1;text-align:center">
+              <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Média geral</div>
+              <div style="font-size:16px;font-weight:600;color:var(--ink2)">${r.tempo_medio_dias}d</div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="cat-card gold">
         <div class="cc-title">Juros/Multa recuperados</div>
@@ -2844,50 +2891,27 @@ function renderRecuperacao() {
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 20px;padding:0 2px;">
       <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
-        <b style="color:var(--ink2)">Atraso mais frequente (moda)</b><br>
-        O prazo de atraso que mais se repete na carteira — o comportamento padrão dos clientes. Mediana (50% dos casos) e média também exibidos para referência completa.
+        <b style="color:var(--ink2)">Atraso mais comum</b><br>
+        Quantos dias de atraso a maioria dos clientes tem na hora de pagar. O número menor na linha abaixo é o prazo em que metade dos pagamentos já foram quitados.
       </div>
       <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
         <b style="color:var(--ink2)">Juros/Multa recuperados</b><br>
-        Soma dos acréscimos cobrados: diferença positiva entre o valor pago e o valor original da fatura. Descontos e notas refaturadas são excluídos automaticamente.
+        Total cobrado em juros e multa no período. Calculado como a diferença a maior entre o que foi pago e o valor original da fatura. Valores menores (descontos) são ignorados.
       </div>
       <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
         <b style="color:var(--ink2)">Pagas em atraso</b><br>
-        Quantidade de faturas liquidadas após o vencimento, independente do prazo. Inclui tanto atrasos de 1 dia quanto os mais longos.
+        Quantidade de faturas que foram pagas depois do vencimento, seja 1 dia ou 90 dias. O total ao lado mostra todas as faturas já liquidadas no período.
       </div>
       <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
         <b style="color:var(--ink2)">Taxa de atraso</b><br>
-        % das faturas já liquidadas que foram pagas fora do prazo. Não inclui as ainda em aberto. Referência: abaixo de 15% é considerado saudável no setor.
+        De cada 100 faturas pagas, quantas foram pagas com atraso. Não conta as que ainda estão em aberto. Abaixo de 15% é referência saudável para o setor.
       </div>
     </div>
     <div class="chart-card">
       <div class="ch"><div><div class="ct">Distribuição · Dias de Atraso no Pagamento</div></div></div>
       <div class="cw"><canvas id="ch-recup"></canvas></div>
     </div>
-    <div class="tc">
-      <div class="th-row">
-        <div><div class="th-title">Coorte de Recuperação por Safra</div></div>
-      </div>
-      <div class="tc-wrap">
-        <table class="in">
-          <thead>
-            <tr><th>Safra</th><th>Faturado</th><th>Pago no Prazo</th><th>Pago em Atraso</th><th>Em Aberto</th><th>% Recuperado</th></tr>
-          </thead>
-          <tbody>
-            ${r.coorte.map(c => `
-              <tr>
-                <td class="b">${c.safra}</td>
-                <td>${fmtR(c.total)}</td>
-                <td class="pos">${fmtR(c.pago_prazo)}</td>
-                <td class="warn">${fmtR(c.pago_atraso)}</td>
-                <td class="neg">${fmtR(c.em_aberto)}</td>
-                <td class="${c.pct_prazo + c.pct_atraso >= 95 ? 'pos' : 'warn'} b">${fmtPct(c.pct_prazo + c.pct_atraso)}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </div>
-    </div>
+
   `;
   document.getElementById('sec-recuperacao').innerHTML = html;
   
