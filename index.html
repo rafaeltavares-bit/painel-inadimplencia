@@ -307,6 +307,125 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 .legenda-custom{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
 .lc-item{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:var(--ink2);letter-spacing:.02em;white-space:nowrap;}
 .lc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;border:1.5px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.1);}
+
+/* === V30: Sistema de Notas por Cliente (CNPJ) === */
+.nota-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:24px;height:24px;border-radius:5px;
+  border:1px solid transparent;background:transparent;
+  cursor:pointer;font-size:14px;line-height:1;
+  transition:all .15s;vertical-align:middle;margin-left:4px;
+  position:relative;
+}
+.nota-btn:hover{background:rgba(22,61,120,.08);border-color:rgba(22,61,120,.2);}
+.nota-btn.has-nota{
+  color:#9a6c18;background:rgba(255,221,128,.25);
+  border-color:rgba(154,108,24,.3);
+}
+.nota-btn.has-nota:hover{background:rgba(255,221,128,.45);}
+.nota-btn.empty{color:#aaa;opacity:.5;}
+.nota-btn.empty:hover{opacity:1;color:var(--ink3);}
+
+/* Tooltip ao hover */
+.nota-btn[data-tooltip]:hover::after{
+  content:attr(data-tooltip);
+  position:absolute;bottom:calc(100% + 6px);left:50%;
+  transform:translateX(-50%);
+  background:#1a1612;color:#fff;
+  padding:8px 10px;border-radius:6px;
+  font-size:11px;font-weight:500;white-space:normal;
+  width:max-content;max-width:280px;
+  box-shadow:0 4px 12px rgba(0,0,0,.18);
+  z-index:1000;pointer-events:none;
+  line-height:1.4;
+}
+.nota-btn[data-tooltip]:hover::before{
+  content:"";position:absolute;bottom:calc(100% + 1px);left:50%;
+  transform:translateX(-50%);
+  border:5px solid transparent;border-top-color:#1a1612;
+  z-index:1000;pointer-events:none;
+}
+
+/* Modal de Edição */
+.nota-modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.45);
+  display:none;align-items:center;justify-content:center;z-index:9998;
+}
+.nota-modal-bg.open{display:flex;}
+.nota-modal{
+  background:#fff;border-radius:12px;
+  width:100%;max-width:520px;
+  box-shadow:0 12px 40px rgba(0,0,0,.18);
+  padding:24px;
+}
+.nota-modal-title{
+  font-family:"Playfair Display",serif;
+  font-size:18px;font-weight:700;color:var(--ink);
+  margin-bottom:4px;
+}
+.nota-modal-sub{
+  font-size:12px;color:var(--ink3);
+  margin-bottom:16px;
+  word-break:break-word;
+}
+.nota-modal textarea{
+  width:100%;box-sizing:border-box;
+  min-height:120px;padding:12px;
+  border:1.5px solid #ddd;border-radius:8px;
+  font-family:"Outfit",sans-serif;font-size:13px;
+  outline:none;resize:vertical;
+  line-height:1.5;
+}
+.nota-modal textarea:focus{border-color:var(--em);}
+.nota-modal-meta{
+  font-size:10px;color:var(--ink3);
+  margin-top:6px;font-style:italic;
+}
+.nota-modal-actions{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:18px;gap:10px;
+}
+.nota-modal-actions .left{display:flex;gap:8px;}
+.nota-modal-actions .right{display:flex;gap:8px;}
+.nota-btn-action{
+  padding:9px 18px;border-radius:7px;
+  font-size:13px;font-weight:600;cursor:pointer;
+  font-family:inherit;border:1px solid transparent;
+  transition:all .15s;
+}
+.nota-btn-action.primary{background:var(--em);color:#fff;}
+.nota-btn-action.primary:hover{background:#084d33;}
+.nota-btn-action.secondary{background:#f5f0e8;color:var(--ink2);border-color:#ddd;}
+.nota-btn-action.secondary:hover{background:#ebe5d8;}
+.nota-btn-action.danger{background:transparent;color:#b03020;border-color:#b03020;}
+.nota-btn-action.danger:hover{background:rgba(176,48,32,.08);}
+
+/* Barra de Export/Import na aba */
+.notas-bar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;margin-bottom:14px;
+  background:rgba(154,108,24,.06);
+  border:1px solid rgba(154,108,24,.18);
+  border-radius:8px;font-size:12px;
+}
+.notas-bar .nb-label{
+  font-weight:700;color:var(--ink2);
+  display:flex;align-items:center;gap:6px;
+}
+.notas-bar .nb-count{
+  background:#9a6c18;color:#fff;
+  padding:2px 8px;border-radius:10px;
+  font-size:11px;font-weight:700;
+}
+.notas-bar button{
+  padding:5px 12px;border-radius:6px;
+  border:1px solid rgba(154,108,24,.3);
+  background:#fff;color:var(--ink2);
+  font-size:11px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:all .15s;
+}
+.notas-bar button:hover{background:rgba(154,108,24,.1);}
+.notas-bar .spacer{flex:1;}
 </style>
 
 
@@ -387,6 +506,25 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   }
 })();
 </script>
+
+<!-- V30: Modal de edição de observação por cliente -->
+<div id="nota-modal-bg" class="nota-modal-bg" onclick="if(event.target===this)fecharNotaModal()">
+  <div class="nota-modal">
+    <div class="nota-modal-title" id="nota-modal-razao">—</div>
+    <div class="nota-modal-sub" id="nota-modal-cnpj">CNPJ: —</div>
+    <textarea id="nota-modal-textarea" placeholder="Ex.: Em negociação - cliente prometeu pagar até 25/05. Falar com João do financeiro."></textarea>
+    <div class="nota-modal-meta" id="nota-modal-meta"></div>
+    <div class="nota-modal-actions">
+      <div class="left">
+        <button id="nota-modal-excluir" class="nota-btn-action danger" onclick="excluirNotaModal()">Excluir</button>
+      </div>
+      <div class="right">
+        <button class="nota-btn-action secondary" onclick="fecharNotaModal()">Cancelar</button>
+        <button class="nota-btn-action primary" onclick="salvarNotaModal()">Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <div class="header">
@@ -494,6 +632,193 @@ const fmtCnpj = (c) => {
   const s = String(c).replace('.0','').padStart(14,'0');
   return `${s.slice(0,2)}.${s.slice(2,5)}.${s.slice(5,8)}/${s.slice(8,12)}-${s.slice(12,14)}`;
 };
+
+// =================================================================
+// === V30: SISTEMA DE NOTAS POR CLIENTE (CNPJ) ====================
+// =================================================================
+// Salva observações por CNPJ no localStorage do navegador.
+// Igual ao comentário do Excel: passa o mouse → vê tooltip;
+// clica no 📝 → abre modal pra editar.
+const NOTAS_KEY = 'painel_inad_notas_v1';
+
+// Normaliza CNPJ: tira tudo que não é dígito e remove sufixo ".0" do Sheets.
+// Garante que "61343552000197.0", "61.343.552/0001-97" e "61343552000197"
+// viram a mesma chave.
+function cnpjKey(c){
+  if (!c) return '';
+  return String(c).replace(/\D/g,'').replace(/^0+/, '') || '0';
+}
+
+function loadNotas(){
+  try {
+    const raw = localStorage.getItem(NOTAS_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch(e){
+    console.warn('[Notas] Falha ao ler localStorage:', e);
+    return {};
+  }
+}
+function saveNotas(notas){
+  try {
+    localStorage.setItem(NOTAS_KEY, JSON.stringify(notas));
+    return true;
+  } catch(e){
+    console.error('[Notas] Falha ao salvar:', e);
+    alert('Erro ao salvar a observação. Pode ser que o navegador esteja com armazenamento cheio.');
+    return false;
+  }
+}
+function getNota(cnpj){
+  const key = cnpjKey(cnpj);
+  const notas = loadNotas();
+  return notas[key] || null;  // { texto, dt_atualizacao, razao_social }
+}
+function setNota(cnpj, razao_social, texto){
+  const key = cnpjKey(cnpj);
+  const notas = loadNotas();
+  if (!texto || !texto.trim()) {
+    delete notas[key];
+  } else {
+    notas[key] = {
+      texto: texto.trim(),
+      dt_atualizacao: new Date().toISOString(),
+      razao_social: razao_social || ''
+    };
+  }
+  return saveNotas(notas);
+}
+function delNota(cnpj){
+  return setNota(cnpj, '', '');
+}
+function countNotas(){
+  return Object.keys(loadNotas()).length;
+}
+
+// Renderiza o botão de nota (📝) que vai ao lado do CNPJ.
+// Mostra ícone amarelo destacado se já tem nota, ou ícone fraco se vazio.
+function renderNotaBtn(cnpj, razao_social){
+  const n = getNota(cnpj);
+  const tem = !!n;
+  // Tooltip: limita a 200 chars pra não estourar a tela
+  const tip = tem ? n.texto.replace(/"/g,'&quot;').slice(0,200) + (n.texto.length > 200 ? '…' : '') : '';
+  const cls = tem ? 'has-nota' : 'empty';
+  const ico = tem ? '📝' : '✎';
+  const escName = (razao_social||'').replace(/"/g,'&quot;').replace(/'/g,"\\'");
+  return `<button class="nota-btn ${cls}" ${tem ? `data-tooltip="${tip}"` : ''} onclick="abrirNotaModal('${cnpjKey(cnpj)}','${escName}', event)" title="${tem ? 'Editar observação' : 'Adicionar observação'}">${ico}</button>`;
+}
+
+// ----- MODAL: abrir, salvar, fechar -----
+let _notaModalCnpj = null;
+let _notaModalRazao = null;
+
+function abrirNotaModal(cnpjK, razao_social, ev){
+  if (ev) { ev.stopPropagation(); ev.preventDefault(); }
+  _notaModalCnpj = cnpjK;
+  _notaModalRazao = razao_social;
+  const n = getNota(cnpjK);
+  document.getElementById('nota-modal-razao').textContent = razao_social || '(sem nome)';
+  document.getElementById('nota-modal-cnpj').textContent = 'CNPJ: ' + fmtCnpj(cnpjK);
+  const txt = document.getElementById('nota-modal-textarea');
+  txt.value = n ? n.texto : '';
+  const meta = document.getElementById('nota-modal-meta');
+  if (n) {
+    const dt = new Date(n.dt_atualizacao);
+    meta.textContent = 'Última atualização: ' + dt.toLocaleString('pt-BR');
+    document.getElementById('nota-modal-excluir').style.display = '';
+  } else {
+    meta.textContent = '';
+    document.getElementById('nota-modal-excluir').style.display = 'none';
+  }
+  document.getElementById('nota-modal-bg').classList.add('open');
+  setTimeout(() => txt.focus(), 50);
+}
+function fecharNotaModal(){
+  document.getElementById('nota-modal-bg').classList.remove('open');
+  _notaModalCnpj = null;
+  _notaModalRazao = null;
+}
+function salvarNotaModal(){
+  const txt = document.getElementById('nota-modal-textarea').value;
+  if (setNota(_notaModalCnpj, _notaModalRazao, txt)) {
+    fecharNotaModal();
+    refreshAllNotaBtns();
+  }
+}
+function excluirNotaModal(){
+  if (!confirm('Excluir a observação deste cliente?')) return;
+  delNota(_notaModalCnpj);
+  fecharNotaModal();
+  refreshAllNotaBtns();
+}
+
+// Atualiza TODOS os botões de nota visíveis (chamado após save/delete).
+// Re-renderiza chamando a aba ativa, pra refletir o ícone novo nas duas tabelas.
+function refreshAllNotaBtns(){
+  const active = document.querySelector('.tab.active');
+  if (!active) return;
+  const id = active.dataset.id;
+  if (id === 'categoria') {
+    // Se está no drill, re-renderiza o drill; senão a heatmap não tem botões de nota
+    if (window._drillAtivo && typeof abrirDrillParceiro === 'function') {
+      abrirDrillParceiro(window._drillAtivo.parc, window._drillAtivo.safra);
+    }
+  } else if (id === 'devedores' && typeof renderDevedores === 'function') {
+    renderDevedores();
+  }
+  // Atualiza contador da barra (se visível em outras telas no futuro)
+  const bc = document.getElementById('notas-bar-count');
+  if (bc) bc.textContent = countNotas();
+}
+
+// ----- EXPORT / IMPORT (analogia: salvar/abrir do Excel) -----
+function exportarNotas(){
+  const notas = loadNotas();
+  if (Object.keys(notas).length === 0) {
+    alert('Não há observações para exportar.');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(notas, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const dt = new Date().toISOString().slice(0,10);
+  a.href = url;
+  a.download = `painel_inadimplencia_notas_${dt}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function importarNotas(){
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'application/json,.json';
+  inp.onchange = (ev) => {
+    const f = ev.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = (e) => {
+      try {
+        const imp = JSON.parse(e.target.result);
+        if (typeof imp !== 'object' || Array.isArray(imp)) throw new Error('Formato inválido');
+        const atual = loadNotas();
+        const merge = confirm(
+          `Achei ${Object.keys(imp).length} observação(ões) no arquivo.\n\n` +
+          `OK → MESCLAR (manter as atuais e adicionar as novas; em conflito, a importada vence)\n` +
+          `Cancelar → SUBSTITUIR (apaga as atuais e usa só as do arquivo)`
+        );
+        const novo = merge ? Object.assign({}, atual, imp) : imp;
+        if (saveNotas(novo)) {
+          alert('Importação concluída. ' + Object.keys(novo).length + ' observação(ões) agora salvas.');
+          refreshAllNotaBtns();
+        }
+      } catch(err) {
+        alert('Arquivo inválido. Use um JSON exportado por este painel.\n\nDetalhe: ' + err.message);
+      }
+    };
+    r.readAsText(f);
+  };
+  inp.click();
+}
 
 const safraLabel = (s) => {
   const kpi = DATA.kpis_por_safra[s];
@@ -2855,6 +3180,8 @@ function renderCategoria() {
 }
 
 function abrirDrillParceiro(parc, safra) {
+  // V30: guarda estado pra que o sistema de notas possa re-renderizar este drill
+  window._drillAtivo = {parc, safra};
   // Helper de mês legível
   const mesLbl = DATA.kpis_por_safra[safra]?.safra_label || safra;
   
@@ -2933,13 +3260,13 @@ function abrirDrillParceiro(parc, safra) {
       <div class="tc-wrap">
         <table class="in">
           <thead>
-            <tr><th style="min-width:28px">#</th><th style="min-width:140px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Tier</th><th>Vencto</th><th style="min-width:80px">Atraso</th><th>Valor</th><th>Faturas</th></tr>
+            <tr><th style="min-width:28px">#</th><th style="min-width:160px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Tier</th><th>Vencto</th><th style="min-width:80px">Atraso</th><th>Valor</th><th>Faturas</th></tr>
           </thead>
           <tbody>
             ${clientes.map((c,i) => `
               <tr${i < 3 ? ' style="background:rgba(176,48,32,.04);"' : ''}>
                 <td>${i+1}</td>
-                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(c.cnpj)}</td>
+                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(c.cnpj)}${renderNotaBtn(c.cnpj, c.razao_social)}</td>
                 <td class="b" style="text-align:left;white-space:normal;max-width:280px">${c.razao_social}</td>
                 <td>${c.tier}</td>
                 <td style="white-space:nowrap;font-size:12px">${c.dt_venc || '—'}</td>
@@ -3315,6 +3642,14 @@ function renderDevedores() {
       <div class="ni">⚠</div>
       <div class="nt"><b>Dados em conciliação:</b> lista vinda da aba "Analítico" (~R$ 47k de diferença vs oficial).</div>
     </div>
+
+    <div class="notas-bar">
+      <span class="nb-label">📝 Observações <span class="nb-count" id="notas-bar-count">${countNotas()}</span> salva(s)</span>
+      <span style="color:var(--ink3);font-size:11px;">passe o mouse no 📝 ao lado do CNPJ para ler · clique para editar</span>
+      <span class="spacer"></span>
+      <button onclick="exportarNotas()" title="Baixa um arquivo JSON com todas as observações">⬇ Exportar</button>
+      <button onclick="importarNotas()" title="Carrega observações de um JSON exportado">⬆ Importar</button>
+    </div>
     
     <div class="cat-cards">
       <div class="cat-card gold">
@@ -3350,13 +3685,13 @@ function renderDevedores() {
       <div class="tc-wrap">
         <table class="in">
           <thead>
-            <tr><th style="min-width:28px">#</th><th style="min-width:140px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Parceiro</th><th>Tier</th><th>Vencto</th><th>Valor</th><th>Faturas</th><th>Atraso</th></tr>
+            <tr><th style="min-width:28px">#</th><th style="min-width:160px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Parceiro</th><th>Tier</th><th>Vencto</th><th>Valor</th><th>Faturas</th><th>Atraso</th></tr>
           </thead>
           <tbody id="tbody-dev">
             ${top.map((d,i) => `
               <tr data-search="${(d.razao_social + ' ' + d.cnpj).toLowerCase()}">
                 <td>${i+1}</td>
-                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(d.cnpj)}</td>
+                <td style="font-size:11px;white-space:nowrap">${fmtCnpj(d.cnpj)}${renderNotaBtn(d.cnpj, d.razao_social)}</td>
                 <td class="b" style="text-align:left;white-space:normal;max-width:280px">${d.razao_social}</td>
                 <td>${d.parceiro}</td>
                 <td>${d.tier}</td>
