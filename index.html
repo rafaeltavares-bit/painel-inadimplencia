@@ -871,6 +871,61 @@ function processarSlide(rows, catInfo) {
   };
 }
 
+// ========== PROCESSAMENTO: Slide Tier ==========
+// Converte a saída de processarSlide para o formato esperado por renderTier:
+// { tier, por_safra: { 'YYYY-MM': { qtd, valor_inadimplencia } }, total: { ... } }
+// A aba Slide Tier tem: Tier 0/1/2/3/4/N/C × (R$ Faturado | R$ Inad | % Inad) × 6 meses
+function processarSlideTier(rows) {
+  // Reusar processarSlide com catInfo fake (só precisamos do nome)
+  const result = processarSlide(rows, { nome: 'SlideTier', nome_completo: 'Slide Tier', cor: 'gray' });
+  
+  const safrasAlvo = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
+  const tierOrder = ['Tier 0', 'Tier 1', 'Tier 2', 'Tier 3', 'Tier 4', 'N/C'];
+  
+  // Normalizar nomes (a planilha pode ter "N/C", "Sem Classificação", "Tier0", etc.)
+  const normNome = (n) => {
+    if (!n) return 'N/C';
+    const u = n.trim().toUpperCase();
+    if (/N\/C|SEM CLAS|NC/.test(u)) return 'N/C';
+    const m = u.match(/TIER\s*(\d)/);
+    if (m) return 'Tier ' + m[1];
+    return n.trim();
+  };
+
+  const tiers = result.parceiros.map(p => {
+    const nome = normNome(p.nome);
+    const por_safra = {};
+    safrasAlvo.forEach(s => {
+      const inad = p.inadimplencia_rs[s] || 0;
+      if (inad > 0) {
+        por_safra[s] = { qtd: 0, valor_inadimplencia: Math.round(inad * 100) / 100 };
+      }
+    });
+    return {
+      tier: nome,
+      por_safra,
+      faturado: p.faturado,         // extra: R$ faturado por safra (disponível na Slide Tier)
+      pct_inadimplencia: p.pct_inadimplencia, // extra: % por safra
+      total: {
+        qtd: 0,
+        valor_inadimplencia: Math.round((p.inadimplencia_rs.total || 0) * 100) / 100,
+        faturado_total: p.faturado.total || 0,
+        parceiros_unicos: 0,
+        clientes_unicos: 0,
+      }
+    };
+  });
+
+  // Ordenar conforme tierOrder; tiers não reconhecidos vão ao final
+  tiers.sort((a, b) => {
+    const ia = tierOrder.indexOf(a.tier);
+    const ib = tierOrder.indexOf(b.tier);
+    return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+  });
+
+  return tiers;
+}
+
 // ========== PROCESSAMENTO: Grafico - historico Inad 1 ==========
 // 17 colunas, 19 linhas. Coluna A=safra (data), B=Vlr Faturado, C-I = % por momento medição, etc.
 function processarHistorico(rows) {
@@ -1388,7 +1443,9 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     DATA.historico = historico;
     DATA.categorias = categorias;
     DATA.top_devedores = ana.top_devedores;
-    DATA.tiers = ana.tiers;
+    // Tiers: preferir Slide Tier (tem Mai/26 e % real); fallback para analítico
+    const tiersDaSlideTier = processarSlideTier(slideTier);
+    DATA.tiers = (tiersDaSlideTier && tiersDaSlideTier.length > 0) ? tiersDaSlideTier : ana.tiers;
     DATA.inadimplencia_rs_por_safra = ana.inadimplencia_rs_por_safra;
 
     // 6b. Inadimplência diária — declarado aqui para estar disponível antes do uso abaixo
@@ -2763,111 +2820,300 @@ function abrirDrillParceiro(parc, safra) {
   setTimeout(() => document.getElementById('drill-detail').scrollIntoView({behavior:'smooth', block:'start'}), 100);
 }
 
-// === ABA 3: POR TIER === (igual v02)
+// === ABA 3: POR TIER === (v22 — tabela dupla R$ + ticket médio, bubble chart proporcional)
 function renderTier() {
-  const tiers = DATA.tiers;
-  const totalInad = tiers.reduce((s,t) => s + t.total.valor_inadimplencia, 0);
-  
-  let html = `
-    <div class="note-box warning">
-      <div class="ni">⚠</div>
-      <div class="nt">
-        <b>Aviso de conciliação:</b> os valores de inadimplência por Tier vêm da aba "Analítico" da planilha 
-        e apresentam divergência de aproximadamente R$ 47k vs o oficial. Estrutura está pronta · dados em conciliação.
-      </div>
-    </div>
-    
-    <div class="cat-cards">
-  `;
-  
-  tiers.forEach(t => {
-    const cor = t.tier.includes('1') ? 'red' : 
-                t.tier.includes('2') ? 'gold' : 
-                t.tier.includes('3') ? 'blue' : 'purple';
-    const pct = totalInad > 0 ? t.total.valor_inadimplencia / totalInad * 100 : 0;
+  // Filtra "Sem Classificação" para o gráfico (poluem a análise — só ruído)
+  // Mantém na tabela como referência atenuada
+  const tiersAll = DATA.tiers;
+  const tiersPrinc = tiersAll.filter(t => !/Sem Classifica/i.test(t.tier));
+  const totalInad = tiersAll.reduce((s,t) => s + t.total.valor_inadimplencia, 0);
+  const totalInadPrinc = tiersPrinc.reduce((s,t) => s + t.total.valor_inadimplencia, 0);
+
+  const corTier = {
+    'Tier 1': '#b03020',
+    'Tier 2': '#9a6c18',
+    'Tier 3': '#163d78',
+    'Tier 4': '#6b2fd4',
+    'Sem Classificação': '#8a8579'
+  };
+  const corClass = (t) => t.includes('1') ? 'red' : t.includes('2') ? 'gold' : t.includes('3') ? 'blue' : t.includes('4') ? 'purple' : 'gray';
+
+  // Meses para tabelas (mesma ordem da tela original)
+  const mesesT = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
+  const mesLabel = (m) => safraLabel(m);
+
+  // ============ HTML ============
+  let html = ``;
+
+  // Cards de Tier (mantém os principais, sem N/C)
+  html += `<div class="cat-cards">`;
+  tiersPrinc.forEach(t => {
+    const pct = totalInadPrinc > 0 ? t.total.valor_inadimplencia / totalInadPrinc * 100 : 0;
+    const fatTotal = t.total.faturado_total || 0;
+    const pctInadReal = t.pct_inadimplencia ? (t.pct_inadimplencia['2026-05'] || t.pct_inadimplencia['2026-04'] || 0) : 0;
+    const mesRefLabel = t.pct_inadimplencia?.['2026-05'] ? 'Mai/26' : 'Abr/26';
     html += `
-      <div class="cat-card ${cor}">
+      <div class="cat-card ${corClass(t.tier)}">
         <div class="cc-title">${t.tier}</div>
         <div class="cc-pct">${fmtRk(t.total.valor_inadimplencia)}</div>
-        <div class="cc-info"><span>Faturas vencidas: <b>${fmtInt(t.total.qtd)}</b></span></div>
-        <div class="cc-info"><span>Clientes: <b>${fmtInt(t.total.clientes_unicos)}</b></span></div>
-        <div class="cc-info"><span>% do total: <b>${fmtPct(pct, 1)}</b></span></div>
+        ${fatTotal > 0 ? `<div class="cc-info"><span>Faturado total: <b>${fmtRk(fatTotal)}</b></span></div>` : ''}
+        ${pctInadReal > 0 ? `<div class="cc-info"><span>% inad. ${mesRefLabel}: <b>${fmtPct(pctInadReal, 1)}</b></span></div>` : ''}
+        <div class="cc-info"><span>% do inadimplente total: <b>${fmtPct(pct, 1)}</b></span></div>
       </div>
     `;
   });
   html += `</div>`;
-  
+
+  // ============ TABELA DUPLA ============
+  // Esquerda: R$ inadimplente por mês  |  Direita: Ticket médio inadimplente por fatura (R$)
+  // Heatmap em ambas: laranja claro -> vermelho mais escuro conforme valor sobe
+  // Calcula máximos por coluna para escalar o heatmap
+  const maxInadPorMes = {};
+  const maxTicketPorMes = {};
+  mesesT.forEach(m => {
+    let maxI = 0, maxT = 0;
+    tiersAll.forEach(t => {
+      const v = t.por_safra[m]?.valor_inadimplencia || 0;
+      const vFat = (t.faturado && t.faturado[m]) ? t.faturado[m] : 0;
+      const pctVal = (t.pct_inadimplencia && t.pct_inadimplencia[m]) ? t.pct_inadimplencia[m]
+                   : (vFat > 0 ? v/vFat*100 : 0);
+      if (v > maxI) maxI = v;
+      if (pctVal > maxT) maxT = pctVal;
+    });
+    maxInadPorMes[m] = maxI;
+    maxTicketPorMes[m] = maxT;
+  });
+
+  const heatBg = (v, max) => {
+    if (!v || !max) return '';
+    const intensity = Math.min(1, v/max);
+    // gradiente: bege -> laranja -> vermelho
+    return `background:rgba(176,48,32,${(intensity*0.22).toFixed(3)});`;
+  };
+
   html += `
-    <div class="tc">
-      <div class="th-row">
-        <div>
-          <div class="th-title">Detalhamento por Tier × Safra</div>
-          <div class="th-note">Valor inadimplente (R$ das faturas vencidas) por tier e safra</div>
-        </div>
-      </div>
-      <div class="tc-wrap">
-        <table class="in">
-          <thead>
-            <tr>
-              <th>Tier</th><th>Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th><th>Total</th><th>Faturas</th><th>Clientes</th>
-            </tr>
-          </thead>
-          <tbody>
+    <div class="dual-tier-wrap">
+      <div class="tier-table-card">
+        <div class="th-title">Inadimplência <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--ink2);">(valores em R$)</span></div>
+        <div class="th-note">Faturas vencidas por tier × safra</div>
+        <div class="tc-wrap">
+          <table class="in tier-tbl">
+            <thead><tr><th>Tier</th>${mesesT.map(m=>`<th>${mesLabel(m)}</th>`).join('')}<th>Total</th></tr></thead>
+            <tbody>
   `;
-  
-  const mesesT = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
-  tiers.forEach(t => {
-    html += `<tr><td class="b">${t.tier}</td>`;
+  tiersAll.forEach(t => {
+    const isNC = /Sem Classifica/i.test(t.tier);
+    const trCls = isNC ? ' class="nc-row"' : '';
+    const chipCor = corTier[t.tier] || '#888';
+    html += `<tr${trCls}><td class="tname"><span class="tchip" style="background:${chipCor}"></span>${t.tier}</td>`;
     mesesT.forEach(m => {
       const v = t.por_safra[m]?.valor_inadimplencia || 0;
-      html += `<td>${v > 0 ? fmtR(v, 0) : '—'}</td>`;
+      const bg = isNC ? '' : heatBg(v, maxInadPorMes[m]);
+      const vFmt = v > 0 ? (v).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0}) : '—';
+      html += `<td style="${bg}">${vFmt}</td>`;
     });
-    html += `<td class="b neg">${fmtR(t.total.valor_inadimplencia, 0)}</td>`;
-    html += `<td>${fmtInt(t.total.qtd)}</td>`;
-    html += `<td>${fmtInt(t.total.clientes_unicos)}</td>`;
-    html += `</tr>`;
+    html += `<td class="b">${(t.total.valor_inadimplencia).toLocaleString('pt-BR',{minimumFractionDigits:0,maximumFractionDigits:0})}</td></tr>`;
   });
-  
   html += `</tbody></table></div></div>`;
-  
+
+  // Direita: Ticket médio inadimplente
+  html += `
+      <div class="tier-table-card">
+        <div class="th-title">% Inadimplência <span style="font-weight:400;font-size:11px;letter-spacing:0;text-transform:none;color:var(--ink2);">(% do faturado)</span></div>
+        <div class="th-note">% inadimplente por tier × safra — dado direto da Slide Tier</div>
+        <div class="tc-wrap">
+          <table class="in tier-tbl">
+            <thead><tr><th>Tier</th>${mesesT.map(m=>`<th>${mesLabel(m)}</th>`).join('')}<th>Faturas</th><th>Clientes</th></tr></thead>
+            <tbody>
+  `;
+  tiersAll.forEach(t => {
+    const isNC = /Sem Classifica/i.test(t.tier);
+    const trCls = isNC ? ' class="nc-row"' : '';
+    const chipCor = corTier[t.tier] || '#888';
+    html += `<tr${trCls}><td class="tname"><span class="tchip" style="background:${chipCor}"></span>${t.tier}</td>`;
+    mesesT.forEach(m => {
+      const pctVal = (t.pct_inadimplencia && t.pct_inadimplencia[m]) ? t.pct_inadimplencia[m] : 0;
+      // Fallback: calcular via R$ inad / R$ faturado se tiver
+      const vInad = t.por_safra[m]?.valor_inadimplencia || 0;
+      const vFat = (t.faturado && t.faturado[m]) ? t.faturado[m] : 0;
+      const pctEfetivo = pctVal > 0 ? pctVal : (vFat > 0 ? (vInad / vFat * 100) : 0);
+      const bg = isNC ? '' : heatBg(pctEfetivo, maxTicketPorMes[m]);
+      html += `<td style="${bg}">${pctEfetivo > 0 ? fmtPct(pctEfetivo, 1) : '—'}</td>`;
+    });
+    html += `<td>${fmtInt(t.total.qtd)}</td><td>${fmtInt(t.total.clientes_unicos)}</td></tr>`;
+  });
+  html += `</tbody></table></div></div>
+    </div>
+  `;
+
+  // ============ BUBBLE CHART ============
   html += `
     <div class="chart-card">
       <div class="ch">
         <div>
-          <div class="ct">Distribuição da Inadimplência por Tier</div>
-          <div class="cs">Total: ${fmtR(totalInad, 0)}</div>
+          <div class="ct">Onde a inadimplência se concentra · proporcionalidade real</div>
+          <div class="cs">
+            Eixo X = faturas vencidas (volume) · Eixo Y = ticket médio inadimplente (R$, gravidade por fatura) · 
+            Tamanho da bolha = R$ total inadimplente · "Sem Classificação" omitido para limpar a análise
+          </div>
         </div>
       </div>
-      <div class="cw"><canvas id="ch-tier"></canvas></div>
+      <div class="cw" style="height:440px;"><canvas id="ch-tier-bubble"></canvas></div>
+      <div class="quad-legend">
+        <div class="quad q-star"><div class="quad-title">↙ Baixo volume e baixo ticket</div><div class="quad-desc">Pouca dor — sem alavanca.</div></div>
+        <div class="quad q-watch"><div class="quad-title">↘ Alto volume, baixo ticket</div><div class="quad-desc">Muitas faturinhas — pulverizado.</div></div>
+        <div class="quad q-bleed"><div class="quad-title">↖ Baixo volume, alto ticket</div><div class="quad-desc">Poucos clientes pesados — abordar 1 a 1.</div></div>
+        <div class="quad q-crit"><div class="quad-title">↗ Alto volume e alto ticket</div><div class="quad-desc">Prioridade máxima — atacar primeiro.</div></div>
+      </div>
+      <div class="tier-insight" id="tier-insight"></div>
     </div>
+
+    <style>
+      .dual-tier-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+      .tier-table-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--sh);}
+      .tier-table-card .th-title{font-weight:700;font-size:14px;color:var(--ink);margin-bottom:2px;letter-spacing:.3px;text-transform:uppercase;}
+      .tier-table-card .th-note{font-size:12px;color:var(--ink2);margin-bottom:14px;font-style:italic;}
+      table.tier-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+      table.tier-tbl thead th{background:#2c3e50;color:#fff;padding:8px 10px;text-align:right;font-weight:700;font-size:11px;letter-spacing:.4px;text-transform:uppercase;}
+      table.tier-tbl thead th:first-child{text-align:left;}
+      table.tier-tbl tbody td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;}
+      table.tier-tbl tbody td.tname{text-align:left;font-weight:600;}
+      table.tier-tbl tbody td.b{font-weight:700;}
+      table.tier-tbl tbody tr.nc-row td{color:#9b958a;font-style:italic;background:#fafaf8;}
+      .tchip{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:8px;vertical-align:middle;}
+      .quad-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;font-family:"Outfit",sans-serif;font-size:11.5px;}
+      .quad{padding:9px 11px;border:1px solid var(--rule);border-left:3px solid #ccc;border-radius:4px;}
+      .quad-title{font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:10.5px;margin-bottom:2px;}
+      .quad-desc{color:var(--ink2);font-size:11px;line-height:1.4;}
+      .quad.q-star{border-left-color:#4a7a4a;} .quad.q-star .quad-title{color:#4a7a4a;}
+      .quad.q-watch{border-left-color:#c97b1f;} .quad.q-watch .quad-title{color:#c97b1f;}
+      .quad.q-bleed{border-left-color:#9a6c18;} .quad.q-bleed .quad-title{color:#9a6c18;}
+      .quad.q-crit{border-left-color:#b03020;} .quad.q-crit .quad-title{color:#b03020;}
+      .tier-insight{background:#fff8ee;border-left:3px solid #c97b1f;padding:12px 16px;margin-top:16px;font-size:13px;color:#5a3a10;line-height:1.55;border-radius:0 4px 4px 0;}
+      .tier-insight b{color:#b03020;}
+      @media(max-width:1100px){.dual-tier-wrap{grid-template-columns:1fr;} .quad-legend{grid-template-columns:repeat(2,1fr);}}
+    </style>
   `;
-  
+
   document.getElementById('sec-tier').innerHTML = html;
-  
-  destroyChart('tier');
-  CHARTS['tier'] = new Chart(document.getElementById('ch-tier'), {
-    type: 'bar',
-    data: {
-      labels: tiers.map(t => t.tier),
-      datasets: [{
-        label: 'Inadimplência',
-        data: tiers.map(t => t.total.valor_inadimplencia),
-        backgroundColor: ['#b03020', '#9a6c18', '#163d78', '#6b2fd4', '#6b6258'],
-        borderWidth: 0
-      }]
-    },
+
+  // ============ BUBBLE CHART ============
+  destroyChart('tier-bubble');
+  destroyChart('tier'); // limpa antigo caso exista
+
+  const bubbleData = tiersPrinc.map(t => {
+    const tk = t.total.qtd > 0 ? t.total.valor_inadimplencia / t.total.qtd : 0;
+    const r  = Math.max(8, Math.sqrt(t.total.valor_inadimplencia) / 18); // raio proporcional ao R$ total
+    return {
+      label: t.tier,
+      data: [{ x: t.total.qtd, y: tk, r: r, inad: t.total.valor_inadimplencia, q: t.total.qtd }],
+      backgroundColor: corTier[t.tier] + 'cc',
+      borderColor: corTier[t.tier],
+      borderWidth: 2,
+    };
+  });
+
+  // medianas para dividir quadrantes (sobre os 4 tiers principais)
+  const xs = tiersPrinc.map(t => t.total.qtd);
+  const ys = tiersPrinc.map(t => t.total.qtd > 0 ? t.total.valor_inadimplencia/t.total.qtd : 0);
+  const xMed = (Math.max(...xs) + Math.min(...xs)) / 2;
+  const yMed = (Math.max(...ys) + Math.min(...ys)) / 2;
+  const yMax = Math.max(...ys) * 1.25;
+
+  const quadrantPlugin = {
+    id: 'tierQuad',
+    beforeDraw(chart) {
+      const {ctx, chartArea, scales} = chart;
+      if (!chartArea || !scales.x || !scales.y) return;
+      const {left, top, right, bottom} = chartArea;
+      const xp = scales.x.getPixelForValue(xMed);
+      const yp = scales.y.getPixelForValue(yMed);
+      ctx.save();
+      // shading crítico (↗ canto sup direito)
+      ctx.fillStyle = 'rgba(176,48,32,0.06)';
+      ctx.fillRect(xp, top, right-xp, yp-top);
+      // shading estrela (↙ canto inf esquerdo)
+      ctx.fillStyle = 'rgba(74,122,74,0.05)';
+      ctx.fillRect(left, yp, xp-left, bottom-yp);
+      ctx.strokeStyle = '#c9c2b3';
+      ctx.setLineDash([4,4]);
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(xp, top); ctx.lineTo(xp, bottom);
+      ctx.moveTo(left, yp); ctx.lineTo(right, yp);
+      ctx.stroke();
+      ctx.restore();
+    }
+  };
+
+  CHARTS['tier-bubble'] = new Chart(document.getElementById('ch-tier-bubble'), {
+    type: 'bubble',
+    data: { datasets: bubbleData },
+    plugins: [quadrantPlugin],
     options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { 
-        legend: { display: false },
-        tooltip: { callbacks: { label: ctx => fmtR(ctx.parsed.y) } }
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: {
+            font: { family: 'Outfit', size: 12 },
+            usePointStyle: true,
+            padding: 14,
+          }
+        },
+        tooltip: {
+          callbacks: {
+            title: items => items[0].dataset.label,
+            label: ctx => {
+              const d = ctx.raw;
+              return [
+                `Faturas vencidas: ${fmtInt(d.q)}`,
+                `Ticket médio inad.: ${fmtR(d.y, 2)}`,
+                `R$ total inadimplente: ${fmtR(d.inad, 0)}`
+              ];
+            }
+          }
+        }
       },
       scales: {
-        y: { beginAtZero: true, ticks: { callback: v => fmtRk(v) }, grid: { color: 'rgba(0,0,0,0.05)' } },
-        x: { grid: { display: false } }
+        x: {
+          title: { display: true, text: 'Faturas vencidas (volume)', font: {family:'Outfit', size:12, style:'italic'} },
+          beginAtZero: true,
+          ticks: { callback: v => fmtInt(v) },
+          grid: { color: '#f0ebe0' }
+        },
+        y: {
+          title: { display: true, text: 'Ticket médio inadimplente (R$)', font: {family:'Outfit', size:12, style:'italic'} },
+          beginAtZero: true,
+          suggestedMax: yMax,
+          ticks: { callback: v => fmtR(v, 0) },
+          grid: { color: '#f0ebe0' }
+        }
       }
     }
   });
+
+  // ============ INSIGHT AUTOMÁTICO ============
+  const ranked = tiersPrinc.map(t => ({
+    nome: t.tier,
+    inad: t.total.valor_inadimplencia,
+    qtd: t.total.qtd,
+    clientes: t.total.clientes_unicos,
+    tk: t.total.qtd > 0 ? t.total.valor_inadimplencia/t.total.qtd : 0
+  }));
+  const piorRS    = [...ranked].sort((a,b) => b.inad - a.inad)[0];
+  const piorTk    = [...ranked].sort((a,b) => b.tk   - a.tk)[0];
+  const maisVol   = [...ranked].sort((a,b) => b.qtd  - a.qtd)[0];
+
+  document.getElementById('tier-insight').innerHTML = `
+    <b>Leitura proporcional:</b>
+    Em R$ totais, <b>${piorRS.nome}</b> lidera (${fmtR(piorRS.inad,0)} em ${fmtInt(piorRS.qtd)} faturas).
+    Mas em <i>gravidade por fatura</i>, <b>${piorTk.nome}</b> é o mais pesado (ticket médio ${fmtR(piorTk.tk,0)}), 
+    ${piorRS.nome === piorTk.nome ? 'reforçando que esse tier concentra volume e gravidade — prioridade absoluta.' 
+    : `enquanto <b>${maisVol.nome}</b> domina em volume puro (${fmtInt(maisVol.qtd)} faturas).`}
+    Atacar primeiro ↗ (canto superior direito): combina muito volume com ticket alto.
+  `;
 }
 
 // === ABA 4: TOP DEVEDORES === (igual v02)
