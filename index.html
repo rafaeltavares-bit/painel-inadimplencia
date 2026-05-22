@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v15</title>
+<title>Painel · Inadimplência · v16</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -365,22 +365,16 @@ let CHARTS = {};
 let MODO_GRAFICO = 'comparativo'; // 'comparativo' | 'focado' | 'curvas'
 
 // Datas escolhidas para comparação (inicializa com defaults)
-// FIX v14 (bug 1): data "ATUAL" e datas de comparacao agora vem da ULTIMA
-// observacao disponivel em DATA.inad_diaria[safra] para cada safra, em vez
-// de um default fixo. Quando voce atualizar do Sheets, inad_diaria recebe
-// os pontos mais recentes da aba e essa inicializacao reflete isso
-// automaticamente -- sem hardcode, sem new Date().
+// FIX v14 (bug 1): pegar última observação real de cada safra
 let DATAS_COMPARACAO = (function () {
   const out = {};
   const fonte = DATA.inad_diaria || {};
   Object.keys(fonte).forEach(safra => {
     const obs = fonte[safra];
-    if (Array.isArray(obs) && obs.length > 0) {
-      out[safra] = obs[obs.length - 1].data; // inad_diaria ja vem ordenada crescente
-    }
+    if (Array.isArray(obs) && obs.length > 0) out[safra] = obs[obs.length - 1].data;
   });
-  const fallback = DATA.datas_comparacao_default || {};
-  Object.keys(fallback).forEach(s => { if (!out[s]) out[s] = fallback[s]; });
+  const fb = DATA.datas_comparacao_default || {};
+  Object.keys(fb).forEach(s => { if (!out[s]) out[s] = fb[s]; });
   return out;
 })();
 
@@ -718,15 +712,12 @@ function processarSlide(rows, catInfo) {
   for (let i = dataStart; i < rows.length; i++) {
     const r = rows[i];
     if (!r || r.length < 5) continue;
-    // Nome do parceiro está na coluna 1 (B no Excel)
     const nome = String(r[1] || '').trim();
     if (!nome) continue;
     if (/^total/i.test(nome)) { totalRow = r; continue; }
     
-    // FIX v15: ignora linhas-titulo intercaladas na planilha
-    // (ex.: "Categoria - 2", "Inadimplencia por Parceiro - Nov/25 a Abr/26 (...)").
+    // FIX v15: ignora linhas-titulo intercaladas
     if (/inadimpl[êe]ncia por parceiro|^categoria\s*-/i.test(nome)) continue;
-    // Titulos costumam ter " - " no meio E parenteses no final
     if (nome.length > 25 && /\s-\s/.test(nome) && /\(.*\)/.test(nome)) continue;
     
     const faturado = {};
@@ -744,7 +735,6 @@ function processarSlide(rows, catInfo) {
     inadRs.total = somaI;
     pctInad.total = somaF > 0 ? (somaI / somaF * 100) : 0;
     
-    // FIX v15: segunda barreira -- se TUDO zerado, e linha-titulo da planilha
     if (somaF === 0 && somaI === 0) continue;
     
     parceiros.push({
@@ -1276,6 +1266,20 @@ async function atualizarDoSheets() {
       }
     });
     DATA.datas_comparacao_default = datasDefault;
+    
+    // FIX v16 (BUG CRITICO): sincronizar a variavel global DATAS_COMPARACAO com os
+    // dados recem-trazidos do Sheets. Sem isso, a inicializacao continua usando o
+    // ultimo ponto que existia no JSON embutido na carga da pagina (ex: 15/05),
+    // mesmo apos o usuario clicar "Atualizar" e a planilha ter dados ate 21/05.
+    // Preserva selecoes manuais que o usuario ja fez (so substitui se a data atual
+    // ficou stale, ou seja, nao existe mais na nova lista de pontos).
+    safrasComDados.forEach(s => {
+      const pontos = novaInadDiaria[s] || [];
+      const datasValidas = pontos.map(p => p.data);
+      if (!DATAS_COMPARACAO[s] || !datasValidas.includes(DATAS_COMPARACAO[s])) {
+        DATAS_COMPARACAO[s] = datasValidas[datasValidas.length - 1] || DATAS_COMPARACAO[s];
+      }
+    });
     
     // 6c. Atualizar meses_disponiveis (lista do seletor) com base nas safras do histórico + inad_diaria
     const safrasUniao = new Set();
@@ -1911,21 +1915,18 @@ function renderGerencial() {
         },
         {
           label: '% Último dia',
-          // FIX v14 (bug 2): linha azul ("% Ultimo dia do mes") deve TERMINAR
-          // no ultimo mes fechado. A safra corrente ainda nao fechou, entao
-          // plota null em vez de 0. Sem isso, Mai/26 caia para 0% no grafico.
+          // FIX v14 (bug 2): null em vez de 0 na safra corrente
           data: HIST_12M.map(h => {
-            if (h.safra === MES_CORRENTE) return null;             // safra atual: nao fechou
+            if (h.safra === MES_CORRENTE) return null;
             const v = h.pct_ultimo_dia_mes;
-            if (v === null || v === undefined || v === 0) return null; // safra futura ou sem dado
+            if (v === null || v === undefined || v === 0) return null;
             return v;
           }),
-          spanGaps: false, // FIX v14: linha realmente TERMINA no null, nao pula
+          spanGaps: false,
           borderColor: '#2196F3',
           backgroundColor: 'transparent',
           borderWidth: 3,
           tension: 0.3,
-          // V06: destaque do mês selecionado também na azul
           pointRadius: HIST_12M.map((h,i) => i === safraIdx12 ? 9 : 6),
           pointBackgroundColor: HIST_12M.map((h,i) => i === safraIdx12 ? '#b03020' : '#2196F3'),
           pointBorderColor: '#fff',
@@ -2265,8 +2266,7 @@ function renderCategoria() {
           <tbody>
   `;
   
-  // FIX v15: ordena por R$ Faturado total dos 6 meses (decrescente).
-  // O parceiro de maior peso aparece primeiro, como na planilha mestre.
+  // FIX v15: ordenar por R$ Faturado total (decrescente)
   const parceirosOrd = [...parceirosComMov].sort((a, b) => {
     const totA = meses.reduce((s, m) => s + (a.faturado[m] || 0), 0);
     const totB = meses.reduce((s, m) => s + (b.faturado[m] || 0), 0);
@@ -2278,7 +2278,6 @@ function renderCategoria() {
     html += `<tr>`;
     html += `<td class="b" style="text-align:left">${p.nome}</td>`;
     
-    // Coluna Movimento (com tooltip explicando a conta)
     let movTxt = '', movCor = 'var(--ink3)', movTip = '';
     const pctCompTxt = fmtPct(p.pctComp);
     const mediaPTxt = fmtPct(p.mediaP);
@@ -2298,7 +2297,7 @@ function renderCategoria() {
       const v = p.faturado[m] || 0;
       html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${v > 0 ? fmt(v) : '—'}</td>`;
     });
-    // FIX v15: coluna TOTAL R$ Faturado (soma 6 meses)
+    // FIX v15: TOTAL R$ Faturado
     const totalFatP = meses.reduce((s,m) => s + (p.faturado[m] || 0), 0);
     html += `<td class="b" style="background:rgba(22,61,120,.04);">${totalFatP > 0 ? fmt(totalFatP) : '—'}</td>`;
     
@@ -2309,7 +2308,7 @@ function renderCategoria() {
       const titulo = v > 0 ? `title="Clique para ver os clientes inadimplentes em ${mesesLbl[i]}"` : '';
       html += `<td${cellStyle} onclick="abrirDrillParceiro('${pNomeEsc}','${m}')" ${titulo}>${v > 0 ? `<span class="hm-cell ${cls}">${fmtPct(v)}</span>` : '—'}</td>`;
     });
-    // FIX v15: coluna TOTAL % Inadimplencia = soma R$Inad 6m / soma R$Faturado 6m
+    // FIX v15: TOTAL % Inadimplência
     const totalInadP = meses.reduce((s,m) => s + (p.inadimplencia_rs[m] || 0), 0);
     const totalPctP = totalFatP > 0 ? (totalInadP / totalFatP * 100) : 0;
     const clsTotalP = hmClass(totalPctP);
@@ -2321,14 +2320,12 @@ function renderCategoria() {
   meses.forEach((m,i) => {
     html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${fmt(totais.faturado[m])}</td>`;
   });
-  // FIX v15: TOTAL R$ Faturado da categoria
   const totalFatCat = meses.reduce((s,m) => s + (totais.faturado[m] || 0), 0);
   html += `<td style="background:rgba(22,61,120,.06);">${fmt(totalFatCat)}</td>`;
   
   meses.forEach((m,i) => {
     html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${fmtPct(totais.pct_inadimplencia[m])}</td>`;
   });
-  // FIX v15: TOTAL % Inadimplencia da categoria
   const totalInadCat = meses.reduce((s,m) => s + (totais.inadimplencia_rs[m] || 0), 0);
   const totalPctCat = totalFatCat > 0 ? (totalInadCat / totalFatCat * 100) : 0;
   html += `<td style="background:rgba(22,61,120,.06);">${fmtPct(totalPctCat)}</td>`;
@@ -2339,7 +2336,7 @@ function renderCategoria() {
   // Nota explicativa da coluna Movimento
   html += `
     <div class="cards-nota">
-      <b>* Movimento (coluna):</b> diferença entre o % de inadimplência do parceiro em <b>${labelComp}</b> e a <b>média dos últimos 6 meses (${labelPrim}–${labelUlt})</b>. Exemplo: parceiro fechou ${labelComp} em 5% e a média 6m foi 2,7% → movimento é <b>▲ +2,3pp</b> (piorou 2,3 pontos percentuais). <b>Passe o mouse na célula</b> para ver os números exatos da conta. <b>▲ vermelho</b> = piorou · <b>▼ verde</b> = melhorou · <b>≈ cinza</b> = estável (variação < 0,2pp).
+      <b>* Movimento (coluna):</b> diferença entre o % de inadimplência do parceiro em <b>${labelComp}</b> e a <b>média dos últimos 6 meses (${labelPrim}–${labelUlt})</b>. Exemplo: parceiro fechou ${labelComp} em 5% e média 6m foi 2,7% → movimento é <b>▲ +2,3pp</b> (piorou 2,3 pontos percentuais). <b>Passe o mouse na célula</b> para ver os números exatos. <b>▲ vermelho</b> = piorou · <b>▼ verde</b> = melhorou · <b>≈ cinza</b> = estável (variação < 0,2pp).
       ${safraCorrenteMadura ? '' : `<br><b>Nota:</b> ${DATA.kpis_por_safra[MES_CORRENTE].safra_label} ainda está em maturação. Análise de movimento refere-se a ${labelComp} (último mês fechado).`}
     </div>
   `;
