@@ -1434,7 +1434,7 @@ async function atualizarDoSheets() {
     liveDot.style.background = 'var(--em)';
     liveLabel.textContent = 'Ao vivo · Quick Sight/Omie';
     lastUpd.textContent = 'Sincronizado: ' + dataStr;
-    bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + agora.toLocaleDateString('pt-BR');
+    bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + (DATA.data_extrato_analitico || agora.toLocaleDateString('pt-BR'));
     
     setTimeout(() => {
       btnIcon.textContent = '🔄';
@@ -2830,6 +2830,14 @@ const RENDERERS = {
 
 // === INIT ===
 document.addEventListener('DOMContentLoaded', () => {
+  // FIX v20-F: badge de fonte usa data_extrato_analitico do JSON (= 21/05/2026)
+  try {
+    const bpFonteInit = document.getElementById('bp-fonte');
+    if (bpFonteInit && DATA && DATA.data_extrato_analitico) {
+      bpFonteInit.textContent = 'Fonte: Quick Sight/Omie · ' + DATA.data_extrato_analitico;
+    }
+  } catch(e) {}
+
   popularSeletorMes();
   renderFarol();
   renderGerencial();
