@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v16</title>
+<title>Painel · Inadimplência · v17</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -286,6 +286,18 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 .cc4-status.piorou{background:var(--rd-l);color:var(--rd);}
 .cc4-status.estavel{background:var(--paper);color:var(--ink3);}
 .cc4-status .arrow{font-size:13px;line-height:1;}
+
+/* FIX v17: Card categoria dividido em 2 blocos */
+.cc-block{padding:12px 0;}
+.cc-block + .cc-block{border-top:1px dashed rgba(200,191,176,.7);margin-top:6px;}
+.cc-block-label{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px;}
+.cc-block-label.atual{color:var(--ink);}
+.cc-block-label.fechado{color:var(--ink3);}
+.cc-pct-atual{font-family:"Playfair Display",serif;font-size:38px;font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.02em;margin-bottom:4px;}
+.cc-pct-atual.red{color:var(--rd);} .cc-pct-atual.warn{color:var(--am);} .cc-pct-atual.green{color:var(--em);}
+.cc-pct-fechado{font-size:18px;font-weight:700;color:var(--ink2);line-height:1;margin-bottom:6px;}
+.cc-comp-txt{font-size:11px;color:var(--ink3);line-height:1.5;}
+.cc-comp-txt b{color:var(--ink2);}
 
 @media(max-width:1100px){.dual-charts{grid-template-columns:1fr;}}
 
@@ -1737,21 +1749,20 @@ function renderGerencial() {
       }
     }
     
-    // === Ranking + status (baseados na safra de comparação) ===
-    const analise = DATA.analise_categorias[c.nome]?.[safraComp];
-    let statusBox = '';
+    // === FIX v17: Card dividido em 2 blocos ===
+    // BLOCO 1 (ATUAL): % atual da categoria na safra corrente (Mai/26 com 5 dias)
+    // BLOCO 2 (FECHADO): % no último mês fechado (Abr/26) + comparação com média 6m que termina nele
     
-    if (analise) {
-      // === Recalcula média incluindo a safra de comparação (6 meses) ===
-      // O JSON tem media_outros_meses calculado SEM a safra. Vou recompor incluindo.
-      // Pega todas as safras disponíveis no analise_categorias dessa categoria
+    const analise = DATA.analise_categorias[c.nome]?.[safraComp];
+    let blocoFechadoHtml = '';
+    
+    if (analise && cComp) {
+      // Recalcula a média 6m INCLUINDO a safra de comparação (Nov/25 a Abr/26)
       const todasSafrasCat = DATA.analise_categorias[c.nome];
       const safrasArr = Object.keys(todasSafrasCat).sort();
-      // Pega as últimas 6 safras até (e incluindo) a de comparação
       const idxCompSafra = safrasArr.indexOf(safraComp);
       const safrasParaMedia = safrasArr.slice(Math.max(0, idxCompSafra - 5), idxCompSafra + 1);
       
-      // Coleta os % de cada safra (vem das categorias_por_safra)
       const valoresMedia = safrasParaMedia.map(s => {
         const catsS = DATA.categorias_por_safra[s] || [];
         const cS = catsS.find(x => x.nome === c.nome);
@@ -1762,28 +1773,32 @@ function renderGerencial() {
         ? valoresMedia.reduce((s, v) => s + v, 0) / valoresMedia.length 
         : 0;
       
-      // Recalcula delta com base na média incluindo
-      const pctRef = cComp ? cComp.pct_inadimplencia : (analise.media_outros_meses + (analise.delta_vs_media || 0));
-      const delta = pctRef - mediaIncluindo;
+      const pctFechado = cComp.pct_inadimplencia;
+      const delta = pctFechado - mediaIncluindo;
       const absDelta = Math.abs(delta);
       
       let statusCls, statusArrow, statusTxt;
       if (absDelta < 0.1) {
-        statusCls = 'estavel'; statusArrow = '≈'; statusTxt = 'ESTÁVEL';
+        statusCls = 'estavel'; statusArrow = '≈'; statusTxt = 'Estável';
       } else if (delta < 0) {
-        statusCls = 'melhorou'; statusArrow = '▼'; statusTxt = `MELHOROU ${fmtPct(absDelta)}pp`;
+        statusCls = 'melhorou'; statusArrow = '▼'; statusTxt = `Melhorou ${fmtPct(absDelta)}pp`;
       } else {
-        statusCls = 'piorou'; statusArrow = '▲'; statusTxt = `PIOROU ${fmtPct(absDelta)}pp`;
+        statusCls = 'piorou'; statusArrow = '▲'; statusTxt = `Piorou ${fmtPct(absDelta)}pp`;
       }
       
-      // Texto da referência: humano, sem jargão "5m"
-      const labelPrimeira = DATA.kpis_por_safra[safrasParaMedia[0]]?.safra_label || safrasParaMedia[0];
-      const labelUltima = DATA.kpis_por_safra[safrasParaMedia[safrasParaMedia.length - 1]]?.safra_label || safrasParaMedia[safrasParaMedia.length - 1];
-      const refTexto = safraCorrenteMadura 
-        ? `vs média ${labelPrimeira}–${labelUltima}* (${fmtPct(mediaIncluindo)})`
-        : `${labelComp}: ${fmtPct(cComp ? cComp.pct_inadimplencia : 0)} · vs média ${labelPrimeira}–${labelUltima}* (${fmtPct(mediaIncluindo)})`;
+      const labelPrim = DATA.kpis_por_safra[safrasParaMedia[0]]?.safra_label || safrasParaMedia[0];
+      const labelUlt = DATA.kpis_por_safra[safrasParaMedia[safrasParaMedia.length - 1]]?.safra_label || safrasParaMedia[safrasParaMedia.length - 1];
       
-      statusBox = `<div class="cc4-status ${statusCls}"><span class="arrow">${statusArrow}</span> ${statusTxt}</div><div style="font-size:11px;color:var(--ink3);margin-bottom:10px;">${refTexto}</div>`;
+      blocoFechadoHtml = `
+        <div class="cc-block">
+          <div class="cc-block-label fechado">${labelComp} · último mês fechado</div>
+          <div class="cc-pct-fechado">${fmtPct(pctFechado)}</div>
+          <div class="cc4-status ${statusCls}"><span class="arrow">${statusArrow}</span> ${statusTxt}</div>
+          <div class="cc-comp-txt" style="margin-top:6px;">
+            vs média ${labelPrim}–${labelUlt}: <b>${fmtPct(mediaIncluindo)}</b>
+          </div>
+        </div>
+      `;
     }
     
     html += `
@@ -1791,17 +1806,16 @@ function renderGerencial() {
         <div class="cc3-head">
           <div class="cc3-title">${c.nome}</div>
         </div>
-        <div class="cc3-pct ${pctCls}">${fmtPct(c.pct_inadimplencia)}</div>
-        ${statusBox}
-        <div class="cc3-info">
-          <span>Faturado: <b>${fmtRk(c.faturado)}</b></span>
-          <span>Inadimpl.: <b>${fmtRk(c.inadimplencia_rs)}</b></span>
+        <div class="cc-block">
+          <div class="cc-block-label atual">${kpi.safra_label} · atual</div>
+          <div class="cc-pct-atual ${pctCls}">${fmtPct(c.pct_inadimplencia)}</div>
+          <div class="cc3-info" style="border-top:none;padding-top:4px;">
+            <span>Faturado: <b>${fmtRk(c.faturado)}</b></span>
+            <span>Inadimpl.: <b>${fmtRk(c.inadimplencia_rs)}</b></span>
+          </div>
         </div>
-        <div class="cc3-participacao" title="${tipPart}">
-          <div class="cc3-part-row"><span>📊 % do faturado total:</span><span class="cc3-part-val"><b>${fmtPct(pctFat)}</b><span class="cc3-seta-slot"></span></span></div>
-          <div class="cc3-part-row"><span>⚠ % da inadimplência total${safraCorrenteMadura ? '' : ' <i style="font-style:normal;color:var(--ink3);">('+labelComp+')</i>'}:</span><span class="cc3-part-val"><b>${fmtPct(pctInadComp)}</b><span class="cc3-seta-slot" style="color:${corPart};">${setaPart}</span></span></div>
-        </div>
-        <div class="cc3-link">Detalhar por parceiro</div>
+        ${blocoFechadoHtml}
+        <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     `;
   });
@@ -1814,11 +1828,10 @@ function renderGerencial() {
   const labelPrim = safrasMediaUsadas.length > 0 ? (DATA.kpis_por_safra[safrasMediaUsadas[0]]?.safra_label || '') : '';
   const labelUlt = safrasMediaUsadas.length > 0 ? (DATA.kpis_por_safra[safrasMediaUsadas[safrasMediaUsadas.length-1]]?.safra_label || '') : '';
   
-  let notaTexto = `<b>* Média ${labelPrim}–${labelUlt}:</b> média dos últimos 6 meses (incluindo ${labelComp}). Comparação indica se a categoria piorou ou melhorou em relação ao histórico recente.`;
+  // FIX v17: nota explicativa simplificada
+  let notaTexto = `<b>Como ler o card:</b> o bloco de cima mostra a situação <b>atual</b> da categoria em ${kpi.safra_label} (mês ainda em andamento, valores parciais). O bloco de baixo mostra o desempenho no <b>último mês fechado</b> (${labelComp}) comparado com a média dos 6 meses Nov/25-${labelComp}.`;
   if (!safraCorrenteMadura) {
-    notaTexto += ` <br><b>Nota:</b> ${kpi.safra_label} ainda está em maturação (poucos dias do mês decorridos). O número grande mostra a posição atual da safra. <b>Toda a análise comparativa (MELHOROU/PIOROU, participação) refere-se a ${labelComp}</b>, último mês fechado e com dado consolidado.`;
-  } else {
-    notaTexto += ` <b>📊 % do faturado total</b> = peso da categoria na receita do mês. <b>⚠ % da inadimplência total</b> = peso da categoria no problema (setas mostram se aumentou ▲ ou caiu ▼ vs mês anterior).`;
+    notaTexto += ` ${kpi.safra_label} ainda tem poucos dias de dados — a leitura definitiva do mês só fecha no final.`;
   }
   html += `<div class="cards-nota">${notaTexto}</div>`;
   
@@ -2242,7 +2255,7 @@ function renderCategoria() {
       <div class="th-row">
         <div>
           <div class="th-title">📋 Detalhamento por Parceiro · ${cat.nome_completo}</div>
-          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro) · clique numa célula <b>% Inadimplência</b> para ver os clientes daquele mês</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
         </div>
       </div>
       <div class="tc-wrap">
@@ -2250,13 +2263,12 @@ function renderCategoria() {
           <thead>
             <tr>
               <th>Parceiro</th>
-              <th style="border-left:2px solid var(--rule);">Movimento*</th>
+              
               <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
               <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
             </tr>
             <tr>
               <th></th>
-              <th style="border-left:2px solid var(--rule);">vs média 6m</th>
               ${mesesLbl.map((l,i) => `<th${i===0?' style="border-left:2px solid var(--rule);"':''}>${l}</th>`).join('')}
               <th style="background:rgba(22,61,120,.06);">TOTAL</th>
               ${mesesLbl.map((l,i) => `<th${i===0?' style="border-left:2px solid var(--rule);"':''}>${l}</th>`).join('')}
@@ -2278,20 +2290,7 @@ function renderCategoria() {
     html += `<tr>`;
     html += `<td class="b" style="text-align:left">${p.nome}</td>`;
     
-    let movTxt = '', movCor = 'var(--ink3)', movTip = '';
-    const pctCompTxt = fmtPct(p.pctComp);
-    const mediaPTxt = fmtPct(p.mediaP);
-    if (Math.abs(p.deltaP) < 0.2) {
-      movTxt = '≈ estável'; movCor = 'var(--ink3)';
-      movTip = `${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} (variação < 0,2pp)`;
-    } else if (p.deltaP > 0) {
-      movTxt = `▲ +${fmtPct(p.deltaP)}pp`; movCor = 'var(--rd)';
-      movTip = `Piorou. ${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} | diferença: +${fmtPct(p.deltaP)}pp`;
-    } else {
-      movTxt = `▼ ${fmtPct(p.deltaP)}pp`; movCor = 'var(--em)';
-      movTip = `Melhorou. ${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} | diferença: ${fmtPct(p.deltaP)}pp`;
-    }
-    html += `<td style="border-left:2px solid var(--rule);color:${movCor};font-weight:700;" title="${movTip}">${movTxt}</td>`;
+    // FIX v17: coluna Movimento removida - apresentamos apenas os números mensais
     
     meses.forEach((m,i) => {
       const v = p.faturado[m] || 0;
@@ -2316,7 +2315,7 @@ function renderCategoria() {
     html += `</tr>`;
   });
   
-  html += `<tr class="r-total"><td>Total ${cat.nome}</td><td style="border-left:2px solid var(--rule);"></td>`;
+  html += `<tr class="r-total"><td>Total ${cat.nome}</td>`;
   meses.forEach((m,i) => {
     html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${fmt(totais.faturado[m])}</td>`;
   });
@@ -2336,7 +2335,7 @@ function renderCategoria() {
   // Nota explicativa da coluna Movimento
   html += `
     <div class="cards-nota">
-      <b>* Movimento (coluna):</b> diferença entre o % de inadimplência do parceiro em <b>${labelComp}</b> e a <b>média dos últimos 6 meses (${labelPrim}–${labelUlt})</b>. Exemplo: parceiro fechou ${labelComp} em 5% e média 6m foi 2,7% → movimento é <b>▲ +2,3pp</b> (piorou 2,3 pontos percentuais). <b>Passe o mouse na célula</b> para ver os números exatos. <b>▲ vermelho</b> = piorou · <b>▼ verde</b> = melhorou · <b>≈ cinza</b> = estável (variação < 0,2pp).
+      <b>Como ler a tabela:</b> os parceiros estão ordenados por <b>R$ Faturado total</b> dos 6 meses (maior peso primeiro). As colunas <b>TOTAL</b> mostram o acumulado dos 6 meses (R$ Faturado somado, % Inadimplência ponderada pelo faturado). Clique numa célula de <b>% Inadimplência</b> para ver os clientes inadimplentes daquele mês.
       ${safraCorrenteMadura ? '' : `<br><b>Nota:</b> ${DATA.kpis_por_safra[MES_CORRENTE].safra_label} ainda está em maturação. Análise de movimento refere-se a ${labelComp} (último mês fechado).`}
     </div>
   `;
