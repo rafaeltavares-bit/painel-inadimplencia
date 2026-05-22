@@ -1602,7 +1602,7 @@ function renderGerencial() {
             <div class="comp-title">📊 Comparativo entre safras · datas equivalentes</div>
             <div class="comp-sub">Escolha manualmente as datas de cada safra</div>
           </div>
-          <button class="btn-atualizar" onclick="renderGerencial()">🔄 Atualizar</button>
+          <button class="btn-atualizar" onclick="renderGerencial();renderFarol()">🔄 Atualizar</button>
         </div>
         <div class="comp-grid">
   `;
@@ -1638,7 +1638,7 @@ function renderGerencial() {
           ${pctSafra !== null ? fmtPct(pctSafra) : '—'}
         </div>
         <div class="cc-data-sel">
-          <select onchange="DATAS_COMPARACAO['${safra}']=this.value;DATAS_COMPARACAO_MANUAL['${safra}']=true;renderGerencial();" ${datasDisp.length === 0 ? 'disabled' : ''}>
+          <select onchange="DATAS_COMPARACAO['${safra}']=this.value;DATAS_COMPARACAO_MANUAL['${safra}']=true;renderGerencial();renderFarol();" ${datasDisp.length === 0 ? 'disabled' : ''}>
             ${datasDisp.length === 0 ? '<option>Sem dados</option>' : optsHtml}
           </select>
         </div>
