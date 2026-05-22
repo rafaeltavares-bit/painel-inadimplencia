@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v10</title>
+<title>Painel · Inadimplência · v14</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -365,7 +365,24 @@ let CHARTS = {};
 let MODO_GRAFICO = 'comparativo'; // 'comparativo' | 'focado' | 'curvas'
 
 // Datas escolhidas para comparação (inicializa com defaults)
-let DATAS_COMPARACAO = {...(DATA.datas_comparacao_default || {})};
+// FIX v14 (bug 1): data "ATUAL" e datas de comparacao agora vem da ULTIMA
+// observacao disponivel em DATA.inad_diaria[safra] para cada safra, em vez
+// de um default fixo. Quando voce atualizar do Sheets, inad_diaria recebe
+// os pontos mais recentes da aba e essa inicializacao reflete isso
+// automaticamente -- sem hardcode, sem new Date().
+let DATAS_COMPARACAO = (function () {
+  const out = {};
+  const fonte = DATA.inad_diaria || {};
+  Object.keys(fonte).forEach(safra => {
+    const obs = fonte[safra];
+    if (Array.isArray(obs) && obs.length > 0) {
+      out[safra] = obs[obs.length - 1].data; // inad_diaria ja vem ordenada crescente
+    }
+  });
+  const fallback = DATA.datas_comparacao_default || {};
+  Object.keys(fallback).forEach(s => { if (!out[s]) out[s] = fallback[s]; });
+  return out;
+})();
 
 // Quais safras comparar (default: últimas 4 que têm dados diários)
 let SAFRAS_COMPARACAO = ['2026-05', '2026-04', '2026-03', '2026-02'];
@@ -1885,7 +1902,16 @@ function renderGerencial() {
         },
         {
           label: '% Último dia',
-          data: HIST_12M.map(h => h.pct_ultimo_dia_mes),
+          // FIX v14 (bug 2): linha azul ("% Ultimo dia do mes") deve TERMINAR
+          // no ultimo mes fechado. A safra corrente ainda nao fechou, entao
+          // plota null em vez de 0. Sem isso, Mai/26 caia para 0% no grafico.
+          data: HIST_12M.map(h => {
+            if (h.safra === MES_CORRENTE) return null;             // safra atual: nao fechou
+            const v = h.pct_ultimo_dia_mes;
+            if (v === null || v === undefined || v === 0) return null; // safra futura ou sem dado
+            return v;
+          }),
+          spanGaps: false, // FIX v14: linha realmente TERMINA no null, nao pula
           borderColor: '#2196F3',
           backgroundColor: 'transparent',
           borderWidth: 3,
