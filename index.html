@@ -974,6 +974,8 @@ function processarBaseCompleta(rows) {
   // Recuperação: estatísticas
   let qtdPagas = 0, qtdAtraso = 0;
   let somaDias = 0, qtdComDias = 0;
+  let somaJuros = 0;
+  const diasAtraso = [];
   const recBuckets = {'1-7 dias':{qtd:0,valor:0}, '8-15 dias':{qtd:0,valor:0}, '16-30 dias':{qtd:0,valor:0}, '31-60 dias':{qtd:0,valor:0}, '61-90 dias':{qtd:0,valor:0}, '90+ dias':{qtd:0,valor:0}};
   
   // Para drill: agrupar VENCIDA por parceiro × safra × cliente
@@ -1019,6 +1021,9 @@ function processarBaseCompleta(rows) {
       }
     } else if (sit === 'PAGA EM ATRASO') {
       qtdAtraso += 1;
+      // Juros = diferença positiva entre pago e faturado
+      const vlrPago = parseNum(r[idx.vlrPago]);
+      if (vlrPago > valor && valor > 0) somaJuros += (vlrPago - valor);
       // Calcular dias de atraso a partir das datas
       const dPag = r[idx.dtPagamento];
       const dVenc = r[idx.dtVenc];
@@ -1035,6 +1040,7 @@ function processarBaseCompleta(rows) {
           else if (dias <= 90) bucket = '61-90 dias';
           recBuckets[bucket].qtd += 1;
           recBuckets[bucket].valor += valor;
+          diasAtraso.push(dias);
         }
       }
     } else if (sit === 'PAGA') {
@@ -1071,12 +1077,24 @@ function processarBaseCompleta(rows) {
     recBuckets[k].valor = Math.round(recBuckets[k].valor * 100) / 100;
   });
   
+  // Calcular mediana real
+  let medianaReal = 0, modaReal = 0;
+  if (diasAtraso.length > 0) {
+    const sorted = diasAtraso.slice().sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    medianaReal = sorted.length % 2 === 0 ? Math.round((sorted[mid-1]+sorted[mid])/2) : sorted[mid];
+    // Moda
+    const freq = {};
+    diasAtraso.forEach(d => { freq[d] = (freq[d]||0) + 1; });
+    modaReal = parseInt(Object.entries(freq).sort((a,b) => b[1]-a[1])[0][0]);
+  }
   const recuperacao = {
     tempo_medio_dias: qtdComDias > 0 ? Math.round((somaDias/qtdComDias) * 10) / 10 : 0,
-    tempo_mediano_dias: 4.0, // placeholder, manter
+    tempo_mediano_dias: medianaReal,
+    tempo_moda_dias: modaReal,
     qtd_pagas_atraso: qtdAtraso,
     qtd_pagas_prazo: qtdPagas,
-    juros_recuperados: 0, // placeholder
+    juros_recuperados: Math.round(somaJuros * 100) / 100,
     distribuicao: Object.entries(recBuckets).map(([faixa, v]) => ({faixa, qtd:v.qtd, valor:v.valor})),
     coorte: [], // placeholder
   };
@@ -2804,9 +2822,9 @@ function renderRecuperacao() {
     </div>
     <div class="cat-cards">
       <div class="cat-card blue">
-        <div class="cc-title">Tempo médio</div>
-        <div class="cc-pct green">${r.tempo_medio_dias} <span style="font-size:18px">dias</span></div>
-        <div class="cc-info"><span>Mediana: ${r.tempo_mediano_dias} dias</span></div>
+        <div class="cc-title">Atraso mais frequente</div>
+        <div class="cc-pct green">${r.tempo_moda_dias} <span style="font-size:18px">dias</span></div>
+        <div class="cc-info"><span>Moda · Mediana: ${r.tempo_mediano_dias}d · Média: ${r.tempo_medio_dias}d</span></div>
       </div>
       <div class="cat-card gold">
         <div class="cc-title">Juros/Multa recuperados</div>
@@ -2822,6 +2840,24 @@ function renderRecuperacao() {
         <div class="cc-title">Taxa de atraso</div>
         <div class="cc-pct">${fmtPct(r.qtd_pagas_atraso/(r.qtd_pagas_atraso + r.qtd_pagas_prazo)*100, 1)}</div>
         <div class="cc-info"><span>do total pago</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 20px;padding:0 2px;">
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
+        <b style="color:var(--ink2)">Atraso mais frequente (moda)</b><br>
+        O prazo de atraso que mais se repete na carteira — o comportamento padrão dos clientes. Mediana (50% dos casos) e média também exibidos para referência completa.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
+        <b style="color:var(--ink2)">Juros/Multa recuperados</b><br>
+        Soma dos acréscimos cobrados: diferença positiva entre o valor pago e o valor original da fatura. Descontos e notas refaturadas são excluídos automaticamente.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
+        <b style="color:var(--ink2)">Pagas em atraso</b><br>
+        Quantidade de faturas liquidadas após o vencimento, independente do prazo. Inclui tanto atrasos de 1 dia quanto os mais longos.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
+        <b style="color:var(--ink2)">Taxa de atraso</b><br>
+        % das faturas já liquidadas que foram pagas fora do prazo. Não inclui as ainda em aberto. Referência: abaixo de 15% é considerado saudável no setor.
       </div>
     </div>
     <div class="chart-card">
