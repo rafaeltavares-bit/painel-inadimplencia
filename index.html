@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v14</title>
+<title>Painel · Inadimplência · v15</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -723,6 +723,12 @@ function processarSlide(rows, catInfo) {
     if (!nome) continue;
     if (/^total/i.test(nome)) { totalRow = r; continue; }
     
+    // FIX v15: ignora linhas-titulo intercaladas na planilha
+    // (ex.: "Categoria - 2", "Inadimplencia por Parceiro - Nov/25 a Abr/26 (...)").
+    if (/inadimpl[êe]ncia por parceiro|^categoria\s*-/i.test(nome)) continue;
+    // Titulos costumam ter " - " no meio E parenteses no final
+    if (nome.length > 25 && /\s-\s/.test(nome) && /\(.*\)/.test(nome)) continue;
+    
     const faturado = {};
     const inadRs = {};
     const pctInad = {};
@@ -737,6 +743,9 @@ function processarSlide(rows, catInfo) {
     faturado.total = somaF;
     inadRs.total = somaI;
     pctInad.total = somaF > 0 ? (somaI / somaF * 100) : 0;
+    
+    // FIX v15: segunda barreira -- se TUDO zerado, e linha-titulo da planilha
+    if (somaF === 0 && somaI === 0) continue;
     
     parceiros.push({
       nome: nome,
@@ -2232,7 +2241,7 @@ function renderCategoria() {
       <div class="th-row">
         <div>
           <div class="th-title">📋 Detalhamento por Parceiro · ${cat.nome_completo}</div>
-          <div class="th-note">Ordenado por movimento em ${labelComp} · clique numa célula <b>% Inadimplência</b> para ver os clientes daquele mês</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro) · clique numa célula <b>% Inadimplência</b> para ver os clientes daquele mês</div>
         </div>
       </div>
       <div class="tc-wrap">
@@ -2241,42 +2250,58 @@ function renderCategoria() {
             <tr>
               <th>Parceiro</th>
               <th style="border-left:2px solid var(--rule);">Movimento*</th>
-              <th colspan="6" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
-              <th colspan="6" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
             </tr>
             <tr>
               <th></th>
               <th style="border-left:2px solid var(--rule);">vs média 6m</th>
               ${mesesLbl.map((l,i) => `<th${i===0?' style="border-left:2px solid var(--rule);"':''}>${l}</th>`).join('')}
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
               ${mesesLbl.map((l,i) => `<th${i===0?' style="border-left:2px solid var(--rule);"':''}>${l}</th>`).join('')}
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
             </tr>
           </thead>
           <tbody>
   `;
   
-  // Ordena: piores movimentos primeiro (deltaP positivo grande), depois neutros, depois melhorias
-  const parceirosOrd = [...parceirosComMov].sort((a,b) => b.deltaP - a.deltaP);
+  // FIX v15: ordena por R$ Faturado total dos 6 meses (decrescente).
+  // O parceiro de maior peso aparece primeiro, como na planilha mestre.
+  const parceirosOrd = [...parceirosComMov].sort((a, b) => {
+    const totA = meses.reduce((s, m) => s + (a.faturado[m] || 0), 0);
+    const totB = meses.reduce((s, m) => s + (b.faturado[m] || 0), 0);
+    return totB - totA;
+  });
   
   parceirosOrd.forEach(p => {
     const pNomeEsc = p.nome.replace(/'/g, "\\'");
     html += `<tr>`;
     html += `<td class="b" style="text-align:left">${p.nome}</td>`;
     
-    // Coluna Movimento
-    let movTxt = '', movCor = 'var(--ink3)';
+    // Coluna Movimento (com tooltip explicando a conta)
+    let movTxt = '', movCor = 'var(--ink3)', movTip = '';
+    const pctCompTxt = fmtPct(p.pctComp);
+    const mediaPTxt = fmtPct(p.mediaP);
     if (Math.abs(p.deltaP) < 0.2) {
       movTxt = '≈ estável'; movCor = 'var(--ink3)';
+      movTip = `${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} (variação < 0,2pp)`;
     } else if (p.deltaP > 0) {
       movTxt = `▲ +${fmtPct(p.deltaP)}pp`; movCor = 'var(--rd)';
+      movTip = `Piorou. ${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} | diferença: +${fmtPct(p.deltaP)}pp`;
     } else {
       movTxt = `▼ ${fmtPct(p.deltaP)}pp`; movCor = 'var(--em)';
+      movTip = `Melhorou. ${labelComp}: ${pctCompTxt} | média 6m: ${mediaPTxt} | diferença: ${fmtPct(p.deltaP)}pp`;
     }
-    html += `<td style="border-left:2px solid var(--rule);color:${movCor};font-weight:700;">${movTxt}</td>`;
+    html += `<td style="border-left:2px solid var(--rule);color:${movCor};font-weight:700;" title="${movTip}">${movTxt}</td>`;
     
     meses.forEach((m,i) => {
       const v = p.faturado[m] || 0;
       html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${v > 0 ? fmt(v) : '—'}</td>`;
     });
+    // FIX v15: coluna TOTAL R$ Faturado (soma 6 meses)
+    const totalFatP = meses.reduce((s,m) => s + (p.faturado[m] || 0), 0);
+    html += `<td class="b" style="background:rgba(22,61,120,.04);">${totalFatP > 0 ? fmt(totalFatP) : '—'}</td>`;
+    
     meses.forEach((m,i) => {
       const v = p.pct_inadimplencia[m] || 0;
       const cls = hmClass(v);
@@ -2284,6 +2309,11 @@ function renderCategoria() {
       const titulo = v > 0 ? `title="Clique para ver os clientes inadimplentes em ${mesesLbl[i]}"` : '';
       html += `<td${cellStyle} onclick="abrirDrillParceiro('${pNomeEsc}','${m}')" ${titulo}>${v > 0 ? `<span class="hm-cell ${cls}">${fmtPct(v)}</span>` : '—'}</td>`;
     });
+    // FIX v15: coluna TOTAL % Inadimplencia = soma R$Inad 6m / soma R$Faturado 6m
+    const totalInadP = meses.reduce((s,m) => s + (p.inadimplencia_rs[m] || 0), 0);
+    const totalPctP = totalFatP > 0 ? (totalInadP / totalFatP * 100) : 0;
+    const clsTotalP = hmClass(totalPctP);
+    html += `<td class="b" style="background:rgba(22,61,120,.04);">${totalPctP > 0 ? `<span class="hm-cell ${clsTotalP}">${fmtPct(totalPctP)}</span>` : '—'}</td>`;
     html += `</tr>`;
   });
   
@@ -2291,9 +2321,17 @@ function renderCategoria() {
   meses.forEach((m,i) => {
     html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${fmt(totais.faturado[m])}</td>`;
   });
+  // FIX v15: TOTAL R$ Faturado da categoria
+  const totalFatCat = meses.reduce((s,m) => s + (totais.faturado[m] || 0), 0);
+  html += `<td style="background:rgba(22,61,120,.06);">${fmt(totalFatCat)}</td>`;
+  
   meses.forEach((m,i) => {
     html += `<td${i===0?' style="border-left:2px solid var(--rule);"':''}>${fmtPct(totais.pct_inadimplencia[m])}</td>`;
   });
+  // FIX v15: TOTAL % Inadimplencia da categoria
+  const totalInadCat = meses.reduce((s,m) => s + (totais.inadimplencia_rs[m] || 0), 0);
+  const totalPctCat = totalFatCat > 0 ? (totalInadCat / totalFatCat * 100) : 0;
+  html += `<td style="background:rgba(22,61,120,.06);">${fmtPct(totalPctCat)}</td>`;
   html += `</tr>`;
   
   html += `</tbody></table></div></div>`;
@@ -2301,7 +2339,7 @@ function renderCategoria() {
   // Nota explicativa da coluna Movimento
   html += `
     <div class="cards-nota">
-      <b>* Movimento vs média 6m:</b> compara o % de inadimplência do parceiro em ${labelComp} contra a média ${labelPrim}–${labelUlt}. <b>▲ vermelho</b> = piorou · <b>▼ verde</b> = melhorou · <b>≈ cinza</b> = estável (variação < 0,2pp).
+      <b>* Movimento (coluna):</b> diferença entre o % de inadimplência do parceiro em <b>${labelComp}</b> e a <b>média dos últimos 6 meses (${labelPrim}–${labelUlt})</b>. Exemplo: parceiro fechou ${labelComp} em 5% e a média 6m foi 2,7% → movimento é <b>▲ +2,3pp</b> (piorou 2,3 pontos percentuais). <b>Passe o mouse na célula</b> para ver os números exatos da conta. <b>▲ vermelho</b> = piorou · <b>▼ verde</b> = melhorou · <b>≈ cinza</b> = estável (variação < 0,2pp).
       ${safraCorrenteMadura ? '' : `<br><b>Nota:</b> ${DATA.kpis_por_safra[MES_CORRENTE].safra_label} ainda está em maturação. Análise de movimento refere-se a ${labelComp} (último mês fechado).`}
     </div>
   `;
