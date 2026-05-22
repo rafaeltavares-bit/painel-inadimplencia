@@ -2967,10 +2967,10 @@ function renderTier() {
       </div>
       <div class="cw" style="height:440px;"><canvas id="ch-tier-bubble"></canvas></div>
       <div class="quad-legend">
-        <div class="quad q-star"><div class="quad-title">↙ Baixo volume e baixo ticket</div><div class="quad-desc">Pouca dor — sem alavanca.</div></div>
-        <div class="quad q-watch"><div class="quad-title">↘ Alto volume, baixo ticket</div><div class="quad-desc">Muitas faturinhas — pulverizado.</div></div>
-        <div class="quad q-bleed"><div class="quad-title">↖ Baixo volume, alto ticket</div><div class="quad-desc">Poucos clientes pesados — abordar 1 a 1.</div></div>
-        <div class="quad q-crit"><div class="quad-title">↗ Alto volume e alto ticket</div><div class="quad-desc">Prioridade máxima — atacar primeiro.</div></div>
+        <div class="quad q-star"><div class="quad-title">▼ Abaixo da linha</div><div class="quad-desc">% inadimplência abaixo da média geral do mês — zona saudável.</div></div>
+        <div class="quad q-crit"><div class="quad-title">▲ Acima da linha</div><div class="quad-desc">% inadimplência acima da média geral — requer atenção.</div></div>
+        <div class="quad q-watch"><div class="quad-title">→ Direita do gráfico</div><div class="quad-desc">Alto faturamento — impacto em R$ absoluto é maior.</div></div>
+        <div class="quad q-bleed"><div class="quad-title">● Tamanho da bolha</div><div class="quad-desc">Proporcional ao R$ total inadimplente do tier.</div></div>
       </div>
       <div class="tier-insight" id="tier-insight"></div>
     </div>
@@ -3037,6 +3037,12 @@ function renderTier() {
   const yMed = (Math.max(...ys) + Math.min(...ys)) / 2;
   const yMax = Math.min(20, Math.max(...ys) * 1.3); // máx 20% no eixo Y
 
+  // Linha de referência = inadimplência geral do mês corrente
+  // Pega do historico: pct_inadimplencia_atual do MES_CORRENTE
+  const kpiCorrente = DATA.kpis_por_safra[MES_CORRENTE];
+  const pctRefGeral = kpiCorrente ? (kpiCorrente.pct_inadimplencia || 0) : 0;
+  const labelRefGeral = kpiCorrente ? kpiCorrente.safra_label : safraLabel(MES_CORRENTE);
+
   const quadrantPlugin = {
     id: 'tierQuad',
     beforeDraw(chart) {
@@ -3046,18 +3052,38 @@ function renderTier() {
       const xp = scales.x.getPixelForValue(xMed);
       const yp = scales.y.getPixelForValue(yMed);
       ctx.save();
-      // shading crítico (↗ canto sup direito)
-      ctx.fillStyle = 'rgba(176,48,32,0.06)';
-      ctx.fillRect(xp, top, right-xp, yp-top);
-      // shading estrela (↙ canto inf esquerdo)
-      ctx.fillStyle = 'rgba(74,122,74,0.05)';
-      ctx.fillRect(left, yp, xp-left, bottom-yp);
-      ctx.strokeStyle = '#c9c2b3';
-      ctx.setLineDash([4,4]);
+
+      // Linha de referência: inadimplência geral do mês corrente
+      if (pctRefGeral > 0) {
+        const yRef = scales.y.getPixelForValue(pctRefGeral);
+        // Zona acima da linha = vermelho suave (pior que a média geral)
+        ctx.fillStyle = 'rgba(176,48,32,0.07)';
+        ctx.fillRect(left, top, right-left, yRef-top);
+        // Zona abaixo = verde suave (melhor que a média geral)
+        ctx.fillStyle = 'rgba(74,122,74,0.05)';
+        ctx.fillRect(left, yRef, right-left, bottom-yRef);
+        // Linha tracejada vermelha — mais grossa e vísivel
+        ctx.strokeStyle = '#b03020';
+        ctx.setLineDash([8, 5]);
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(left, yRef);
+        ctx.lineTo(right, yRef);
+        ctx.stroke();
+        // Label da linha
+        ctx.setLineDash([]);
+        ctx.font = 'bold 11px Outfit, sans-serif';
+        ctx.fillStyle = '#b03020';
+        ctx.textAlign = 'right';
+        ctx.fillText(\`\${pctRefGeral.toFixed(2).replace('.',',')}% · inad. geral \${labelRefGeral}\`, right - 8, yRef - 5);
+      }
+
+      // Linha vertical mediana (mais discreta)
+      ctx.strokeStyle = '#d0cab8';
+      ctx.setLineDash([4, 4]);
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(xp, top); ctx.lineTo(xp, bottom);
-      ctx.moveTo(left, yp); ctx.lineTo(right, yp);
       ctx.stroke();
       ctx.restore();
     }
