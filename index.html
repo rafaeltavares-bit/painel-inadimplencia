@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v19</title>
+<title>Painel · Inadimplência · v20</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -321,9 +321,9 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   <div class="hr">
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--rule2);background:var(--em);color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:12px;">
       <span id="btn-refresh-icon">🔄</span>
-      <span id="btn-refresh-txt">Atualizar do Google Sheets</span>
+      <span id="btn-refresh-txt">Atualizar dados</span>
     </button>
-    <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight · 15/05/2026</span>
+    <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot"></div><span class="ll" id="live-label">Dados embutidos</span></div>
       <div class="lt" id="last-upd">Geração: 18/05/2026</div>
@@ -1215,7 +1215,7 @@ async function atualizarDoSheets() {
   btn.disabled = true;
   btn.style.background = '#888';
   btnIcon.textContent = '⏳';
-  btnTxt.textContent = 'Carregando do Google Sheets…';
+  btnTxt.textContent = 'Carregando…';
   liveLabel.textContent = 'Atualizando…';
   
   try {
@@ -1264,7 +1264,19 @@ async function atualizarDoSheets() {
     DATA.top_devedores = ana.top_devedores;
     DATA.tiers = ana.tiers;
     DATA.inadimplencia_rs_por_safra = ana.inadimplencia_rs_por_safra; // FIX v19-B: foto do analítico por safra
-    DATA.data_extrato_analitico = new Date().toLocaleDateString('pt-BR'); // FIX v19-B: data de quando o refresh puxou o analítico
+    // FIX v20-E: data do extrato = maior data disponível em inad_diaria[MES_CORRENTE]
+    try {
+      const pts = novaInadDiaria[MES_CORRENTE] || novaInadDiaria['2026-05'];
+      if (pts && pts.length > 0) {
+        const ultimo = pts.reduce((max, p) => p.data > max.data ? p : max);
+        const [yy, mm, dd] = ultimo.data.split('-');
+        DATA.data_extrato_analitico = dd + '/' + mm + '/' + yy;
+      } else {
+        DATA.data_extrato_analitico = new Date().toLocaleDateString('pt-BR');
+      }
+    } catch(e) {
+      DATA.data_extrato_analitico = new Date().toLocaleDateString('pt-BR');
+    }
     DATA.drill_parceiro_por_mes = bc.drill_parceiro_por_mes;
     DATA.aging = bc.aging;
     DATA.recuperacao = bc.recuperacao;
@@ -1418,15 +1430,15 @@ async function atualizarDoSheets() {
     btn.style.background = 'var(--em)';
     btn.disabled = false;
     btnIcon.textContent = '✓';
-    btnTxt.textContent = 'Atualizado!';
+    btnTxt.textContent = 'Sincronizado!';
     liveDot.style.background = 'var(--em)';
-    liveLabel.textContent = 'Ao vivo · Google Sheets';
-    lastUpd.textContent = 'Atualizado: ' + dataStr;
-    bpFonte.textContent = 'Fonte: Google Sheets · ' + agora.toLocaleDateString('pt-BR');
+    liveLabel.textContent = 'Ao vivo · Quick Sight/Omie';
+    lastUpd.textContent = 'Sincronizado: ' + dataStr;
+    bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + agora.toLocaleDateString('pt-BR');
     
     setTimeout(() => {
       btnIcon.textContent = '🔄';
-      btnTxt.textContent = 'Atualizar do Google Sheets';
+      btnTxt.textContent = 'Atualizar dados';
     }, 3000);
     
   } catch (err) {
@@ -1435,12 +1447,12 @@ async function atualizarDoSheets() {
     btnIcon.textContent = '⚠';
     btnTxt.textContent = 'Erro — ver console (F12)';
     liveLabel.textContent = 'Erro na atualização';
-    alert('Erro ao atualizar do Google Sheets:\n\n' + err.message + '\n\nVerifique se as 9 abas estão publicadas como CSV.\nDetalhes: F12 → Console.');
+    alert('Erro ao atualizar dados:\n\n' + err.message + '\n\nVerifique se as abas estão publicadas como CSV (Quick Sight/Omie → Google Sheets).\nDetalhes: F12 → Console.');
     setTimeout(() => {
       btn.disabled = false;
       btn.style.background = 'var(--em)';
       btnIcon.textContent = '🔄';
-      btnTxt.textContent = 'Atualizar do Google Sheets';
+      btnTxt.textContent = 'Atualizar dados';
     }, 5000);
   }
 }
@@ -1602,10 +1614,24 @@ function renderGerencial() {
             // O analitico ja eh uma foto exata das faturas vencidas na data de extracao.
             const rsPorSafra = (DATA && DATA.inadimplencia_rs_por_safra) || {};
             const rsAnalitico = rsPorSafra[MES_CORRENTE];
-            const dataExtrato = (DATA && DATA.data_extrato_analitico)
-              || ((DATA && DATA.metadados && DATA.metadados.fonte_drill)
-                  ? DATA.metadados.fonte_drill.replace(/.*·\s*/, '')
-                  : '');
+            // FIX v20-D: data dos dados = maior data disponível na inad_diaria da safra corrente
+            // (mais preciso que data_extrato_analitico que pode ser o dia do refresh)
+            let dataExtrato = '';
+            try {
+              const pontosCorrente = DATA && DATA.inad_diaria && DATA.inad_diaria[MES_CORRENTE];
+              if (pontosCorrente && pontosCorrente.length > 0) {
+                const ultimoPonto = pontosCorrente.reduce((max, p) => p.data > max.data ? p : max);
+                // Converter de YYYY-MM-DD para DD/MM/YYYY
+                const [yy, mm, dd] = ultimoPonto.data.split('-');
+                dataExtrato = dd + '/' + mm + '/' + yy;
+              }
+            } catch(e) {}
+            if (!dataExtrato) {
+              dataExtrato = (DATA && DATA.data_extrato_analitico)
+                || ((DATA && DATA.metadados && DATA.metadados.fonte_drill)
+                    ? DATA.metadados.fonte_drill.replace(/.*·\s*/, '')
+                    : '');
+            }
             // Fallback: se a safra corrente nao esta no analitico (raro, mas pode acontecer
             // antes do primeiro refresh), volta ao calculo antigo
             const valorR = (rsAnalitico !== undefined && rsAnalitico !== null)
