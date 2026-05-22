@@ -410,7 +410,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 <div class="seletor-bar">
   <span class="sb-label">📅 Mês corrente da apresentação:</span>
   <select id="sel-mes-corrente" onchange="atualizarTudo()"></select>
-  <span class="sb-note">Toda segunda, selecione o último mês com safra já vencida</span>
+
 </div>
 
 <div id="farol-bar" class="farol-bar verde">
@@ -2828,7 +2828,7 @@ function renderTier() {
   // Filtra "Sem Classificação" para o gráfico (poluem a análise — só ruído)
   // Mantém na tabela como referência atenuada
   const tiersAll = DATA.tiers;
-  const tiersPrinc = tiersAll.filter(t => !/Sem Classifica/i.test(t.tier));
+  const tiersPrinc = tiersAll.filter(t => !/Sem Classifica|N\/C|^N\.C/i.test(t.tier));
   const totalInad = tiersAll.reduce((s,t) => s + t.total.valor_inadimplencia, 0);
   const totalInadPrinc = tiersPrinc.reduce((s,t) => s + t.total.valor_inadimplencia, 0);
 
@@ -2848,20 +2848,24 @@ function renderTier() {
   // ============ HTML ============
   let html = ``;
 
-  // Cards de Tier (mantém os principais, sem N/C)
+  // Cards de Tier — foco em Mai/26 (mês corrente)
+  const MES_CARD = MES_CORRENTE; // usa o mês selecionado no dropdown
   html += `<div class="cat-cards">`;
   tiersPrinc.forEach(t => {
-    const pct = totalInadPrinc > 0 ? t.total.valor_inadimplencia / totalInadPrinc * 100 : 0;
-    const fatTotal = t.total.faturado_total || 0;
-    const pctInadReal = t.pct_inadimplencia ? (t.pct_inadimplencia['2026-05'] || t.pct_inadimplencia['2026-04'] || 0) : 0;
-    const mesRefLabel = t.pct_inadimplencia?.['2026-05'] ? 'Mai/26' : 'Abr/26';
+    const inadMes  = t.por_safra[MES_CARD]?.valor_inadimplencia || 0;
+    const fatMes   = t.faturado?.[MES_CARD] || 0;
+    const pctMes   = t.pct_inadimplencia?.[MES_CARD] || (fatMes > 0 ? inadMes/fatMes*100 : 0);
+    const mesLbl   = safraLabel(MES_CARD);
+    // fallback: se o mês corrente não tiver dado, pega o anterior
+    const inadShow = inadMes > 0 ? inadMes : (t.total.valor_inadimplencia);
+    const labelShow = inadMes > 0 ? mesLbl : '6 meses';
     html += `
       <div class="cat-card ${corClass(t.tier)}">
         <div class="cc-title">${t.tier}</div>
-        <div class="cc-pct">${fmtRk(t.total.valor_inadimplencia)}</div>
-        ${fatTotal > 0 ? `<div class="cc-info"><span>Faturado total: <b>${fmtRk(fatTotal)}</b></span></div>` : ''}
-        ${pctInadReal > 0 ? `<div class="cc-info"><span>% inad. ${mesRefLabel}: <b>${fmtPct(pctInadReal, 1)}</b></span></div>` : ''}
-        <div class="cc-info"><span>% do inadimplente total: <b>${fmtPct(pct, 1)}</b></span></div>
+        <div class="cc-pct">${fmtRk(inadShow)}</div>
+        <div class="cc-info" style="font-size:11px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · ${labelShow}</div>
+        ${fatMes > 0 ? `<div class="cc-info"><span>Faturado ${mesLbl}: <b>${fmtRk(fatMes)}</b></span></div>` : ''}
+        ${pctMes > 0 ? `<div class="cc-info"><span>% inadimplência ${mesLbl}: <b>${fmtPct(pctMes, 1)}</b></span></div>` : ''}
       </div>
     `;
   });
