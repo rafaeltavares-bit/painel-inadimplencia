@@ -2845,7 +2845,16 @@ function fmtPeriodoRec(p) {
       }
     } catch(e) { return s; }
   }
-  if (!p || !p.de || !p.ate) return '—';
+  if (!p || !p.de || !p.ate) {
+    // Fallback: derivar das safras do drill (Base Completa)
+    const safras = Object.values(DATA.drill_parceiro_por_mes || {})
+      .flatMap(parc => Object.keys(parc)).filter(Boolean).sort();
+    if (safras.length) {
+      const s0 = safras[0].split('-'); const s1 = safras[safras.length-1].split('-');
+      return meses[parseInt(s0[1])-1]+'/'+s0[0].slice(2) + ' a ' + meses[parseInt(s1[1])-1]+'/'+s1[0].slice(2);
+    }
+    return '—';
+  }
   return fmtD(p.de) + ' a ' + fmtD(p.ate);
 }
 function renderRecuperacao() {
@@ -2856,19 +2865,24 @@ function renderRecuperacao() {
       <div class="nt"><b>Período de estudo: ${fmtPeriodoRec(r.periodo_estudo)}</b> · Títulos liquidados (no prazo ou com atraso) emitidos neste intervalo. Faturas ainda em aberto em ${DATA.data_extrato_analitico || '—'} não entram nos indicadores abaixo.</div>
     </div>
     <div class="cat-cards">
-      <div class="cat-card blue">
-        <div class="cc-title">Prazo de atraso</div>
-        <div style="padding:2px 16px 0">
-          <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Mais comum</div>
-          <div style="font-size:28px;font-weight:700;color:var(--pos);line-height:1.1">${r.tempo_moda_dias} <span style="font-size:16px;font-weight:400">dias</span></div>
-          <div style="display:flex;gap:12px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
-            <div style="flex:1;text-align:center">
-              <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Metade paga em até</div>
-              <div style="font-size:16px;font-weight:600;color:var(--ink2)">${r.tempo_mediano_dias}d</div>
+      <div class="cat-card blue" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.06;line-height:1;pointer-events:none">⏱</div>
+        <div class="cc-title" style="font-size:11px;letter-spacing:.08em">PRAZO DE ATRASO</div>
+        <div style="padding:4px 0 0">
+          <div style="font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Atraso mais frequente</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span style="font-size:48px;font-weight:800;color:var(--pos);line-height:1">${r.tempo_moda_dias}</span>
+            <span style="font-size:20px;font-weight:400;color:var(--pos)">dias</span>
+          </div>
+          <div style="font-size:13px;color:var(--ink3);margin:4px 0 12px">é o atraso que mais se repete na carteira</div>
+          <div style="display:flex;gap:0;border-top:1px solid var(--border);padding-top:10px">
+            <div style="flex:1;padding-right:12px;border-right:1px solid var(--border)">
+              <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Metade paga em até</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">${r.tempo_mediano_dias}<span style="font-size:14px;font-weight:400;color:var(--ink3)"> dias</span></div>
             </div>
-            <div style="flex:1;text-align:center">
-              <div style="font-size:10px;color:var(--ink3);text-transform:uppercase;letter-spacing:.04em">Média geral</div>
-              <div style="font-size:16px;font-weight:600;color:var(--ink2)">${r.tempo_medio_dias}d</div>
+            <div style="flex:1;padding-left:12px">
+              <div style="font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Média geral</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">${r.tempo_medio_dias}<span style="font-size:14px;font-weight:400;color:var(--ink3)"> dias</span></div>
             </div>
           </div>
         </div>
@@ -2890,20 +2904,20 @@ function renderRecuperacao() {
       </div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 20px;padding:0 2px;">
-      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
-        <b style="color:var(--ink2)">Atraso mais comum</b><br>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:13px;">Atraso mais comum</b><br>
         Quantos dias de atraso a maioria dos clientes tem na hora de pagar. O número menor na linha abaixo é o prazo em que metade dos pagamentos já foram quitados.
       </div>
-      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
-        <b style="color:var(--ink2)">Juros/Multa recuperados</b><br>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:13px;">Juros/Multa recuperados</b><br>
         Total cobrado em juros e multa no período. Calculado como a diferença a maior entre o que foi pago e o valor original da fatura. Valores menores (descontos) são ignorados.
       </div>
-      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
-        <b style="color:var(--ink2)">Pagas em atraso</b><br>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:13px;">Pagas em atraso</b><br>
         Quantidade de faturas que foram pagas depois do vencimento, seja 1 dia ou 90 dias. O total ao lado mostra todas as faturas já liquidadas no período.
       </div>
-      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:11px;color:var(--ink3);line-height:1.5;">
-        <b style="color:var(--ink2)">Taxa de atraso</b><br>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:13px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:13px;">Taxa de atraso</b><br>
         De cada 100 faturas pagas, quantas foram pagas com atraso. Não conta as que ainda estão em aberto. Abaixo de 15% é referência saudável para o setor.
       </div>
     </div>
