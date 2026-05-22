@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel · Inadimplência · v17</title>
+<title>Painel · Inadimplência · v18</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
@@ -340,7 +340,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 <div id="farol-bar" class="farol-bar verde">
   <div class="farol-dot"></div>
   <div class="ft-title" id="f-title">Carregando...</div>
-  <div class="farol-note">Vs média histórica de 12 meses</div>
+  <div class="farol-note"></div>
 </div>
 
 <div class="tabs-wrap">
@@ -392,6 +392,11 @@ let DATAS_COMPARACAO = (function () {
 
 // Quais safras comparar (default: últimas 4 que têm dados diários)
 let SAFRAS_COMPARACAO = ['2026-05', '2026-04', '2026-03', '2026-02'];
+
+// FIX v18: marca por safra quando o usuario escolheu uma data manualmente
+// no dropdown (vs deixou no default da ultima data disponivel).
+// Usado para nao sobrescrever escolha manual ao clicar Atualizar.
+let DATAS_COMPARACAO_MANUAL = {};
 
 const fmt = (n) => {
   if (n === null || n === undefined || isNaN(n)) return '—';
@@ -1283,14 +1288,25 @@ async function atualizarDoSheets() {
     // dados recem-trazidos do Sheets. Sem isso, a inicializacao continua usando o
     // ultimo ponto que existia no JSON embutido na carga da pagina (ex: 15/05),
     // mesmo apos o usuario clicar "Atualizar" e a planilha ter dados ate 21/05.
-    // Preserva selecoes manuais que o usuario ja fez (so substitui se a data atual
-    // ficou stale, ou seja, nao existe mais na nova lista de pontos).
+    //
+    // FIX v18 (corrigindo a tentativa do v16): a logica do v16 so trocava se a data
+    // ficasse INVALIDA. Mas 15/05 continua valida apos o refresh (a planilha ainda
+    // tem 15/05 la, so que agora tambem tem 16,17,18,19,20,21). Resultado: o codigo
+    // dizia 'esta tudo certo' e mantinha 15/05 travado. A correcao do v18 e:
+    // se a data nao eh mais a ULTIMA disponivel, atualizar pra ultima (a menos que
+    // o usuario tenha feito uma selecao manual, marcada via DATAS_COMPARACAO_MANUAL).
     safrasComDados.forEach(s => {
       const pontos = novaInadDiaria[s] || [];
       const datasValidas = pontos.map(p => p.data);
-      if (!DATAS_COMPARACAO[s] || !datasValidas.includes(DATAS_COMPARACAO[s])) {
-        DATAS_COMPARACAO[s] = datasValidas[datasValidas.length - 1] || DATAS_COMPARACAO[s];
+      const ultimaData = datasValidas[datasValidas.length - 1];
+      if (!ultimaData) return;
+      const foiEscolhidoManualmente = (DATAS_COMPARACAO_MANUAL && DATAS_COMPARACAO_MANUAL[s]);
+      if (foiEscolhidoManualmente && datasValidas.includes(DATAS_COMPARACAO[s])) {
+        // Preservar escolha manual do usuario, desde que ainda seja valida
+        return;
       }
+      // Caso contrario, forcar pra ultima data disponivel
+      DATAS_COMPARACAO[s] = ultimaData;
     });
     
     // 6c. Atualizar meses_disponiveis (lista do seletor) com base nas safras do histórico + inad_diaria
@@ -1426,19 +1442,73 @@ function switchTab(id, el) {
 }
 
 function renderFarol() {
-  const kpi = DATA.kpis_por_safra[MES_CORRENTE];
-  if (!kpi) return;
-  const pct = kpi.pct_inadimplencia;
-  const media = DATA.estatisticas.media_historica_12m;
-  
-  let cor, titulo;
-  if (pct < media * 0.9) { cor = 'verde'; titulo = `${kpi.safra_label} · ${fmtPct(pct)} · ABAIXO da média histórica (${fmtPct(media)})`; }
-  else if (pct < media * 1.1) { cor = 'amarelo'; titulo = `${kpi.safra_label} · ${fmtPct(pct)} · NA média histórica (${fmtPct(media)})`; }
-  else { cor = 'vermelho'; titulo = `${kpi.safra_label} · ${fmtPct(pct)} · ACIMA da média histórica (${fmtPct(media)})`; }
-
+  // FIX v18: farol baseado em comparacao por DATAS-EQUIVALENTES manuais
+  // (e nao mais por media historica 12m, que era injusto para mes em andamento).
+  // Compara o pct da safra corrente na data escolhida no dropdown vs media
+  // das outras safras de SAFRAS_COMPARACAO nas datas escolhidas em seus dropdowns.
   const bar = document.getElementById('farol-bar');
+  const titulo = document.getElementById('f-title');
+  const nota = bar.querySelector('.farol-note');
+
+  // Buscar pct da safra atual na data escolhida
+  const dataAtual = DATAS_COMPARACAO[MES_CORRENTE];
+  const labelMes = safraLabel(MES_CORRENTE);
+  if (!dataAtual) {
+    bar.className = 'farol-bar';
+    titulo.textContent = `${labelMes} · sem data selecionada`;
+    if (nota) nota.textContent = '';
+    return;
+  }
+  const obsAtual = buscarPctNaData(MES_CORRENTE, dataAtual);
+  if (!obsAtual) {
+    bar.className = 'farol-bar';
+    titulo.textContent = `${labelMes} · sem observacao na data selecionada`;
+    if (nota) nota.textContent = '';
+    return;
+  }
+  const pctAtual = obsAtual.pct;
+  const dataAtualLabel = obsAtual.data_label;
+
+  // Coletar pcts das outras safras nas datas escolhidas em seus dropdowns
+  const outras = [];
+  SAFRAS_COMPARACAO.forEach(s => {
+    if (s === MES_CORRENTE) return;
+    const d = DATAS_COMPARACAO[s];
+    if (!d) return;
+    const obs = buscarPctNaData(s, d);
+    if (obs) outras.push({safra: s, pct: obs.pct, dataLabel: obs.data_label});
+  });
+
+  if (outras.length === 0) {
+    bar.className = 'farol-bar';
+    titulo.textContent = `${labelMes} em ${dataAtualLabel} · ${fmtPct(pctAtual)} · sem safras de comparacao`;
+    if (nota) nota.textContent = '';
+    return;
+  }
+
+  const mediaOutras = outras.reduce((a,b) => a + b.pct, 0) / outras.length;
+  const deltaPct = mediaOutras === 0 ? 0 : ((mediaOutras - pctAtual) / mediaOutras) * 100;
+  // deltaPct > 0 => atual eh MENOR que a media (MELHOR)
+  // deltaPct < 0 => atual eh MAIOR que a media (PIOR)
+
+  let cor, fraseStatus;
+  if (deltaPct > 5) {
+    cor = 'verde';
+    fraseStatus = `${fmtPct(deltaPct, 1)} MELHOR que a media das ${outras.length} safras anteriores`;
+  } else if (deltaPct < -5) {
+    cor = 'vermelho';
+    fraseStatus = `${fmtPct(Math.abs(deltaPct), 1)} PIOR que a media das ${outras.length} safras anteriores`;
+  } else {
+    cor = 'amarelo';
+    fraseStatus = `em linha com a media das ${outras.length} safras anteriores`;
+  }
+
   bar.className = 'farol-bar ' + cor;
-  document.getElementById('f-title').textContent = titulo;
+  titulo.textContent = `${labelMes} em ${dataAtualLabel} · ${fmtPct(pctAtual)} · ${fraseStatus} (media ${fmtPct(mediaOutras)})`;
+  if (nota) {
+    const detalhes = outras.map(o => `${safraLabel(o.safra)} em ${o.dataLabel}: ${fmtPct(o.pct)}`).join(' · ');
+    nota.textContent = detalhes;
+  }
 }
 
 // === ABA 1 V04: VISÃO GERENCIAL (2 colunas + cards melhorados) ===
@@ -1568,7 +1638,7 @@ function renderGerencial() {
           ${pctSafra !== null ? fmtPct(pctSafra) : '—'}
         </div>
         <div class="cc-data-sel">
-          <select onchange="DATAS_COMPARACAO['${safra}']=this.value;renderGerencial();" ${datasDisp.length === 0 ? 'disabled' : ''}>
+          <select onchange="DATAS_COMPARACAO['${safra}']=this.value;DATAS_COMPARACAO_MANUAL['${safra}']=true;renderGerencial();" ${datasDisp.length === 0 ? 'disabled' : ''}>
             ${datasDisp.length === 0 ? '<option>Sem dados</option>' : optsHtml}
           </select>
         </div>
