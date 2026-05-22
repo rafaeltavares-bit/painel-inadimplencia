@@ -2325,13 +2325,18 @@ function renderCategoria() {
   const meses = ['2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05'];
   const mesesLbl = ['Dez/25', 'Jan/26', 'Fev/26', 'Mar/26', 'Abr/26', 'Mai/26'];
   
-  const hmClass = (pct) => {
+  // v21-E: cores relativas à média da categoria no mesmo mês
+  // Verde        = parceiro <= média da categoria
+  // Amarelo      = entre 1× e 1.5× a média (até +50%)
+  // Vermelho     = entre 1.5× e 2× a média
+  // Vermelho forte = acima de 2× a média
+  const hmClass = (pct, mediaCat) => {
     if (pct === 0) return '';
-    if (pct < 1) return 'hm-0';
-    if (pct < 3) return 'hm-1';
-    if (pct < 5) return 'hm-2';
-    if (pct < 10) return 'hm-3';
-    return 'hm-4';
+    if (mediaCat <= 0) return pct < 3 ? 'hm-1' : pct < 5 ? 'hm-2' : 'hm-3'; // fallback se sem média
+    if (pct <= mediaCat)         return 'hm-1'; // verde
+    if (pct <= mediaCat * 1.5)  return 'hm-2'; // amarelo
+    if (pct <= mediaCat * 2)    return 'hm-3'; // vermelho
+    return 'hm-4';                              // vermelho forte
   };
   
   // === Calcula movimento de cada parceiro (PIOROU/MELHOROU) baseado em safraComp ===
@@ -2434,15 +2439,31 @@ function renderCategoria() {
     
     meses.forEach((m,i) => {
       const v = p.pct_inadimplencia[m] || 0;
-      const cls = hmClass(v);
+      // Se totais não tem o mês (ex: mês corrente não embedado), calcular da inad_diaria ou dos próprios parceiros
+      let mediaCat = totais.pct_inadimplencia[m] || 0;
+      if (!mediaCat) {
+        // Calcular média ponderada pelo faturado dos parceiros neste mês
+        let somaF = 0, somaI = 0;
+        cat.parceiros.forEach(pp => {
+          const f = pp.faturado[m] || 0;
+          const pctP = pp.pct_inadimplencia[m] || 0;
+          somaF += f;
+          somaI += f * pctP / 100;
+        });
+        mediaCat = somaF > 0 ? (somaI / somaF * 100) : 0;
+      }
+      const cls = hmClass(v, mediaCat);
       const cellStyle = i===0 ? ' style="border-left:2px solid var(--rule);cursor:pointer;"' : ' style="cursor:pointer;"';
-      const titulo = v > 0 ? `title="Clique para ver os clientes inadimplentes em ${mesesLbl[i]}"` : '';
+      const titulo = v > 0 ? `title="${fmtPct(v)} · Média ${cat.nome}: ${fmtPct(mediaCat)} · Clique para ver os clientes inadimplentes"` : '';
       html += `<td${cellStyle} onclick="abrirDrillParceiro('${pNomeEsc}','${m}')" ${titulo}>${v > 0 ? `<span class="hm-cell ${cls}">${fmtPct(v)}</span>` : '—'}</td>`;
     });
     // FIX v15: TOTAL % Inadimplência
     const totalInadP = meses.reduce((s,m) => s + (p.inadimplencia_rs[m] || 0), 0);
     const totalPctP = totalFatP > 0 ? (totalInadP / totalFatP * 100) : 0;
-    const clsTotalP = hmClass(totalPctP);
+    const totalFatCatTot = meses.reduce((s,m) => s + (totais.faturado[m] || 0), 0);
+    const totalInadCatTot = meses.reduce((s,m) => s + (totais.inadimplencia_rs[m] || 0), 0);
+    const mediaCatTotal = totalFatCatTot > 0 ? (totalInadCatTot / totalFatCatTot * 100) : 0;
+    const clsTotalP = hmClass(totalPctP, mediaCatTotal);
     html += `<td class="b" style="background:rgba(22,61,120,.04);">${totalPctP > 0 ? `<span class="hm-cell ${clsTotalP}">${fmtPct(totalPctP)}</span>` : '—'}</td>`;
     html += `</tr>`;
   });
@@ -2469,6 +2490,14 @@ function renderCategoria() {
     <div class="cards-nota">
       <b>Como ler a tabela:</b> os parceiros estão ordenados por <b>R$ Faturado total</b> dos 6 meses (maior peso primeiro). As colunas <b>TOTAL</b> mostram o acumulado dos 6 meses (R$ Faturado somado, % Inadimplência ponderada pelo faturado). Clique numa célula de <b>% Inadimplência</b> para ver os clientes inadimplentes daquele mês.
       ${safraCorrenteMadura ? '' : `<br><b>Nota:</b> ${DATA.kpis_por_safra[MES_CORRENTE].safra_label} ainda está em maturação. Análise de movimento refere-se a ${labelComp} (último mês fechado).`}
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:11px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
     </div>
   `;
   
