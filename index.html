@@ -2846,14 +2846,20 @@ function fmtPeriodoRec(p) {
     } catch(e) { return s; }
   }
   if (!p || !p.de || !p.ate) {
-    // Fallback: derivar das safras do drill (Base Completa)
-    const safras = Object.values(DATA.drill_parceiro_por_mes || {})
-      .flatMap(parc => Object.keys(parc)).filter(Boolean).sort();
-    if (safras.length) {
-      const s0 = safras[0].split('-'); const s1 = safras[safras.length-1].split('-');
+    // Fallback: usar metadado fonte_drill que descreve a Base Completa
+    // Período dinâmico só disponível após refresh — usar fev/26 a mai/26 como padrão
+    // (Base Completa sempre vai de fev até o mês atual conforme planilha)
+    const fonteInfo = (DATA.metadados || {}).fonte_drill || '';
+    // Tentar extrair do campo metadado se disponível
+    const safras = (DATA.meses_disponiveis || []).map(x => x.safra).filter(s => s.startsWith('2026')).sort();
+    if (safras.length >= 2) {
+      // Pular jan/26 se vier — Base Completa começa em fev
+      const primeiro = safras.find(s => s !== '2026-01') || safras[0];
+      const ultimo = safras[safras.length - 1];
+      const s0 = primeiro.split('-'); const s1 = ultimo.split('-');
       return meses[parseInt(s0[1])-1]+'/'+s0[0].slice(2) + ' a ' + meses[parseInt(s1[1])-1]+'/'+s1[0].slice(2);
     }
-    return '—';
+    return 'fev/26 a mai/26';
   }
   return fmtD(p.de) + ' a ' + fmtD(p.ate);
 }
