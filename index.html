@@ -1222,6 +1222,7 @@ async function atualizarDoSheets() {
   const liveDot = document.getElementById('live-dot');
   const liveLabel = document.getElementById('live-label');
   const lastUpd = document.getElementById('last-upd');
+const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
   const bpFonte = document.getElementById('bp-fonte');
   
   btn.disabled = true;
@@ -1284,10 +1285,10 @@ async function atualizarDoSheets() {
         const [yy, mm, dd] = ultimo.data.split('-');
         DATA.data_extrato_analitico = dd + '/' + mm + '/' + yy;
       } else {
-        DATA.data_extrato_analitico = new Date().toLocaleDateString('pt-BR');
+        // Mantém a data do JSON embedado (não usa new Date() para não mostrar data de hoje)
       }
     } catch(e) {
-      DATA.data_extrato_analitico = new Date().toLocaleDateString('pt-BR');
+      // Mantém a data do JSON embedado em caso de erro
     }
     DATA.drill_parceiro_por_mes = bc.drill_parceiro_por_mes;
     DATA.aging = bc.aging;
@@ -1446,7 +1447,7 @@ async function atualizarDoSheets() {
     liveDot.style.background = 'var(--em)';
     liveLabel.textContent = 'Ao vivo · Quick Sight/Omie';
     lastUpd.textContent = 'Sincronizado: ' + dataStr;
-    bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + (DATA.data_extrato_analitico || agora.toLocaleDateString('pt-BR'));
+    bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + (DATA.data_extrato_analitico || DATA_EXTRATO_ORIGINAL);
     
     setTimeout(() => {
       btnIcon.textContent = '🔄';
@@ -2510,11 +2511,28 @@ function abrirDrillParceiro(parc, safra) {
   // Helper de mês legível
   const mesLbl = DATA.kpis_por_safra[safra]?.safra_label || safra;
   
-  const drillPorMes = DATA.drill_parceiro_por_mes[parc] || {};
-  const clientes = drillPorMes[safra] || [];
+  const drillPorMes = DATA.drill_parceiro_por_mes[parc];
+  const parceiroPossuiDrill = drillPorMes && Object.keys(drillPorMes).length > 0;
+  const clientes = (drillPorMes && drillPorMes[safra]) || [];
   
   if (clientes.length === 0) {
-    document.getElementById('drill-detail').innerHTML = `
+    // Distinguir: parceiro sem drill nenhum (dados não carregados) vs safra sem vencidos (realmente quitado)
+    const semDados = !parceiroPossuiDrill;
+    document.getElementById('drill-detail').innerHTML = semDados ? `
+      <div class="tc">
+        <div class="th-row">
+          <div>
+            <div class="th-title">🔍 ${parc} · ${mesLbl}</div>
+            <div class="th-note">Detalhamento não disponível nos dados embedados</div>
+          </div>
+          <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:11px;cursor:pointer;font-weight:600;">Fechar</button>
+        </div>
+        <div style="padding:14px;background:rgba(192,107,0,.06);border-left:3px solid var(--am);border-radius:6px;font-size:13px;color:var(--ink2);">
+          <b>⟳ Clique em "Atualizar dados" para carregar o detalhamento de ${parc}.</b><br>
+          <span style="color:var(--ink3);font-size:12px;">Os dados embedados nesta versão do painel não incluem o drill deste parceiro. Após atualizar, todas as células ficarão disponíveis.</span>
+        </div>
+      </div>
+    ` : `
       <div class="tc">
         <div class="th-row">
           <div>
@@ -2715,7 +2733,7 @@ function renderDevedores() {
       <div class="cat-card gold">
         <div class="cc-title">Top 50 Devedores</div>
         <div class="cc-pct">${fmtRk(total)}</div>
-        <div class="cc-info"><span>Soma dos top 50 (em aberto)</span></div>
+        <div class="cc-info"><span>${(()=>{ const ss=(DATA.meses_disponiveis||[]).filter(s=>s.safra.startsWith("2026")); if(!ss.length)return "Faturas vencidas em aberto"; const lbl={"2026-01":"jan/26","2026-02":"fev/26","2026-03":"mar/26","2026-04":"abr/26","2026-05":"mai/26","2026-06":"jun/26"}; return "Faturas vencidas de "+(lbl[ss[0].safra]||ss[0].safra)+" a "+(lbl[ss[ss.length-1].safra]||ss[ss.length-1].safra); })()}</span></div>
       </div>
       <div class="cat-card red">
         <div class="cc-title">Concentração Top 10</div>
@@ -2738,7 +2756,7 @@ function renderDevedores() {
       <div class="th-row">
         <div>
           <div class="th-title">🔍 Top 50 Devedores · Lista nominal</div>
-          <div class="th-note">Ordenado por valor em aberto</div>
+          <div class="th-note">${(()=>{ const ss=(DATA.meses_disponiveis||[]).filter(s=>s.safra.startsWith('2026')); if(!ss.length)return 'Faturas vencidas em aberto · Ordenado por valor em aberto'; const lbl={'2026-01':'jan/26','2026-02':'fev/26','2026-03':'mar/26','2026-04':'abr/26','2026-05':'mai/26','2026-06':'jun/26'}; return 'Faturas vencidas de '+(lbl[ss[0].safra]||ss[0].safra)+' a '+(lbl[ss[ss.length-1].safra]||ss[ss.length-1].safra)+' · Ordenado por valor em aberto'; })()}</div>
         </div>
         <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
       </div>
