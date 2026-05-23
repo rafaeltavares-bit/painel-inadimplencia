@@ -526,6 +526,24 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   </div>
 </div>
 
+<!-- V31: Painel discreto de Observações (aparece só ao clicar no 📝 do header) -->
+<div id="notas-panel-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:9997;" onclick="if(event.target===this)fecharNotasPanel()">
+  <div style="position:absolute;top:80px;right:24px;background:#fff;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.18);padding:18px 20px;width:320px;font-family:'Outfit',sans-serif;">
+    <div style="font-weight:700;color:var(--ink);font-size:14px;margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;">
+      <span>📝 Observações por cliente</span>
+      <span style="cursor:pointer;color:var(--ink3);font-size:18px;line-height:1;" onclick="fecharNotasPanel()" title="Fechar">×</span>
+    </div>
+    <div style="font-size:11px;color:var(--ink3);margin-bottom:12px;line-height:1.4;">
+      Você tem <b id="notas-panel-count">0</b> observação(ões) salvas no navegador.<br>
+      Procure o ícone 📝 ao lado do CNPJ nas tabelas (Categoria e Top Devedores).
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button onclick="exportarNotas()" style="flex:1;padding:7px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⬇ Exportar</button>
+      <button onclick="importarNotas()" style="flex:1;padding:7px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">⬆ Importar</button>
+    </div>
+  </div>
+</div>
+
 
 <div class="header">
   <div class="hl">
@@ -536,6 +554,11 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
+    <button id="btn-notas-toggle" onclick="abrirNotasPanel()" title="Observações por cliente"
+      style="padding:7px 11px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:10px;">
+      <span>📝</span>
+      <span id="btn-notas-count" style="font-size:11px;color:var(--ink3);">0</span>
+    </button>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--rule2);background:var(--em);color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:12px;">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
@@ -755,19 +778,29 @@ function excluirNotaModal(){
 // Re-renderiza chamando a aba ativa, pra refletir o ícone novo nas duas tabelas.
 function refreshAllNotaBtns(){
   const active = document.querySelector('.tab.active');
-  if (!active) return;
-  const id = active.dataset.id;
-  if (id === 'categoria') {
-    // Se está no drill, re-renderiza o drill; senão a heatmap não tem botões de nota
-    if (window._drillAtivo && typeof abrirDrillParceiro === 'function') {
+  if (active) {
+    const id = active.dataset.id;
+    if (id === 'categoria' && window._drillAtivo && typeof abrirDrillParceiro === 'function') {
       abrirDrillParceiro(window._drillAtivo.parc, window._drillAtivo.safra);
+    } else if (id === 'devedores' && typeof renderDevedores === 'function') {
+      renderDevedores();
     }
-  } else if (id === 'devedores' && typeof renderDevedores === 'function') {
-    renderDevedores();
   }
-  // Atualiza contador da barra (se visível em outras telas no futuro)
-  const bc = document.getElementById('notas-bar-count');
-  if (bc) bc.textContent = countNotas();
+  // V31: atualizar contadores (botão do header + painel discreto)
+  const c = countNotas();
+  const bh = document.getElementById('btn-notas-count');
+  if (bh) bh.textContent = c;
+  const bp = document.getElementById('notas-panel-count');
+  if (bp) bp.textContent = c;
+}
+
+// V31: painel discreto de Observações (abre pelo botão 📝 no header)
+function abrirNotasPanel(){
+  document.getElementById('notas-panel-count').textContent = countNotas();
+  document.getElementById('notas-panel-bg').style.display = 'block';
+}
+function fecharNotasPanel(){
+  document.getElementById('notas-panel-bg').style.display = 'none';
 }
 
 // ----- EXPORT / IMPORT (analogia: salvar/abrir do Excel) -----
@@ -1436,7 +1469,10 @@ function processarBaseCompleta(rows) {
   let somaDias = 0, qtdComDias = 0;
   let somaJuros = 0;
   const diasAtraso = [];
-  let dtMinRec = null, dtMaxRec = null;
+  // V31.1: usar Set de safras yyyy-mm dos títulos PAGOS (base da aba Recuperação).
+  // Garantia: como parseSafra retorna sempre "yyyy-mm", ordenação alfabética = cronológica.
+  // Fim do bug "jan/26 a jan/26" — não dependemos mais de comparar strings de data soltas.
+  const safrasPagos = new Set();
   const recBuckets = {'1-7 dias':{qtd:0,valor:0}, '8-15 dias':{qtd:0,valor:0}, '16-30 dias':{qtd:0,valor:0}, '31-60 dias':{qtd:0,valor:0}, '61-90 dias':{qtd:0,valor:0}, '90+ dias':{qtd:0,valor:0}};
   
   // Para drill: agrupar VENCIDA por parceiro × safra × cliente
@@ -1448,12 +1484,6 @@ function processarBaseCompleta(rows) {
     const sit = String(r[idx.sitFatura] || '').trim().toUpperCase();
     const valor = parseNum(r[idx.vlrFat]);
     const agingDias = parseNum(r[idx.agingDias]);
-    // Capturar período (primeira e última data de emissão da planilha)
-    const dEmissaoLoop = String(r[idx.dtEmissao] || '').trim();
-    if (dEmissaoLoop) {
-      if (!dtMinRec || dEmissaoLoop < dtMinRec) dtMinRec = dEmissaoLoop;
-      if (!dtMaxRec || dEmissaoLoop > dtMaxRec) dtMaxRec = dEmissaoLoop;
-    }
     
     if (sit === 'VENCIDA') {
       // Aging
@@ -1490,9 +1520,9 @@ function processarBaseCompleta(rows) {
       qtdAtraso += 1;
       // Juros = diferença positiva entre pago e faturado
       const vlrPago = parseNum(r[idx.vlrPago]);
-      // Período coberto
-      const dEmissaoRec = String(r[idx.dtEmissao] || '').trim();
-      if (dEmissaoRec) { if (!dtMinRec || dEmissaoRec < dtMinRec) dtMinRec = dEmissaoRec; if (!dtMaxRec || dEmissaoRec > dtMaxRec) dtMaxRec = dEmissaoRec; }
+      // V31.1: período coberto via parseSafra (formato yyyy-mm, sempre comparável)
+      const safraRec = parseSafra(r[idx.dtEmissao]);
+      if (safraRec) safrasPagos.add(safraRec);
       if (vlrPago > valor && valor > 0) somaJuros += (vlrPago - valor);
       // Calcular dias de atraso a partir das datas
       const dPag = r[idx.dtPagamento];
@@ -1515,6 +1545,9 @@ function processarBaseCompleta(rows) {
       }
     } else if (sit === 'PAGA') {
       qtdPagas += 1;
+      // V31.1: incluir safra do pago no prazo também
+      const safraPaga = parseSafra(r[idx.dtEmissao]);
+      if (safraPaga) safrasPagos.add(safraPaga);
     }
   }
   
@@ -1558,11 +1591,15 @@ function processarBaseCompleta(rows) {
     diasAtraso.forEach(d => { freq[d] = (freq[d]||0) + 1; });
     modaReal = parseInt(Object.entries(freq).sort((a,b) => b[1]-a[1])[0][0]);
   }
+  // V31.1: período de estudo derivado de safras yyyy-mm dos PAGOS (sempre confiável)
+  const safrasOrdenadas = Array.from(safrasPagos).sort();
   const recuperacao = {
     tempo_medio_dias: qtdComDias > 0 ? Math.round((somaDias/qtdComDias) * 10) / 10 : 0,
     tempo_mediano_dias: medianaReal,
     tempo_moda_dias: modaReal,
-    periodo_estudo: dtMinRec && dtMaxRec ? { de: dtMinRec, ate: dtMaxRec } : null,
+    periodo_estudo: safrasOrdenadas.length > 0
+      ? { safra_min: safrasOrdenadas[0], safra_max: safrasOrdenadas[safrasOrdenadas.length-1] }
+      : null,
     qtd_pagas_atraso: qtdAtraso,
     qtd_pagas_prazo: qtdPagas,
     juros_recuperados: Math.round(somaJuros * 100) / 100,
@@ -3638,19 +3675,6 @@ function renderDevedores() {
   const top10 = top.slice(0,10).reduce((s,d) => s + d.valor_devido, 0);
   
   let html = `
-    <div class="note-box warning">
-      <div class="ni">⚠</div>
-      <div class="nt"><b>Dados em conciliação:</b> lista vinda da aba "Analítico" (~R$ 47k de diferença vs oficial).</div>
-    </div>
-
-    <div class="notas-bar">
-      <span class="nb-label">📝 Observações <span class="nb-count" id="notas-bar-count">${countNotas()}</span> salva(s)</span>
-      <span style="color:var(--ink3);font-size:11px;">passe o mouse no 📝 ao lado do CNPJ para ler · clique para editar</span>
-      <span class="spacer"></span>
-      <button onclick="exportarNotas()" title="Baixa um arquivo JSON com todas as observações">⬇ Exportar</button>
-      <button onclick="importarNotas()" title="Carrega observações de um JSON exportado">⬆ Importar</button>
-    </div>
-    
     <div class="cat-cards">
       <div class="cat-card gold">
         <div class="cc-title">Top 50 Devedores</div>
@@ -3718,43 +3742,23 @@ function filtrarDevedores() {
 
 // === ABA 5: RECUPERAÇÃO === (igual v02)
 
+// V31.1: formata período de estudo da Recuperação.
+// Caso 1 (refresh feito): recebe {safra_min, safra_max} calculado direto dos PAGOS.
+// Caso 2 (dados embutidos): usa primeira e última safra de meses_disponiveis.
+// Sem comparação de string. Sem fallback hard-coded. Sem adivinhação.
 function fmtPeriodoRec(p) {
-  const meses = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
-  function fmtD(s) {
-    if (!s) return '?';
-    try {
-      if (s.includes('/')) {
-        const parts = s.split('/');
-        // dd/mm/yyyy
-        const m = parseInt(parts[1]) - 1;
-        const y = parts[2] ? parts[2].slice(2) : '??';
-        return meses[m] + '/' + y;
-      } else {
-        // yyyy-mm-dd
-        const parts = s.split('-');
-        const m = parseInt(parts[1]) - 1;
-        const y = parts[0] ? parts[0].slice(2) : '??';
-        return meses[m] + '/' + y;
-      }
-    } catch(e) { return s; }
+  let smin, smax;
+  if (p && p.safra_min && p.safra_max) {
+    smin = p.safra_min; smax = p.safra_max;
+  } else {
+    // Fallback: usa meses cadastrados (ordenados em meses_disponiveis)
+    const ms = (DATA.meses_disponiveis || []).map(x => x.safra).sort();
+    if (ms.length === 0) return '—';
+    smin = ms[0]; smax = ms[ms.length-1];
   }
-  if (!p || !p.de || !p.ate) {
-    // Fallback: usar metadado fonte_drill que descreve a Base Completa
-    // Período dinâmico só disponível após refresh — usar fev/26 a mai/26 como padrão
-    // (Base Completa sempre vai de fev até o mês atual conforme planilha)
-    const fonteInfo = (DATA.metadados || {}).fonte_drill || '';
-    // Tentar extrair do campo metadado se disponível
-    const safras = (DATA.meses_disponiveis || []).map(x => x.safra).filter(s => s.startsWith('2026')).sort();
-    if (safras.length >= 2) {
-      // Pular jan/26 se vier — Base Completa começa em fev
-      const primeiro = safras.find(s => s !== '2026-01') || safras[0];
-      const ultimo = safras[safras.length - 1];
-      const s0 = primeiro.split('-'); const s1 = ultimo.split('-');
-      return meses[parseInt(s0[1])-1]+'/'+s0[0].slice(2) + ' a ' + meses[parseInt(s1[1])-1]+'/'+s1[0].slice(2);
-    }
-    return 'fev/26 a mai/26';
-  }
-  return fmtD(p.de) + ' a ' + fmtD(p.ate);
+  const a = safraLabel(smin).toLowerCase();
+  const b = safraLabel(smax).toLowerCase();
+  return a === b ? a : a + ' a ' + b;
 }
 function renderRecuperacao() {
   const r = DATA.recuperacao;
@@ -3770,7 +3774,7 @@ function renderRecuperacao() {
         <div style="padding:4px 0 0">
           <div style="font-size:12px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Atraso mais frequente</div>
           <div style="display:flex;align-items:baseline;gap:6px">
-            <span style="font-size:48px;font-weight:800;color:var(--pos);line-height:1">${r.tempo_moda_dias}</span>
+            <span style="font-size:48px;font-weight:800;color:var(--pos);line-height:1">${r.tempo_moda_dias != null ? r.tempo_moda_dias : (r.tempo_mediano_dias != null ? r.tempo_mediano_dias : '—')}</span>
             <span style="font-size:20px;font-weight:400;color:var(--pos)">dias</span>
           </div>
           <div style="font-size:13px;color:var(--ink3);margin:4px 0 12px">é o atraso que mais se repete na carteira</div>
@@ -3876,6 +3880,9 @@ document.addEventListener('DOMContentLoaded', () => {
   popularSeletorMes();
   renderFarol();
   renderGerencial();
+  // V31: popular contador do botão Observações no header logo no boot
+  const _bnc = document.getElementById('btn-notas-count');
+  if (_bnc) _bnc.textContent = countNotas();
   
   // CHAVE DE OURO
   console.log('%c🔑 [PAINEL PINEL v03] CHAVE DE OURO · Validações automáticas', 
