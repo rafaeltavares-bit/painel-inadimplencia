@@ -3010,9 +3010,6 @@ function renderCategoria() {
           <div class="hero-question">${cat.nome_completo}</div>
           <div class="hero-pct-big ${pctClsHero}">${fmtPct(pct_atual)}</div>
           <div class="cc4-status ${statusCls}" style="margin-top:8px;display:inline-flex;"><span class="arrow">${statusArrow}</span> ${statusTxt}</div>
-          <div style="font-size:11px;color:var(--ink3);margin-top:6px;">
-            ${safraCorrenteMadura ? '' : `${labelComp}: ${fmtPct(pct_comp)} · `}vs média ${labelPrim}–${labelUlt}* (${fmtPct(mediaIncluindo)})
-          </div>
         </div>
         <div class="hero-info">
           <div class="hero-mes">${DATA.kpis_por_safra[MES_CORRENTE].safra_label}</div>
