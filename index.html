@@ -554,11 +554,6 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
-    <button id="btn-notas-toggle" onclick="abrirNotasPanel()" title="Observações por cliente"
-      style="padding:7px 11px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:10px;">
-      <span>📝</span>
-      <span id="btn-notas-count" style="font-size:11px;color:var(--ink3);">0</span>
-    </button>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--rule2);background:var(--em);color:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:12px;">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
@@ -786,10 +781,12 @@ function refreshAllNotaBtns(){
       renderDevedores();
     }
   }
-  // V31: atualizar contadores (botão do header + painel discreto)
+  // V32.1: atualizar contadores (botões pequenos nas abas + painel popover)
   const c = countNotas();
-  const bh = document.getElementById('btn-notas-count');
-  if (bh) bh.textContent = c;
+  const bd = document.getElementById('btn-notas-count-dev');
+  if (bd) bd.textContent = c;
+  const bc = document.getElementById('btn-notas-count-cat');
+  if (bc) bc.textContent = c;
   const bp = document.getElementById('notas-panel-count');
   if (bp) bp.textContent = c;
 }
@@ -3289,7 +3286,14 @@ function abrirDrillParceiro(parc, safra) {
           <div class="th-title">🔍 ${parc} · ${mesLbl}</div>
           <div class="th-note">${clientes.length} clientes inadimplentes · R$ ${fmtR(total)} em aberto</div>
         </div>
-        <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:11px;cursor:pointer;font-weight:600;">Fechar</button>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onclick="abrirNotasPanel()" title="Observações por cliente"
+            style="padding:6px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;color:var(--ink3);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+            <span>📝</span>
+            <span id="btn-notas-count-cat" style="color:var(--ink3);">${countNotas()}</span>
+          </button>
+          <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:11px;cursor:pointer;font-weight:600;">Fechar</button>
+        </div>
       </div>
       <div style="padding:10px 14px;margin:10px 0;border-left:3px solid ${concentCor};background:rgba(22,61,120,.03);border-radius:6px;font-size:13px;font-weight:600;color:var(--ink2);">
         ${concentIcone} ${concentTxt}
@@ -3704,7 +3708,14 @@ function renderDevedores() {
           <div class="th-title">🔍 Top 50 Devedores · Lista nominal</div>
           <div class="th-note">${(()=>{ const ss=(DATA.meses_disponiveis||[]).filter(s=>s.safra.startsWith('2026')); if(!ss.length)return 'Faturas vencidas em aberto · Ordenado por valor em aberto'; const lbl={'2026-01':'jan/26','2026-02':'fev/26','2026-03':'mar/26','2026-04':'abr/26','2026-05':'mai/26','2026-06':'jun/26'}; return 'Faturas vencidas de '+(lbl[ss[0].safra]||ss[0].safra)+' a '+(lbl[ss[ss.length-1].safra]||ss[ss.length-1].safra)+' · Ordenado por valor em aberto'; })()}</div>
         </div>
-        <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onclick="abrirNotasPanel()" title="Observações por cliente"
+            style="padding:6px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;color:var(--ink3);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
+            <span>📝</span>
+            <span id="btn-notas-count-dev" style="color:var(--ink3);">${countNotas()}</span>
+          </button>
+          <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
+        </div>
       </div>
       <div class="tc-wrap">
         <table class="in">
@@ -3880,9 +3891,6 @@ document.addEventListener('DOMContentLoaded', () => {
   popularSeletorMes();
   renderFarol();
   renderGerencial();
-  // V31: popular contador do botão Observações no header logo no boot
-  const _bnc = document.getElementById('btn-notas-count');
-  if (_bnc) _bnc.textContent = countNotas();
   
   // CHAVE DE OURO
   console.log('%c🔑 [PAINEL PINEL v03] CHAVE DE OURO · Validações automáticas', 
