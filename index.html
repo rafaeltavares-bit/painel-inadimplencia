@@ -921,6 +921,15 @@ function atualizarTudo() {
   if (!SAFRAS_COMPARACAO.includes(MES_CORRENTE)) {
     SAFRAS_COMPARACAO = [MES_CORRENTE, ...SAFRAS_COMPARACAO.slice(0, 3)];
   }
+  // FIX v15 (bug 2): safras cronologicamente posteriores ao MES_CORRENTE
+  // viram "—" automaticamente (sem trava — se o usuário tiver feito uma
+  // escolha manual prévia, respeitar). Comparação lexicográfica funciona
+  // porque o formato é "yyyy-mm".
+  SAFRAS_COMPARACAO.forEach(s => {
+    if (s > MES_CORRENTE && !DATAS_COMPARACAO_MANUAL[s]) {
+      DATAS_COMPARACAO[s] = '';
+    }
+  });
   renderFarol();
   const activeTab = document.querySelector('.tab.active');
   if (activeTab) RENDERERS[activeTab.dataset.id]();
@@ -2991,13 +3000,18 @@ function renderGerencial() {
         },
         {
           label: '% Último dia',
-          // FIX v14 (bug 2): null em vez de 0 na safra corrente
-          data: HIST_12M.map(h => {
-            if (h.safra === MES_CORRENTE) return null;
-            const v = h.pct_ultimo_dia_mes;
-            if (v === null || v === undefined || v === 0) return null;
-            return v;
-          }),
+          // FIX v15: esconder apenas o último mês do histórico (que ainda não fechou),
+          // não o MES_CORRENTE. Isso evita o corte da linha quando usuário escolhe
+          // um mês passado como corrente.
+          data: (() => {
+            const ultimaSafraHist = DATA.historico[DATA.historico.length - 1].safra;
+            return HIST_12M.map(h => {
+              if (h.safra === ultimaSafraHist) return null;  // só esconde o mês mais recente disponível
+              const v = h.pct_ultimo_dia_mes;
+              if (v === null || v === undefined || v === 0) return null;
+              return v;
+            });
+          })(),
           spanGaps: false,
           borderColor: '#2196F3',
           backgroundColor: 'transparent',
