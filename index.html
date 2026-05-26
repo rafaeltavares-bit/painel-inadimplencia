@@ -554,6 +554,8 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
+    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:8px 12px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-right:6px;">📸 Salvar snapshot</button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:8px 12px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-right:12px;">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--rule2);background:var(--em);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:12px;">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
@@ -562,6 +564,41 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot"></div><span class="ll" id="live-label">Dados embutidos</span></div>
       <div class="lt" id="last-upd">Geração: 18/05/2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- Banner que aparece quando o usuário está visualizando um snapshot salvo -->
+<div id="snap-banner" style="display:none;background:#fff4cc;border-top:2px solid #d4a017;border-bottom:2px solid #d4a017;padding:10px 48px;color:#5c4400;font-weight:700;align-items:center;justify-content:space-between;font-size:14px;">
+  <div>🔒 <span id="snap-banner-nome">Visualizando snapshot</span> · <span style="font-weight:400;">dados congelados, nada será atualizado</span></div>
+  <div onclick="sairModoSnapshot()" style="background:#d4a017;color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;">← Voltar ao painel ao vivo</div>
+</div>
+
+<!-- Modal: Salvar snapshot -->
+<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:10px;padding:24px;width:min(440px,90vw);box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <h3 style="margin:0 0 12px 0;font-size:18px;">📸 Salvar snapshot</h3>
+    <p style="margin:0 0 16px 0;color:var(--ink2);font-size:14px;">Vai fotografar o estado atual do painel (mês selecionado, datas de comparação, dados visíveis). Você poderá reabrir esta foto a qualquer momento.</p>
+    <label style="display:block;font-size:13px;color:var(--ink2);margin-bottom:6px;">Nome do snapshot:</label>
+    <input type="text" id="snap-nome-input" style="width:100%;padding:10px;border:1px solid var(--rule2);border-radius:6px;font-size:14px;box-sizing:border-box;" placeholder="Ex: Reunião 25/05/2026">
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:18px;">
+      <button onclick="fecharModalSnap('modal-snap-save')" style="padding:8px 16px;border-radius:6px;border:1px solid var(--rule2);background:#fff;cursor:pointer;font-weight:600;">Cancelar</button>
+      <button onclick="salvarSnapshot()" style="padding:8px 16px;border-radius:6px;border:none;background:var(--em);color:#fff;cursor:pointer;font-weight:700;">📸 Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Lista de snapshots -->
+<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:10px;padding:24px;width:min(640px,92vw);max-height:85vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+      <h3 style="margin:0;font-size:18px;">📂 Snapshots salvos</h3>
+      <button onclick="fecharModalSnap('modal-snap-list')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink3);">×</button>
+    </div>
+    <div id="snap-list-body" style="margin-bottom:14px;"></div>
+    <div style="border-top:1px solid var(--rule2);padding-top:12px;">
+      <button onclick="document.getElementById('snap-import-file').click()" style="padding:8px 14px;border-radius:6px;border:1px solid var(--rule2);background:#fff;cursor:pointer;font-size:13px;font-weight:600;">⬆ Importar snapshot (JSON)</button>
+      <input type="file" id="snap-import-file" accept=".json" style="display:none;" onchange="importarSnapshotArquivo(event)">
     </div>
   </div>
 </div>
@@ -887,6 +924,294 @@ function atualizarTudo() {
   renderFarol();
   const activeTab = document.querySelector('.tab.active');
   if (activeTab) RENDERERS[activeTab.dataset.id]();
+}
+
+// ============================================================================
+// Handler do dropdown de data de comparação
+// Trata o caso "(não comparar)" (valor vazio) marcando explicitamente como
+// escolha manual — para não ser preenchido automaticamente depois.
+// ============================================================================
+function onChangeDataComparacao(safra, novoValor) {
+  if (novoValor === '' || novoValor === null) {
+    // Usuário escolheu "(não comparar)" - esvaziar o card
+    DATAS_COMPARACAO[safra] = '';
+    DATAS_COMPARACAO_MANUAL[safra] = true;  // marca como escolha manual para não ser repreenchido
+  } else {
+    DATAS_COMPARACAO[safra] = novoValor;
+    DATAS_COMPARACAO_MANUAL[safra] = true;
+  }
+  renderGerencial();
+  renderFarol();
+}
+
+// ============================================================================
+// SISTEMA DE SNAPSHOTS
+// Permite salvar "fotos" do painel para reabrir depois (ex: voltar à apresentação de 25/05)
+// Estratégia: salva DATA completo + estado (MES_CORRENTE, DATAS_COMPARACAO, aba ativa)
+// Armazena no localStorage com chave 'painel_inad_snapshots_v1'
+// ============================================================================
+const SNAP_KEY = 'painel_inad_snapshots_v1';
+let MODO_SNAPSHOT_ATIVO = false;  // quando true, "Atualizar dados" fica desabilitado
+let DATA_BACKUP_LIVE = null;
+let ESTADO_BACKUP_LIVE = null;
+
+function lerSnapshots() {
+  try {
+    const raw = localStorage.getItem(SNAP_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('[snapshots] falha ao ler localStorage:', e);
+    return {};
+  }
+}
+
+function gravarSnapshots(obj) {
+  try {
+    localStorage.setItem(SNAP_KEY, JSON.stringify(obj));
+    return true;
+  } catch (e) {
+    console.error('[snapshots] falha ao gravar:', e);
+    alert('Não foi possível salvar o snapshot. Pode ser limite de armazenamento do navegador.\n\nDetalhes: ' + e.message);
+    return false;
+  }
+}
+
+function atualizarContadorSnapshots() {
+  const snaps = lerSnapshots();
+  const n = Object.keys(snaps).length;
+  const badge = document.getElementById('snap-count');
+  if (!badge) return;
+  if (n > 0) {
+    badge.textContent = n;
+    badge.style.display = 'inline-block';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+function abrirModalSalvarSnapshot() {
+  if (MODO_SNAPSHOT_ATIVO) {
+    alert('Você está visualizando um snapshot. Volte ao painel ao vivo antes de salvar um novo.');
+    return;
+  }
+  // Sugerir nome padrão: "Reunião dd/mm/aaaa"
+  const hoje = new Date();
+  const dd = String(hoje.getDate()).padStart(2, '0');
+  const mm = String(hoje.getMonth() + 1).padStart(2, '0');
+  const aaaa = hoje.getFullYear();
+  document.getElementById('snap-nome-input').value = `Reunião ${dd}/${mm}/${aaaa}`;
+  document.getElementById('modal-snap-save').style.display = 'flex';
+  setTimeout(() => {
+    const inp = document.getElementById('snap-nome-input');
+    inp.focus();
+    inp.select();
+  }, 50);
+}
+
+function fecharModalSnap(id) {
+  document.getElementById(id).style.display = 'none';
+}
+
+function salvarSnapshot() {
+  const nome = document.getElementById('snap-nome-input').value.trim();
+  if (!nome) {
+    alert('Dê um nome ao snapshot.');
+    return;
+  }
+  const snaps = lerSnapshots();
+  if (snaps[nome]) {
+    if (!confirm(`Já existe um snapshot chamado "${nome}". Sobrescrever?`)) return;
+  }
+  // Captura o estado completo
+  const abaAtiva = document.querySelector('.tab.active');
+  snaps[nome] = {
+    nome: nome,
+    criado_em: new Date().toISOString(),
+    estado: {
+      MES_CORRENTE: MES_CORRENTE,
+      SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
+      DATAS_COMPARACAO: {...DATAS_COMPARACAO},
+      DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL},
+      aba_ativa: abaAtiva ? abaAtiva.dataset.id : 'gerencial'
+    },
+    DATA: DATA  // foto completa dos dados
+  };
+  if (gravarSnapshots(snaps)) {
+    fecharModalSnap('modal-snap-save');
+    atualizarContadorSnapshots();
+    alert(`✅ Snapshot "${nome}" salvo!\n\nPara reabrir depois, clique em 📂 Snapshots.`);
+  }
+}
+
+function abrirModalListaSnapshots() {
+  const snaps = lerSnapshots();
+  const body = document.getElementById('snap-list-body');
+  const nomes = Object.keys(snaps).sort((a, b) => {
+    // mais recentes primeiro
+    return (snaps[b].criado_em || '').localeCompare(snaps[a].criado_em || '');
+  });
+  if (nomes.length === 0) {
+    body.innerHTML = '<p style="color:var(--ink3);text-align:center;padding:20px 0;font-style:italic;">Nenhum snapshot salvo ainda.<br><br>Clique em 📸 Salvar snapshot quando quiser fotografar o painel.</p>';
+  } else {
+    body.innerHTML = nomes.map(nome => {
+      const s = snaps[nome];
+      const dt = s.criado_em ? new Date(s.criado_em) : null;
+      const dataFmt = dt ? dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) : 'data desconhecida';
+      const mes = s.estado && s.estado.MES_CORRENTE ? s.estado.MES_CORRENTE : '?';
+      const escNome = nome.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+      return `
+        <div style="border:1px solid var(--rule2);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:200px;">
+            <div style="font-weight:700;font-size:14px;color:var(--ink);">${nome}</div>
+            <div style="font-size:12px;color:var(--ink3);margin-top:2px;">Mês: ${mes} · Salvo em ${dataFmt}</div>
+          </div>
+          <div style="display:flex;gap:6px;">
+            <button onclick="carregarSnapshot('${escNome}')" title="Abrir esta foto do painel" style="padding:6px 12px;border-radius:6px;border:none;background:var(--em);color:#fff;cursor:pointer;font-size:12px;font-weight:700;">🔒 Abrir</button>
+            <button onclick="exportarSnapshot('${escNome}')" title="Baixar JSON para guardar/enviar" style="padding:6px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;cursor:pointer;font-size:12px;">⬇</button>
+            <button onclick="excluirSnapshot('${escNome}')" title="Excluir snapshot" style="padding:6px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;cursor:pointer;font-size:12px;color:var(--rd);">🗑️</button>
+          </div>
+        </div>`;
+    }).join('');
+  }
+  document.getElementById('modal-snap-list').style.display = 'flex';
+}
+
+function carregarSnapshot(nome) {
+  const snaps = lerSnapshots();
+  const s = snaps[nome];
+  if (!s) { alert('Snapshot não encontrado.'); return; }
+  // Salvar backup do estado "ao vivo" para poder voltar
+  if (!MODO_SNAPSHOT_ATIVO) {
+    DATA_BACKUP_LIVE = JSON.parse(JSON.stringify(DATA));
+    ESTADO_BACKUP_LIVE = {
+      MES_CORRENTE: MES_CORRENTE,
+      SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
+      DATAS_COMPARACAO: {...DATAS_COMPARACAO},
+      DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL}
+    };
+  }
+  // Aplicar o snapshot
+  DATA = JSON.parse(JSON.stringify(s.DATA));
+  MES_CORRENTE = s.estado.MES_CORRENTE;
+  SAFRAS_COMPARACAO = [...s.estado.SAFRAS_COMPARACAO];
+  DATAS_COMPARACAO = {...s.estado.DATAS_COMPARACAO};
+  DATAS_COMPARACAO_MANUAL = {...s.estado.DATAS_COMPARACAO_MANUAL};
+  MODO_SNAPSHOT_ATIVO = true;
+  // Mostrar banner
+  const banner = document.getElementById('snap-banner');
+  document.getElementById('snap-banner-nome').textContent = `Visualizando snapshot: "${nome}"`;
+  banner.style.display = 'flex';
+  // Desabilitar botões que fazem sentido só ao vivo
+  document.getElementById('btn-refresh').style.opacity = '0.4';
+  document.getElementById('btn-refresh').style.pointerEvents = 'none';
+  document.getElementById('btn-snap-save').style.opacity = '0.4';
+  document.getElementById('btn-snap-save').style.pointerEvents = 'none';
+  // Re-popular seletor de mês e renderizar
+  if (typeof popSeletorMes === 'function') popSeletorMes();
+  const selMes = document.getElementById('sel-mes-corrente');
+  if (selMes) selMes.value = MES_CORRENTE;
+  // Trocar aba se necessário
+  const abaTarget = s.estado.aba_ativa || 'gerencial';
+  const abaEl = document.querySelector(`.tab[data-id="${abaTarget}"]`);
+  if (abaEl && typeof switchTab === 'function') switchTab(abaTarget, abaEl);
+  else atualizarTudo();
+  fecharModalSnap('modal-snap-list');
+  // Scroll pra cima
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function sairModoSnapshot() {
+  if (!MODO_SNAPSHOT_ATIVO) return;
+  // Restaurar o "ao vivo"
+  if (DATA_BACKUP_LIVE) {
+    DATA = JSON.parse(JSON.stringify(DATA_BACKUP_LIVE));
+  }
+  if (ESTADO_BACKUP_LIVE) {
+    MES_CORRENTE = ESTADO_BACKUP_LIVE.MES_CORRENTE;
+    SAFRAS_COMPARACAO = [...ESTADO_BACKUP_LIVE.SAFRAS_COMPARACAO];
+    DATAS_COMPARACAO = {...ESTADO_BACKUP_LIVE.DATAS_COMPARACAO};
+    DATAS_COMPARACAO_MANUAL = {...ESTADO_BACKUP_LIVE.DATAS_COMPARACAO_MANUAL};
+  }
+  MODO_SNAPSHOT_ATIVO = false;
+  DATA_BACKUP_LIVE = null;
+  ESTADO_BACKUP_LIVE = null;
+  // Esconder banner
+  document.getElementById('snap-banner').style.display = 'none';
+  // Reabilitar botões
+  document.getElementById('btn-refresh').style.opacity = '1';
+  document.getElementById('btn-refresh').style.pointerEvents = 'auto';
+  document.getElementById('btn-snap-save').style.opacity = '1';
+  document.getElementById('btn-snap-save').style.pointerEvents = 'auto';
+  // Re-renderizar
+  if (typeof popSeletorMes === 'function') popSeletorMes();
+  const selMes = document.getElementById('sel-mes-corrente');
+  if (selMes) selMes.value = MES_CORRENTE;
+  atualizarTudo();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function exportarSnapshot(nome) {
+  const snaps = lerSnapshots();
+  const s = snaps[nome];
+  if (!s) return;
+  const json = JSON.stringify(s, null, 2);
+  const blob = new Blob([json], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const nomeArq = nome.replace(/[^a-zA-Z0-9_-]+/g, '_').toLowerCase();
+  a.download = `snapshot_${nomeArq}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+function excluirSnapshot(nome) {
+  if (!confirm(`Excluir o snapshot "${nome}"? Esta ação não pode ser desfeita.`)) return;
+  const snaps = lerSnapshots();
+  delete snaps[nome];
+  gravarSnapshots(snaps);
+  atualizarContadorSnapshots();
+  abrirModalListaSnapshots();  // recarrega a lista
+}
+
+function importarSnapshotArquivo(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const s = JSON.parse(e.target.result);
+      if (!s.nome || !s.DATA || !s.estado) {
+        alert('Arquivo não parece ser um snapshot válido.');
+        return;
+      }
+      const snaps = lerSnapshots();
+      if (snaps[s.nome]) {
+        if (!confirm(`Já existe um snapshot chamado "${s.nome}". Sobrescrever?`)) return;
+      }
+      snaps[s.nome] = s;
+      if (gravarSnapshots(snaps)) {
+        atualizarContadorSnapshots();
+        abrirModalListaSnapshots();
+        alert(`✅ Snapshot "${s.nome}" importado!`);
+      }
+    } catch (err) {
+      alert('Erro ao ler arquivo: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  // Limpa o input pra permitir reimportar o mesmo arquivo
+  event.target.value = '';
+}
+
+// Inicializar contador ao carregar a página
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', atualizarContadorSnapshots);
+} else {
+  atualizarContadorSnapshots();
 }
 
 // ============================================================================
@@ -2274,8 +2599,11 @@ function renderGerencial() {
                    pctSafra < 5 ? 'color:var(--am)' : 'color:var(--rd)';
     
     const semDataSelecionada = !isAtual && !DATAS_COMPARACAO[safra];
-    const placeholder = semDataSelecionada ? '<option value="" selected disabled>(selecione a data)</option>' : '';
-    const optsHtml = placeholder + datasDisp.map(d =>
+    const placeholder = semDataSelecionada && isAtual ? '<option value="" selected disabled>(selecione a data)</option>' : '';
+    // Opção "(não comparar)" - permite deixar o card explicitamente vazio
+    // Só faz sentido para safras de comparação, não para a safra atual (mês corrente)
+    const optNaoComparar = !isAtual ? `<option value="" ${semDataSelecionada ? 'selected' : ''}>— (não comparar)</option>` : '';
+    const optsHtml = placeholder + optNaoComparar + datasDisp.map(d =>
       `<option value="${d.data}" ${d.data === dataAtualSafra ? 'selected' : ''}>${d.data_label} (${d.dia_semana})</option>`
     ).join('');
 
@@ -2286,7 +2614,7 @@ function renderGerencial() {
           ${pctSafra !== null ? fmtPct(pctSafra) : (semDataSelecionada ? '<span style="color:var(--ink3);font-size:15px;">— selecione</span>' : '—')}
         </div>
         <div class="cc-data-sel">
-          <select onchange="DATAS_COMPARACAO['${safra}']=this.value;DATAS_COMPARACAO_MANUAL['${safra}']=true;renderGerencial();renderFarol();" ${datasDisp.length === 0 ? 'disabled' : ''}>
+          <select onchange="onChangeDataComparacao('${safra}', this.value)" ${datasDisp.length === 0 ? 'disabled' : ''}>
             ${datasDisp.length === 0 ? '<option>Sem dados</option>' : optsHtml}
           </select>
         </div>
