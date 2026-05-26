@@ -1078,47 +1078,52 @@ function abrirModalListaSnapshots() {
 }
 
 function carregarSnapshot(nome) {
-  const snaps = lerSnapshots();
-  const s = snaps[nome];
-  if (!s) { alert('Snapshot não encontrado.'); return; }
-  // Salvar backup do estado "ao vivo" para poder voltar
-  if (!MODO_SNAPSHOT_ATIVO) {
-    DATA_BACKUP_LIVE = JSON.parse(JSON.stringify(DATA));
-    ESTADO_BACKUP_LIVE = {
-      MES_CORRENTE: MES_CORRENTE,
-      SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
-      DATAS_COMPARACAO: {...DATAS_COMPARACAO},
-      DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL}
-    };
+  try {
+    const snaps = lerSnapshots();
+    const s = snaps[nome];
+    if (!s) { alert('Snapshot não encontrado.'); return; }
+    // Salvar backup do estado "ao vivo" para poder voltar
+    if (!MODO_SNAPSHOT_ATIVO) {
+      DATA_BACKUP_LIVE = JSON.parse(JSON.stringify(DATA));
+      ESTADO_BACKUP_LIVE = {
+        MES_CORRENTE: MES_CORRENTE,
+        SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
+        DATAS_COMPARACAO: {...DATAS_COMPARACAO},
+        DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL}
+      };
+    }
+    // Aplicar o snapshot
+    DATA = JSON.parse(JSON.stringify(s.DATA));
+    MES_CORRENTE = s.estado.MES_CORRENTE;
+    SAFRAS_COMPARACAO = [...s.estado.SAFRAS_COMPARACAO];
+    DATAS_COMPARACAO = {...s.estado.DATAS_COMPARACAO};
+    DATAS_COMPARACAO_MANUAL = {...s.estado.DATAS_COMPARACAO_MANUAL};
+    MODO_SNAPSHOT_ATIVO = true;
+    // Mostrar banner
+    const banner = document.getElementById('snap-banner');
+    document.getElementById('snap-banner-nome').textContent = `Visualizando snapshot: "${nome}"`;
+    banner.style.display = 'flex';
+    // Desabilitar botões que fazem sentido só ao vivo
+    document.getElementById('btn-refresh').style.opacity = '0.4';
+    document.getElementById('btn-refresh').style.pointerEvents = 'none';
+    document.getElementById('btn-snap-save').style.opacity = '0.4';
+    document.getElementById('btn-snap-save').style.pointerEvents = 'none';
+    // Re-popular seletor de mês e renderizar
+    if (typeof popularSeletorMes === 'function') popularSeletorMes();
+    const selMes = document.getElementById('sel-mes-corrente');
+    if (selMes) selMes.value = MES_CORRENTE;
+    // Trocar aba se necessário
+    const abaTarget = s.estado.aba_ativa || 'gerencial';
+    const abaEl = document.querySelector(`.tab[data-id="${abaTarget}"]`);
+    if (abaEl && typeof switchTab === 'function') switchTab(abaTarget, abaEl);
+    else atualizarTudo();
+    fecharModalSnap('modal-snap-list');
+    // Scroll pra cima
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  } catch (e) {
+    console.error('[snapshots] erro ao carregar:', e);
+    alert('Erro ao abrir snapshot:\n\n' + e.message + '\n\nVer detalhes no Console (F12).');
   }
-  // Aplicar o snapshot
-  DATA = JSON.parse(JSON.stringify(s.DATA));
-  MES_CORRENTE = s.estado.MES_CORRENTE;
-  SAFRAS_COMPARACAO = [...s.estado.SAFRAS_COMPARACAO];
-  DATAS_COMPARACAO = {...s.estado.DATAS_COMPARACAO};
-  DATAS_COMPARACAO_MANUAL = {...s.estado.DATAS_COMPARACAO_MANUAL};
-  MODO_SNAPSHOT_ATIVO = true;
-  // Mostrar banner
-  const banner = document.getElementById('snap-banner');
-  document.getElementById('snap-banner-nome').textContent = `Visualizando snapshot: "${nome}"`;
-  banner.style.display = 'flex';
-  // Desabilitar botões que fazem sentido só ao vivo
-  document.getElementById('btn-refresh').style.opacity = '0.4';
-  document.getElementById('btn-refresh').style.pointerEvents = 'none';
-  document.getElementById('btn-snap-save').style.opacity = '0.4';
-  document.getElementById('btn-snap-save').style.pointerEvents = 'none';
-  // Re-popular seletor de mês e renderizar
-  if (typeof popSeletorMes === 'function') popSeletorMes();
-  const selMes = document.getElementById('sel-mes-corrente');
-  if (selMes) selMes.value = MES_CORRENTE;
-  // Trocar aba se necessário
-  const abaTarget = s.estado.aba_ativa || 'gerencial';
-  const abaEl = document.querySelector(`.tab[data-id="${abaTarget}"]`);
-  if (abaEl && typeof switchTab === 'function') switchTab(abaTarget, abaEl);
-  else atualizarTudo();
-  fecharModalSnap('modal-snap-list');
-  // Scroll pra cima
-  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function sairModoSnapshot() {
@@ -1144,7 +1149,7 @@ function sairModoSnapshot() {
   document.getElementById('btn-snap-save').style.opacity = '1';
   document.getElementById('btn-snap-save').style.pointerEvents = 'auto';
   // Re-renderizar
-  if (typeof popSeletorMes === 'function') popSeletorMes();
+  if (typeof popularSeletorMes === 'function') popularSeletorMes();
   const selMes = document.getElementById('sel-mes-corrente');
   if (selMes) selMes.value = MES_CORRENTE;
   atualizarTudo();
