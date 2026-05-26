@@ -934,9 +934,14 @@ function atualizarTudo() {
   SAFRAS_COMPARACAO = [MES_CORRENTE, ...anteriores];
 
   // FIX v16: resetar a data do card corrente para a última disponível (desfaz trava)
+  // Para meses fechados, priorizar datas dentro do próprio mês (o array de inad_diaria
+  // pode ter pontos em meses seguintes, medindo inadimplência ainda em aberto).
   const pontosCorrentes = DATA.inad_diaria[MES_CORRENTE] || [];
   if (pontosCorrentes.length > 0) {
-    DATAS_COMPARACAO[MES_CORRENTE] = pontosCorrentes[pontosCorrentes.length - 1].data;
+    // Filtra pontos que pertencem ao próprio mês da safra (ex: "2026-04" começa com "2026-04-")
+    const pontosDoMes = pontosCorrentes.filter(p => p.data.startsWith(MES_CORRENTE + '-'));
+    const fonte = pontosDoMes.length > 0 ? pontosDoMes : pontosCorrentes;
+    DATAS_COMPARACAO[MES_CORRENTE] = fonte[fonte.length - 1].data;
     delete DATAS_COMPARACAO_MANUAL[MES_CORRENTE];
   }
 
