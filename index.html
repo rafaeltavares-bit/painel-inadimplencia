@@ -1274,7 +1274,10 @@ const SHEETS_CSV = {
   slide_tier:        gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Slide Tier'),
   base_completa:     gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Base Completa'),
   analitico_inad:    gvizCsvUrl(SHEET_ID_PRINCIPAL, 'Analitico de inadimplencia'),
-  // Inadimplência diária - 5 abas (uma por safra-mês)
+  // Inadimplência diária - abas por safra-mês (Out/25 em diante)
+  inad_diaria_out:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Outubro'),
+  inad_diaria_nov:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Novembro'),
+  inad_diaria_dez:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Dezembro'),
   inad_diaria_jan:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Janeiro'),
   inad_diaria_fev:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Fevereiro'),
   inad_diaria_mar:   gvizCsvUrl(SHEET_ID_INAD_DIARIA, 'Março'),
@@ -1284,6 +1287,9 @@ const SHEETS_CSV = {
 
 // Map safra -> URL
 const INAD_DIARIA_URLS = {
+  '2025-10': 'inad_diaria_out',
+  '2025-11': 'inad_diaria_nov',
+  '2025-12': 'inad_diaria_dez',
   '2026-01': 'inad_diaria_jan',
   '2026-02': 'inad_diaria_fev',
   '2026-03': 'inad_diaria_mar',
@@ -1999,6 +2005,9 @@ function diasEntre(d1, d2) {
 // O mesmo parser é chamado para todas as abas para montar a curva completa de cada safra
 function processarInadDiaria(rows, safraAlvo) {
   const SAFRA_PARA_NOME = {
+    '2025-10': /^Outubro$/i,
+    '2025-11': /^Novembro$/i,
+    '2025-12': /^Dezembro$/i,
     '2026-01': /^Janeiro$/i,
     '2026-02': /^Fevereiro$/i,
     '2026-03': /^Mar[çc]o$/i,
@@ -2124,8 +2133,8 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
   liveLabel.textContent = 'Atualizando…';
   
   try {
-    // 1. Buscar todos os CSVs em paralelo (8 das 9 abas principais + 5 de inad diária)
-    btnTxt.textContent = 'Baixando 13 abas…';
+    // 1. Buscar todos os CSVs em paralelo (8 abas principais + 8 de inad diária)
+    btnTxt.textContent = 'Baixando 16 abas…';
     const fetches = await Promise.all([
       fetchCsv(SHEETS_CSV.grafico_historico),
       fetchCsv(SHEETS_CSV.slide_1),
@@ -2135,6 +2144,9 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
       fetchCsv(SHEETS_CSV.slide_tier),
       fetchCsv(SHEETS_CSV.analitico_inad),
       fetchCsv(SHEETS_CSV.base_completa),
+      fetchCsv(SHEETS_CSV.inad_diaria_out),
+      fetchCsv(SHEETS_CSV.inad_diaria_nov),
+      fetchCsv(SHEETS_CSV.inad_diaria_dez),
       fetchCsv(SHEETS_CSV.inad_diaria_jan),
       fetchCsv(SHEETS_CSV.inad_diaria_fev),
       fetchCsv(SHEETS_CSV.inad_diaria_mar),
@@ -2142,7 +2154,7 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
       fetchCsv(SHEETS_CSV.inad_diaria_mai),
     ]);
     const [graficoHist, slide1, slide2, slide3, slide4, slideTier, analitico, baseCompleta,
-           inadJan, inadFev, inadMar, inadAbr, inadMai] = fetches;
+           inadOut, inadNov, inadDez, inadJan, inadFev, inadMar, inadAbr, inadMai] = fetches;
     
     btnTxt.textContent = 'Processando dados…';
     
@@ -2174,8 +2186,8 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
 
     // 6b. Inadimplência diária — declarado aqui para estar disponível antes do uso abaixo
     const novaInadDiaria = {...(DATA.inad_diaria || {})};
-    const todasAbas = [inadJan, inadFev, inadMar, inadAbr, inadMai].filter(Boolean);
-    const safrasAlvo = ['2026-01','2026-02','2026-03','2026-04','2026-05'];
+    const todasAbas = [inadOut, inadNov, inadDez, inadJan, inadFev, inadMar, inadAbr, inadMai].filter(Boolean);
+    const safrasAlvo = ['2025-10','2025-11','2025-12','2026-01','2026-02','2026-03','2026-04','2026-05'];
     const novasSafras = processarTodasSafrasInadDiaria(todasAbas, safrasAlvo);
     for (const [safra, pontos] of Object.entries(novasSafras)) {
       if (pontos.length > 0) novaInadDiaria[safra] = pontos;
