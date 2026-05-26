@@ -554,8 +554,8 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
-    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:8px 12px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-right:6px;">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:8px 12px;border-radius:8px;border:1px solid var(--rule2);background:#fff;color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:5px;margin-right:12px;">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:#8a7f73;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:#8a7f73;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:12px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:8px 16px;border-radius:8px;border:1px solid var(--rule2);background:var(--em);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;margin-right:12px;">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
@@ -1078,52 +1078,47 @@ function abrirModalListaSnapshots() {
 }
 
 function carregarSnapshot(nome) {
-  try {
-    const snaps = lerSnapshots();
-    const s = snaps[nome];
-    if (!s) { alert('Snapshot não encontrado.'); return; }
-    // Salvar backup do estado "ao vivo" para poder voltar
-    if (!MODO_SNAPSHOT_ATIVO) {
-      DATA_BACKUP_LIVE = JSON.parse(JSON.stringify(DATA));
-      ESTADO_BACKUP_LIVE = {
-        MES_CORRENTE: MES_CORRENTE,
-        SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
-        DATAS_COMPARACAO: {...DATAS_COMPARACAO},
-        DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL}
-      };
-    }
-    // Aplicar o snapshot
-    DATA = JSON.parse(JSON.stringify(s.DATA));
-    MES_CORRENTE = s.estado.MES_CORRENTE;
-    SAFRAS_COMPARACAO = [...s.estado.SAFRAS_COMPARACAO];
-    DATAS_COMPARACAO = {...s.estado.DATAS_COMPARACAO};
-    DATAS_COMPARACAO_MANUAL = {...s.estado.DATAS_COMPARACAO_MANUAL};
-    MODO_SNAPSHOT_ATIVO = true;
-    // Mostrar banner
-    const banner = document.getElementById('snap-banner');
-    document.getElementById('snap-banner-nome').textContent = `Visualizando snapshot: "${nome}"`;
-    banner.style.display = 'flex';
-    // Desabilitar botões que fazem sentido só ao vivo
-    document.getElementById('btn-refresh').style.opacity = '0.4';
-    document.getElementById('btn-refresh').style.pointerEvents = 'none';
-    document.getElementById('btn-snap-save').style.opacity = '0.4';
-    document.getElementById('btn-snap-save').style.pointerEvents = 'none';
-    // Re-popular seletor de mês e renderizar
-    if (typeof popularSeletorMes === 'function') popularSeletorMes();
-    const selMes = document.getElementById('sel-mes-corrente');
-    if (selMes) selMes.value = MES_CORRENTE;
-    // Trocar aba se necessário
-    const abaTarget = s.estado.aba_ativa || 'gerencial';
-    const abaEl = document.querySelector(`.tab[data-id="${abaTarget}"]`);
-    if (abaEl && typeof switchTab === 'function') switchTab(abaTarget, abaEl);
-    else atualizarTudo();
-    fecharModalSnap('modal-snap-list');
-    // Scroll pra cima
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  } catch (e) {
-    console.error('[snapshots] erro ao carregar:', e);
-    alert('Erro ao abrir snapshot:\n\n' + e.message + '\n\nVer detalhes no Console (F12).');
+  const snaps = lerSnapshots();
+  const s = snaps[nome];
+  if (!s) { alert('Snapshot não encontrado.'); return; }
+  // Salvar backup do estado "ao vivo" para poder voltar
+  if (!MODO_SNAPSHOT_ATIVO) {
+    DATA_BACKUP_LIVE = JSON.parse(JSON.stringify(DATA));
+    ESTADO_BACKUP_LIVE = {
+      MES_CORRENTE: MES_CORRENTE,
+      SAFRAS_COMPARACAO: [...SAFRAS_COMPARACAO],
+      DATAS_COMPARACAO: {...DATAS_COMPARACAO},
+      DATAS_COMPARACAO_MANUAL: {...DATAS_COMPARACAO_MANUAL}
+    };
   }
+  // Aplicar o snapshot
+  DATA = JSON.parse(JSON.stringify(s.DATA));
+  MES_CORRENTE = s.estado.MES_CORRENTE;
+  SAFRAS_COMPARACAO = [...s.estado.SAFRAS_COMPARACAO];
+  DATAS_COMPARACAO = {...s.estado.DATAS_COMPARACAO};
+  DATAS_COMPARACAO_MANUAL = {...s.estado.DATAS_COMPARACAO_MANUAL};
+  MODO_SNAPSHOT_ATIVO = true;
+  // Mostrar banner
+  const banner = document.getElementById('snap-banner');
+  document.getElementById('snap-banner-nome').textContent = `Visualizando snapshot: "${nome}"`;
+  banner.style.display = 'flex';
+  // Desabilitar botões que fazem sentido só ao vivo
+  document.getElementById('btn-refresh').style.opacity = '0.4';
+  document.getElementById('btn-refresh').style.pointerEvents = 'none';
+  document.getElementById('btn-snap-save').style.opacity = '0.4';
+  document.getElementById('btn-snap-save').style.pointerEvents = 'none';
+  // Re-popular seletor de mês e renderizar
+  if (typeof popSeletorMes === 'function') popSeletorMes();
+  const selMes = document.getElementById('sel-mes-corrente');
+  if (selMes) selMes.value = MES_CORRENTE;
+  // Trocar aba se necessário
+  const abaTarget = s.estado.aba_ativa || 'gerencial';
+  const abaEl = document.querySelector(`.tab[data-id="${abaTarget}"]`);
+  if (abaEl && typeof switchTab === 'function') switchTab(abaTarget, abaEl);
+  else atualizarTudo();
+  fecharModalSnap('modal-snap-list');
+  // Scroll pra cima
+  window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
 function sairModoSnapshot() {
@@ -1149,7 +1144,7 @@ function sairModoSnapshot() {
   document.getElementById('btn-snap-save').style.opacity = '1';
   document.getElementById('btn-snap-save').style.pointerEvents = 'auto';
   // Re-renderizar
-  if (typeof popularSeletorMes === 'function') popularSeletorMes();
+  if (typeof popSeletorMes === 'function') popSeletorMes();
   const selMes = document.getElementById('sel-mes-corrente');
   if (selMes) selMes.value = MES_CORRENTE;
   atualizarTudo();
@@ -2607,7 +2602,7 @@ function renderGerencial() {
     const placeholder = semDataSelecionada && isAtual ? '<option value="" selected disabled>(selecione a data)</option>' : '';
     // Opção "(não comparar)" - permite deixar o card explicitamente vazio
     // Só faz sentido para safras de comparação, não para a safra atual (mês corrente)
-    const optNaoComparar = !isAtual ? `<option value="" ${semDataSelecionada ? 'selected' : ''}>—</option>` : '';
+    const optNaoComparar = !isAtual ? `<option value="" ${semDataSelecionada ? 'selected' : ''}>— (não comparar)</option>` : '';
     const optsHtml = placeholder + optNaoComparar + datasDisp.map(d =>
       `<option value="${d.data}" ${d.data === dataAtualSafra ? 'selected' : ''}>${d.data_label} (${d.dia_semana})</option>`
     ).join('');
@@ -2907,7 +2902,12 @@ function renderGerencial() {
   const safraIdx = DATA.historico.findIndex(h => h.safra === MES_CORRENTE);
   
   // === V05: filtrar últimos 12 meses (limpeza visual) ===
-  const HIST_12M = DATA.historico.slice(-12);
+  // === V19: HORIZONTE - corta no mês selecionado antes dos 12 últimos.
+  // Se o usuário escolhe Abr/26 como mês corrente, gráficos não mostram Mai/26.
+  // Comportamento de "horizonte da apresentação": tudo respeita o mês escolhido.
+  const idxCorrente = DATA.historico.findIndex(h => h.safra === MES_CORRENTE);
+  const histAteCorrente = idxCorrente >= 0 ? DATA.historico.slice(0, idxCorrente + 1) : DATA.historico;
+  const HIST_12M = histAteCorrente.slice(-12);
   const safraIdx12 = HIST_12M.findIndex(h => h.safra === MES_CORRENTE);
   
   // GRÁFICO 1: % Atual focado (estilo da diretora, adaptado)
