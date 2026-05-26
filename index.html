@@ -917,20 +917,41 @@ function popularSeletorMes() {
 
 function atualizarTudo() {
   MES_CORRENTE = document.getElementById('sel-mes-corrente').value;
-  // Sincronizar safras de comparação: a primeira é sempre a corrente
-  // Adicionar a corrente no início se não estiver
-  if (!SAFRAS_COMPARACAO.includes(MES_CORRENTE)) {
-    SAFRAS_COMPARACAO = [MES_CORRENTE, ...SAFRAS_COMPARACAO.slice(0, 3)];
+
+  // FIX v16: recalcular SAFRAS_COMPARACAO dinamicamente a cada troca de mês.
+  // Regra: [MES_CORRENTE, mês-1, mês-2, mês-3] — apenas safras que existam
+  // no histórico ou em inad_diaria. Comparação lexicográfica funciona para "yyyy-mm".
+  const safrasDisponiveis = new Set([
+    ...DATA.historico.map(h => h.safra),
+    ...Object.keys(DATA.inad_diaria || {})
+  ]);
+  // Pega as 3 safras imediatamente anteriores ao mês corrente que tenham dados
+  const anteriores = Array.from(safrasDisponiveis)
+    .filter(s => s < MES_CORRENTE)
+    .sort()
+    .reverse()
+    .slice(0, 3);
+  SAFRAS_COMPARACAO = [MES_CORRENTE, ...anteriores];
+
+  // FIX v16: resetar a data do card corrente para a última disponível (desfaz trava)
+  const pontosCorrentes = DATA.inad_diaria[MES_CORRENTE] || [];
+  if (pontosCorrentes.length > 0) {
+    DATAS_COMPARACAO[MES_CORRENTE] = pontosCorrentes[pontosCorrentes.length - 1].data;
+    delete DATAS_COMPARACAO_MANUAL[MES_CORRENTE];
   }
-  // FIX v15 (bug 2): safras cronologicamente posteriores ao MES_CORRENTE
-  // viram "—" automaticamente (sem trava — se o usuário tiver feito uma
-  // escolha manual prévia, respeitar). Comparação lexicográfica funciona
-  // porque o formato é "yyyy-mm".
+
+  // FIX v16: safras futuras ao MES_CORRENTE viram "—" automaticamente,
+  // a menos que o usuário tenha escolhido manualmente.
   SAFRAS_COMPARACAO.forEach(s => {
     if (s > MES_CORRENTE && !DATAS_COMPARACAO_MANUAL[s]) {
       DATAS_COMPARACAO[s] = '';
     }
   });
+
+  // FIX v16: para meses fechados (< última safra do histórico), o card corrente
+  // deve mostrar a última data disponível daquele mês (não do meio do mês).
+  // Isso é garantido pelo reset acima — inad_diaria[MES_CORRENTE] já tem a última data.
+
   renderFarol();
   const activeTab = document.querySelector('.tab.active');
   if (activeTab) RENDERERS[activeTab.dataset.id]();
