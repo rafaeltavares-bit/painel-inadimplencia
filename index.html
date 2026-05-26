@@ -8,16 +8,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --cream:#faf7f2;--paper:#f0ebe0;--ink:#1a1612;--ink2:#3d3830;--ink3:#6b6258;
-  --rule:#ddd5c8;--rule2:#c8bfb0;
+  --cream:#f5f0e8;--paper:#ece5d6;--ink:#1a1612;--ink2:#2e2820;--ink3:#4a4038;
+  --rule:#ccc3b4;--rule2:#b8ad9e;
   --em:#0a5e40;--em-l:#e6f4ee;
   --rd:#b03020;--rd-l:#fce8e5;
   --gd:#9a6c18;--gd-l:#fdf0d8;
   --sp:#163d78;--sp-l:#e5eaf5;
   --pu:#6b2fd4;--pu-l:#f0eaff;
   --am:#c06b00;--am-l:#fff3e0;
-  --sh:0 2px 20px rgba(26,22,18,.09);
-  --sh2:0 8px 48px rgba(26,22,18,.15);
+  --sh:0 2px 16px rgba(26,22,18,.13);
+  --sh2:0 8px 40px rgba(26,22,18,.22);
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-size:16px;min-height:100vh;}
@@ -28,17 +28,17 @@ body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;fo
 .hl{display:flex;align-items:center;gap:12px;padding:8px 0;position:relative;z-index:1;}
 .logo-delend{height:32px;}
 .hl h1{font-family:"Playfair Display",serif;font-size:19px;font-weight:700;color:var(--ink);letter-spacing:-.3px;}
-.hl .sub{font-size:11px;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;font-weight:400;}
+.hl .sub{font-size:11px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;margin-top:2px;font-weight:600;}
 .hr{display:flex;align-items:center;gap:8px;position:relative;z-index:1;}
 .bp{padding:3px 10px;border-radius:6px;font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;}
-.bp-r{background:#e8f4ef;color:#1a6b47;border:1px solid #a8d4bc;}
+.bp-r{background:#0a5e40;color:#fff;}
 .bp-f{background:#b03020;color:#fff;}
 .live{text-align:right;}
 .live .lr{display:flex;align-items:center;gap:6px;justify-content:flex-end;}
 .ld{width:6px;height:6px;background:#4ade80;border-radius:50%;animation:blink 2s ease-in-out infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
-.live .ll{font-size:11px;color:var(--ink2);}
-.live .lt{font-size:11px;color:var(--ink2);font-weight:400;margin-top:1px;}
+.live .ll{font-size:11px;color:var(--ink);font-weight:500;}
+.live .lt{font-size:11px;color:var(--ink3);font-weight:500;margin-top:1px;}
 
 /* SELETOR MÊS CORRENTE */
 .seletor-bar{background:#fff;padding:12px 48px;border-bottom:2px solid var(--rule);display:flex;align-items:center;gap:14px;}
@@ -66,7 +66,7 @@ body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;fo
 /* TABS */
 .tabs-wrap{background:#fff;border-bottom:2px solid var(--rule);padding:0 48px;display:flex;align-items:center;}
 .tabs{display:flex;flex-wrap:wrap;}
-.tab{padding:15px 22px;font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
+.tab{padding:15px 22px;font-size:15px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);cursor:pointer;border-bottom:3px solid transparent;transition:all .2s;}
 .tab:hover{color:var(--ink2);}
 .tab[data-id="gerencial"].active{color:var(--rd);border-bottom-color:var(--rd);}
 .tab[data-id="categoria"].active{color:var(--gd);border-bottom-color:var(--gd);}
@@ -82,7 +82,7 @@ body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;fo
 
 /* === ABA 1: VISÃO GERENCIAL - HERO === */
 .hero{background:#fff;border:1px solid var(--rule);border-radius:18px;padding:32px 36px;margin-bottom:24px;box-shadow:var(--sh);position:relative;overflow:hidden;}
-.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--rd);}
+.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:var(--rd);}
 .hero-grid{display:grid;grid-template-columns:auto 1fr auto;gap:36px;align-items:center;}
 .hero-pct{font-family:"Playfair Display",serif;font-size:84px;font-weight:900;color:var(--rd);line-height:1;letter-spacing:-.04em;}
 .hero-pct.green{color:var(--em);}
@@ -103,7 +103,7 @@ body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;fo
 /* GRÁFICOS */
 .chart-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:24px;box-shadow:var(--sh);margin-bottom:22px;}
 .ch{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;gap:12px;flex-wrap:wrap;}
-.ct{font-size:15px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);}
+.ct{font-size:15px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);}
 .cs{font-size:14px;color:var(--ink3);}
 .cw{position:relative;height:280px;}
 .cw.tall{height:380px;}
@@ -129,7 +129,7 @@ body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;fo
 /* TABLE */
 .tc{background:#fff;border:1px solid var(--rule);border-radius:14px;overflow:hidden;box-shadow:var(--sh);margin-bottom:22px;}
 .th-row{padding:16px 22px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--rule);gap:12px;flex-wrap:wrap;}
-.th-title{font-size:15px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);}
+.th-title{font-size:15px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink);}
 .th-note{font-size:13px;color:var(--ink3);}
 .tc-wrap{overflow:auto;max-height:72vh;}
 table.in{width:100%;border-collapse:collapse;font-size:15px;}
@@ -554,10 +554,10 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
-    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:#8a7f73;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:#8a7f73;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
-    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:4px 8px;border:none;background:transparent;color:#8a7f73;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">
+    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
     </button>
