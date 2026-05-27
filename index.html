@@ -1303,24 +1303,12 @@ const INAD_DIARIA_URLS = {
 // Atualizado toda vez que o usuário clica "Atualizar dados"
 let COBRANCA_MAP = {};
 
-// Processa CSV da aba "inadimplencia diaria" da planilha de cobrança.
-// Identifica colunas por header (case-insensitive). Chave = número da fatura.
-function processarCobranca(csvText) {
-  if (!csvText) return {};
-  const linhas = csvText.split('\n');
-  if (linhas.length < 2) return {};
-  // Split respeitando aspas do CSV
-  function splitCsv(line) {
-    const result = []; let cur = ''; let inQ = false;
-    for (let c of line) {
-      if (c === '"') { inQ = !inQ; }
-      else if (c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
-      else { cur += c; }
-    }
-    result.push(cur.trim());
-    return result;
-  }
-  const header = splitCsv(linhas[0]).map(h => h.toLowerCase().replace(/[^a-záéíóúãõêô]/g, ''));
+// Processa dados da aba "inadimplencia diaria" da planilha de cobrança.
+// Recebe rows[][] já parseado por fetchCsv (igual a todas as outras funções).
+// Chave do mapa = número da fatura (coluna Fatura).
+function processarCobranca(rows) {
+  if (!rows || rows.length < 2) return {};
+  const header = rows[0].map(h => String(h || '').toLowerCase().replace(/[^a-záéíóúãõêô]/g, ''));
   const idx = (terms) => header.findIndex(h => terms.some(t => h.includes(t)));
   const idxFatura      = idx(['fatura']);
   const idxResponsavel = idx(['respons']);
@@ -1328,14 +1316,14 @@ function processarCobranca(csvText) {
   const idxData        = idx(['data']);
   if (idxFatura === -1) return {};
   const mapa = {};
-  for (let i = 1; i < linhas.length; i++) {
-    const row = splitCsv(linhas[i]);
-    const fatura = (row[idxFatura] || '').trim().replace(/\.0$/, '');
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i] || [];
+    const fatura = String(row[idxFatura] || '').trim().replace(/\.0$/, '');
     if (!fatura) continue;
     mapa[fatura] = {
-      responsavel: idxResponsavel >= 0 ? (row[idxResponsavel] || '').trim() : '',
-      data:        idxData >= 0        ? (row[idxData] || '').trim() : '',
-      comentario:  idxComentario >= 0  ? (row[idxComentario] || '').trim() : '',
+      responsavel: idxResponsavel >= 0 ? String(row[idxResponsavel] || '').trim() : '',
+      data:        idxData >= 0        ? String(row[idxData] || '').trim() : '',
+      comentario:  idxComentario >= 0  ? String(row[idxComentario] || '').trim() : '',
     };
   }
   return mapa;
