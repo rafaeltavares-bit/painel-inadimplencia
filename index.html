@@ -4261,19 +4261,18 @@ function renderDevedores() {
     </div>`;
 
   // Header de tabela compartilhado
+  // Ordem: # | Fatura | Razão Social | Parceiro | Tier | Valor | Responsável | Observação
   const tableHeader = `
     <thead>
       <tr>
-        <th style="width:36px">#</th>
-        <th style="text-align:left;min-width:100px">Dt Emissão</th>
-        <th style="min-width:80px">Fatura</th>
-        <th style="min-width:130px">CNPJ</th>
-        <th style="text-align:left;min-width:200px">Razão Social</th>
-        <th style="min-width:80px">Parceiro</th>
-        <th style="min-width:80px">Tier</th>
-        <th style="min-width:100px">Valor</th>
-        <th style="min-width:100px">Responsável</th>
-        <th style="text-align:left;min-width:260px">Observação de Cobrança</th>
+        <th style="width:32px;text-align:center">#</th>
+        <th style="width:90px">Fatura</th>
+        <th style="text-align:left;width:22%">Razão Social</th>
+        <th style="width:72px">Parceiro</th>
+        <th style="width:68px">Tier</th>
+        <th style="width:100px">Valor</th>
+        <th style="width:96px">Responsável</th>
+        <th style="text-align:left;">Observação de Cobrança</th>
       </tr>
     </thead>`;
 
@@ -4281,25 +4280,24 @@ function renderDevedores() {
   const renderLinha = (r, i, destaque) => {
     const temObs = r.comentario || r.responsavel;
     const tierCor = r.tier==='Tier 1'?'#b45309':r.tier==='Tier 2'?'var(--sp)':r.tier==='Tier 3'?'var(--em)':'var(--ink3)';
-    const highlightStyle = destaque && temObs ? 'background:rgba(16,185,129,0.05);' : '';
+    const highlightStyle = destaque && temObs ? 'background:rgba(16,185,129,0.06);' : '';
+    const tooltip = [r.dt_emissao, r.cnpj ? fmtCnpj(r.cnpj) : ''].filter(Boolean).join(' · ');
     return `
       <tr data-search="${(r.razao_social+' '+r.cnpj+' '+r.parceiro+' '+(r.responsavel||'')+' '+(r.comentario||'')).toLowerCase()}"
         style="${highlightStyle}">
-        <td style="color:var(--ink3);font-size:12px">${i+1}</td>
-        <td style="text-align:left;font-size:13px;white-space:nowrap;color:var(--ink2)">${r.dt_emissao||'—'}</td>
-        <td style="font-size:12px;white-space:nowrap;color:var(--ink3)">${r.fatura||'—'}</td>
-        <td style="font-size:12px;white-space:nowrap;color:var(--ink2)">${r.cnpj ? fmtCnpj(r.cnpj) : '—'}</td>
-        <td class="b" style="text-align:left;white-space:normal;max-width:240px;font-size:13px">${r.razao_social}</td>
-        <td style="font-size:13px;color:var(--ink2)">${r.parceiro}</td>
-        <td><span style="font-size:11px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:${tierCor};font-weight:600">${r.tier||'—'}</span></td>
-        <td class="neg" style="font-weight:700">${fmtR(r.valor)}</td>
-        <td>${r.responsavel
-          ? `<span style="background:rgba(239,68,68,.08);padding:2px 8px;border-radius:9px;font-weight:700;color:var(--rd)">${r.responsavel}</span>`
-          : '<span style="font-size:11px;color:var(--ink3)">—</span>'}</td>
-        <td style="text-align:left;max-width:300px;white-space:normal;font-size:13px;">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">${i+1}</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">${r.fatura||'—'}</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="${tooltip}">${r.razao_social}</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">${r.parceiro}</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:${tierCor};font-weight:700">${r.tier||'—'}</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">${fmtR(r.valor)}</td>
+        <td style="text-align:center">${r.responsavel
+          ? `<span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">${r.responsavel}</span>`
+          : '<span style="color:var(--ink3)">—</span>'}</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px">
           ${r.comentario
-            ? `<span style="color:var(--ink1)" title="${r.comentario}">${r.comentario.length>100?r.comentario.substring(0,100)+'…':r.comentario}</span>`
-            : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
+            ? `${r.comentario.length>120?r.comentario.substring(0,120)+'…':r.comentario}`
+            : '<span style="color:var(--ink3)">—</span>'}
         </td>
       </tr>`;
   };
@@ -4351,7 +4349,7 @@ function renderDevedores() {
           <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
         </div>
         <div class="tc-wrap">
-          <table class="in" style="font-size:13px;">
+          <table class="in" style="font-size:13px;width:100%;table-layout:fixed;">
             ${tableHeader}
             <tbody id="tbody-dev">
               ${top10.map((r,i) => renderLinha(r, i, false)).join('')}
@@ -4382,7 +4380,7 @@ function renderDevedores() {
           <input type="text" class="search-box" id="dev-search-ana" placeholder="🔍 Buscar..." oninput="filtrarAnalitico()">
         </div>
         <div class="tc-wrap">
-          <table class="in" style="font-size:13px;">
+          <table class="in" style="font-size:13px;width:100%;table-layout:fixed;">
             ${tableHeader}
             <tbody id="tbody-ana">
               ${rows.map((r,i) => renderLinha(r, i, true)).join('')}
