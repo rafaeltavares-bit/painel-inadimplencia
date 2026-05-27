@@ -1308,13 +1308,39 @@ let COBRANCA_MAP = {};
 // Chave do mapa = número da fatura (coluna Fatura).
 function processarCobranca(rows) {
   if (!rows || rows.length < 2) return {};
-  const header = rows[0].map(h => String(h || '').toLowerCase().replace(/[^a-záéíóúãõêô]/g, ''));
-  const idx = (terms) => header.findIndex(h => terms.some(t => h.includes(t)));
-  const idxFatura      = idx(['fatura']);
-  const idxResponsavel = idx(['respons']);
-  const idxComentario  = idx(['coment', 'observ', 'comment']);
-  const idxData        = idx(['data']);
-  if (idxFatura === -1) return {};
+  // Detecta colunas pelo header — busca pelo nome mais específico possível
+  // Planilha: col J=Fatura, col R=RESPONSÁVEL, col S=DATA, col T=COMENTÁRIOS
+  const rawHeader = rows[0].map(h => String(h || '').trim());
+  const norm = h => h.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]/g, '');
+  const normedHeader = rawHeader.map(norm);
+
+  // Busca por correspondência exata primeiro, depois parcial
+  const findCol = (exatos, parciais) => {
+    // Busca exata (nome normalizado igual)
+    for (const e of exatos) {
+      const i = normedHeader.indexOf(norm(e));
+      if (i >= 0) return i;
+    }
+    // Busca parcial (contém)
+    for (const p of parciais) {
+      const i = normedHeader.findIndex(h => h.includes(norm(p)));
+      if (i >= 0) return i;
+    }
+    return -1;
+  };
+
+  const idxFatura      = findCol(['Fatura'], ['fatura']);
+  const idxResponsavel = findCol(['RESPONSÁVEL', 'RESPONSAVEL', 'Responsável'], ['respons']);
+  // DATA: busca exata para não pegar "Data Contrat" etc
+  const idxData        = findCol(['DATA', 'Data', 'data'], []);
+  // COMENTÁRIOS: coluna T — busca exata
+  const idxComentario  = findCol(['COMENTÁRIOS', 'COMENTARIOS', 'Comentários', 'Comentarios'], ['coment']);
+
+  // Debug: loga no console para diagnóstico
+  console.log('[Cobrança] Header:', rawHeader.slice(0,22).join(' | '));
+  console.log('[Cobrança] idx → Fatura:', idxFatura, '| Responsável:', idxResponsavel, '| Data:', idxData, '| Comentário:', idxComentario);
+
+  if (idxFatura === -1) { console.warn('[Cobrança] Coluna Fatura não encontrada!'); return {}; }
   const mapa = {};
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i] || [];
@@ -4214,6 +4240,7 @@ function renderDevedores() {
       <tr>
         <th style="width:36px">#</th>
         <th style="text-align:left;min-width:100px">Dt Emissão</th>
+        <th style="min-width:80px">Fatura</th>
         <th style="min-width:130px">CNPJ</th>
         <th style="text-align:left;min-width:200px">Razão Social</th>
         <th style="min-width:80px">Parceiro</th>
@@ -4234,6 +4261,7 @@ function renderDevedores() {
         style="${highlightStyle}">
         <td style="color:var(--ink3);font-size:12px">${i+1}</td>
         <td style="text-align:left;font-size:13px;white-space:nowrap;color:var(--ink2)">${r.dt_emissao||'—'}</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3)">${r.fatura||'—'}</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink2)">${r.cnpj ? fmtCnpj(r.cnpj) : '—'}</td>
         <td class="b" style="text-align:left;white-space:normal;max-width:240px;font-size:13px">${r.razao_social}</td>
         <td style="font-size:13px;color:var(--ink2)">${r.parceiro}</td>
