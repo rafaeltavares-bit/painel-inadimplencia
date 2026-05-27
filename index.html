@@ -1209,7 +1209,7 @@ async function exportarSnapshot(nome) {
 
   // Substitui let DATA = {...}; pelo DATA congelado do snapshot
   // CRÍTICO: escapar <\/script> dentro do JSON para nao quebrar a tag script
-  const snapDataStr = JSON.stringify(s.DATA).replace(/<\/script>/gi, '<\\/script>');
+  const snapDataStr = JSON.stringify(s.DATA).replace(/<\/script>/gi, '\u003c/script>');
   const MARKER = 'let DATA = {';
   const dataStart = htmlBase.indexOf(MARKER);
   if (dataStart === -1) { alert('Erro: marcador "let DATA = {" nao encontrado no arquivo fonte.'); return; }
@@ -1231,9 +1231,9 @@ async function exportarSnapshot(nome) {
   const snapDtJSON = JSON.stringify(dtFmt);
   const estadoSnapJSON = JSON.stringify(estadoSnap);
   // Escapar <\/script> nos JSONs injetados para nao quebrar a tag script
-  const safeNomeJSON   = snapNomeJSON.replace(/<\/script>/gi, '<\\/script>');
-  const safeDtJSON     = snapDtJSON.replace(/<\/script>/gi, '<\\/script>');
-  const safeEstadoJSON = estadoSnapJSON.replace(/<\/script>/gi, '<\\/script>');
+  const safeNomeJSON   = snapNomeJSON.replace(/<\/script>/gi, '\u003c/script>');
+  const safeDtJSON     = snapDtJSON.replace(/<\/script>/gi, '\u003c/script>');
+  const safeEstadoJSON = estadoSnapJSON.replace(/<\/script>/gi, '\u003c/script>');
 
   const bannerScript = '<scr' + 'ipt>\n' +
     'window.IS_SNAPSHOT=true;\n' +
