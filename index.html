@@ -1276,13 +1276,15 @@ if (document.readyState === 'loading') {
   atualizarContadorSnapshots();
 }
 
-// Ocultar botão Atualizar Dados quando aberto por terceiros (GitHub Pages sem token)
+// Ocultar botões para terceiros (quem não tem token do GitHub)
 (function(){
   var isPublic = !localStorage.getItem('gh_token');
   if (isPublic) {
     document.addEventListener('DOMContentLoaded', function(){
-      var btn = document.getElementById('btn-refresh');
-      if (btn) btn.style.display = 'none';
+      ['btn-refresh','btn-snap-save','btn-snap-list'].forEach(function(id){
+        var el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
     });
   }
 })();
