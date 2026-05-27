@@ -1191,52 +1191,49 @@ function exportarSnapshot(nome) {
   const snaps = lerSnapshots();
   const s = snaps[nome];
   if (!s) return;
-  // Exporta HTML completo com dados do snapshot embutidos — abre em qualquer browser sem internet
+
+  // Gera HTML completo com dados do snapshot substituídos diretamente no fonte
   const nomeArq = nome.replace(/[^a-zA-Z0-9_-]+/g, '_').toLowerCase();
   const dt = s.criado_em ? new Date(s.criado_em) : new Date();
   const dtFmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
 
-  // Pega o HTML atual da página e injeta os dados do snapshot + banner permanente
+  // Captura o HTML atual, substitui o bloco let DATA = {...}; diretamente no fonte
   let htmlBase = document.documentElement.outerHTML;
 
-  // Substitui o DATA embutido pelo DATA do snapshot
+  // Substitui o estado MES_CORRENTE embutido
+  const estadoSnap = s.estado || {};
+
+  // 1. Substitui let DATA = {...}; pelo DATA do snapshot
   const snapDataStr = JSON.stringify(s.DATA);
-  // Injeta script logo antes de </body> que substitui DATA e congela o painel
-  const injectScript = `
-<script>
-// === SNAPSHOT EXPORTADO: "${nome}" — ${dtFmt} ===
-// Este arquivo é uma cópia congelada do painel. Não é possível atualizar dados.
-(function() {
-  window.addEventListener('DOMContentLoaded', function() {
-    // Sobrescreve DATA com o snapshot
-    if (typeof DATA !== 'undefined') {
-      DATA = ${snapDataStr};
-    }
-    // Congela estado
-    var estado = ${JSON.stringify(s.estado)};
-    if (typeof MES_CORRENTE !== 'undefined') MES_CORRENTE = estado.MES_CORRENTE || MES_CORRENTE;
-    if (typeof SAFRAS_COMPARACAO !== 'undefined') SAFRAS_COMPARACAO = estado.SAFRAS_COMPARACAO || SAFRAS_COMPARACAO;
-    if (typeof DATAS_COMPARACAO !== 'undefined') DATAS_COMPARACAO = estado.DATAS_COMPARACAO || DATAS_COMPARACAO;
-    if (typeof DATAS_COMPARACAO_MANUAL !== 'undefined') DATAS_COMPARACAO_MANUAL = estado.DATAS_COMPARACAO_MANUAL || DATAS_COMPARACAO_MANUAL;
-    // Banner fixo de snapshot
-    var banner = document.createElement('div');
-    banner.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1612;color:#fff;padding:8px 24px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;z-index:9999;';
-    banner.innerHTML = '<span>📸 Snapshot: <b>${nome}</b> — salvo em ${dtFmt}</span><span style="opacity:.6;font-size:12px;">Arquivo exportado · dados congelados</span>';
-    document.body.appendChild(banner);
-    // Desabilita botões de atualização
-    ['btn-refresh','btn-snap-save'].forEach(function(id) {
-      var el = document.getElementById(id);
-      if (el) { el.style.opacity = '0.3'; el.style.pointerEvents = 'none'; el.title = 'Indisponível no snapshot exportado'; }
+  htmlBase = htmlBase.replace(/let DATA = \{[\s\S]*?\};/, 'let DATA = ' + snapDataStr + ';');
+
+  // 2. Adiciona banner + congela estado + desabilita botões via script inline ao final do body
+  const bannerScript = `<script>
+(function(){
+  var est = ${JSON.stringify(estadoSnap)};
+  if(typeof MES_CORRENTE!=='undefined' && est.MES_CORRENTE) MES_CORRENTE=est.MES_CORRENTE;
+  if(typeof SAFRAS_COMPARACAO!=='undefined' && est.SAFRAS_COMPARACAO) SAFRAS_COMPARACAO=est.SAFRAS_COMPARACAO;
+  if(typeof DATAS_COMPARACAO!=='undefined' && est.DATAS_COMPARACAO) DATAS_COMPARACAO=est.DATAS_COMPARACAO;
+  if(typeof DATAS_COMPARACAO_MANUAL!=='undefined' && est.DATAS_COMPARACAO_MANUAL) DATAS_COMPARACAO_MANUAL=est.DATAS_COMPARACAO_MANUAL;
+  window.addEventListener('DOMContentLoaded', function(){
+    // Banner identificador
+    var b=document.createElement('div');
+    b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1a1612;color:#fff;padding:8px 24px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;z-index:9999;box-shadow:0 -2px 8px rgba(0,0,0,.3);';
+    b.innerHTML='<span>📸 Snapshot: <b>${nome}</b> — salvo em ${dtFmt}</span><span style="opacity:.6;font-size:12px;">dados congelados · somente leitura</span>';
+    document.body.appendChild(b);
+    // Bloqueia botões ao vivo
+    ['btn-refresh','btn-snap-save'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){el.style.opacity='0.3';el.style.pointerEvents='none';el.title='Indisponível no snapshot exportado';}
     });
     // Re-renderiza com dados do snapshot
-    if (typeof popularSeletorMes === 'function') popularSeletorMes();
-    if (typeof renderGerencial === 'function') renderGerencial();
-    if (typeof renderFarol === 'function') renderFarol();
+    if(typeof popSeletorMes==='function') popSeletorMes();
+    if(typeof atualizarTudo==='function') atualizarTudo();
   });
 })();
 <\/script>`;
 
-  htmlBase = htmlBase.replace('</body>', injectScript + '</body>');
+  htmlBase = htmlBase.replace('</body>', bannerScript + '</body>');
 
   const blob = new Blob([htmlBase], {type: 'text/html;charset=utf-8'});
   const url = URL.createObjectURL(blob);
