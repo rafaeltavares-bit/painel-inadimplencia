@@ -1187,51 +1187,65 @@ function sairModoSnapshot() {
   window.scrollTo({top: 0, behavior: 'smooth'});
 }
 
-function exportarSnapshot(nome) {
+async function exportarSnapshot(nome) {
   const snaps = lerSnapshots();
   const s = snaps[nome];
   if (!s) return;
 
-  // Gera HTML completo com dados do snapshot substituídos diretamente no fonte
   const nomeArq = nome.replace(/[^a-zA-Z0-9_-]+/g, '_').toLowerCase();
   const dt = s.criado_em ? new Date(s.criado_em) : new Date();
   const dtFmt = dt.toLocaleDateString('pt-BR') + ' ' + dt.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-
-  // Captura o HTML atual, substitui o bloco let DATA = {...}; diretamente no fonte
-  let htmlBase = document.documentElement.outerHTML;
-
-  // Substitui o estado MES_CORRENTE embutido
   const estadoSnap = s.estado || {};
 
-  // 1. Substitui let DATA = {...}; pelo DATA do snapshot
-  const snapDataStr = JSON.stringify(s.DATA);
-  htmlBase = htmlBase.replace(/let DATA = \{[\s\S]*?\};/, 'let DATA = ' + snapDataStr + ';');
+  // Busca o HTML fonte original via fetch (evita capturar o estado atual do DOM)
+  let htmlBase;
+  try {
+    const resp = await fetch(window.location.href);
+    htmlBase = await resp.text();
+  } catch(e) {
+    alert('Erro ao ler o arquivo do painel: ' + e.message);
+    return;
+  }
 
-  // 2. Adiciona banner + congela estado + desabilita botões via script inline ao final do body
-  const bannerScript = `<script>
-(function(){
-  var est = ${JSON.stringify(estadoSnap)};
-  if(typeof MES_CORRENTE!=='undefined' && est.MES_CORRENTE) MES_CORRENTE=est.MES_CORRENTE;
-  if(typeof SAFRAS_COMPARACAO!=='undefined' && est.SAFRAS_COMPARACAO) SAFRAS_COMPARACAO=est.SAFRAS_COMPARACAO;
-  if(typeof DATAS_COMPARACAO!=='undefined' && est.DATAS_COMPARACAO) DATAS_COMPARACAO=est.DATAS_COMPARACAO;
-  if(typeof DATAS_COMPARACAO_MANUAL!=='undefined' && est.DATAS_COMPARACAO_MANUAL) DATAS_COMPARACAO_MANUAL=est.DATAS_COMPARACAO_MANUAL;
-  window.addEventListener('DOMContentLoaded', function(){
-    // Banner identificador
-    var b=document.createElement('div');
-    b.style.cssText='position:fixed;bottom:0;left:0;right:0;background:#1a1612;color:#fff;padding:8px 24px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;z-index:9999;box-shadow:0 -2px 8px rgba(0,0,0,.3);';
-    b.innerHTML='<span>📸 Snapshot: <b>${nome}</b> — salvo em ${dtFmt}</span><span style="opacity:.6;font-size:12px;">dados congelados · somente leitura</span>';
-    document.body.appendChild(b);
-    // Bloqueia botões ao vivo
-    ['btn-refresh','btn-snap-save'].forEach(function(id){
-      var el=document.getElementById(id);
-      if(el){el.style.opacity='0.3';el.style.pointerEvents='none';el.title='Indisponível no snapshot exportado';}
-    });
-    // Re-renderiza com dados do snapshot
-    if(typeof popSeletorMes==='function') popSeletorMes();
-    if(typeof atualizarTudo==='function') atualizarTudo();
-  });
-})();
-<\/script>`;
+  // Substitui let DATA = {...}; pelo DATA congelado do snapshot
+  const snapDataStr = JSON.stringify(s.DATA);
+  // Marcador de início: "let DATA = {" até o fechamento do objeto principal
+  const dataStart = htmlBase.indexOf('let DATA = {');
+  if (dataStart === -1) { alert('Marcador DATA não encontrado no fonte.'); return; }
+  // Encontra o ; que fecha o let DATA — precisa achar o } correto no nível 0
+  let depth = 0, i = dataStart + 10; // posição do "{"
+  while (i < htmlBase.length) {
+    if (htmlBase[i] === '{') depth++;
+    else if (htmlBase[i] === '}') { depth--; if (depth === 0) break; }
+    i++;
+  }
+  const dataEnd = i + 1; // posição após o "}"
+  htmlBase = htmlBase.slice(0, dataStart) + 'let DATA = ' + snapDataStr + htmlBase.slice(dataEnd);
+
+  // Injeta script que: seta estado, adiciona banner, desabilita botões
+  const snapNomeJSON = JSON.stringify(nome);
+  const snapDtJSON = JSON.stringify(dtFmt);
+  const estadoSnapJSON = JSON.stringify(estadoSnap);
+  const bannerScript = '<scr' + 'ipt>\n' +
+    '(function(){\n' +
+    '  var _snapNome = ' + snapNomeJSON + ';\n' +
+    '  var _snapDt = ' + snapDtJSON + ';\n' +
+    '  var est = ' + estadoSnapJSON + ';\n' +
+    '  if(typeof MES_CORRENTE!=="undefined" && est.MES_CORRENTE) MES_CORRENTE=est.MES_CORRENTE;\n' +
+    '  if(typeof SAFRAS_COMPARACAO!=="undefined" && est.SAFRAS_COMPARACAO) SAFRAS_COMPARACAO=[].concat(est.SAFRAS_COMPARACAO);\n' +
+    '  if(typeof DATAS_COMPARACAO!=="undefined" && est.DATAS_COMPARACAO) Object.assign(DATAS_COMPARACAO,est.DATAS_COMPARACAO);\n' +
+    '  if(typeof DATAS_COMPARACAO_MANUAL!=="undefined" && est.DATAS_COMPARACAO_MANUAL) Object.assign(DATAS_COMPARACAO_MANUAL,est.DATAS_COMPARACAO_MANUAL);\n' +
+    '  document.addEventListener("DOMContentLoaded",function(){\n' +
+    '    var sel=document.getElementById("sel-mes-corrente");\n' +
+    '    if(sel && est.MES_CORRENTE) sel.value=est.MES_CORRENTE;\n' +
+    '    var b=document.createElement("div");\n' +
+    '    b.style.cssText="position:fixed;bottom:0;left:0;right:0;background:#1a1612;color:#fff;padding:10px 28px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;z-index:9999;box-shadow:0 -2px 10px rgba(0,0,0,.4);";\n' +
+    '    b.innerHTML="<span>📸 Snapshot: <b>"+_snapNome+"</b> &nbsp;·&nbsp; salvo em "+_snapDt+"</span><span style=\\"opacity:.55;font-size:12px;font-weight:400;\\">dados congelados · somente leitura</span>";\n' +
+    '    document.body.appendChild(b);\n' +
+    '    ["btn-refresh","btn-snap-save"].forEach(function(id){var el=document.getElementById(id);if(el){el.style.opacity="0.3";el.style.pointerEvents="none";}});\n' +
+    '  });\n' +
+    '})();\n' +
+    '</' + 'script>';
 
   htmlBase = htmlBase.replace('</body>', bannerScript + '</body>');
 
