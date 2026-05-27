@@ -2258,6 +2258,14 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     // 5b. Cobrança (observações dos operadores) — atualiza COBRANCA_MAP global
     if (cobrancaCsv) {
       COBRANCA_MAP = processarCobranca(cobrancaCsv);
+      // DIAGNÓSTICO: log das primeiras entradas do mapa
+      const _keys = Object.keys(COBRANCA_MAP).slice(0, 5);
+      console.log('[COBRANCA_MAP] Total de faturas:', Object.keys(COBRANCA_MAP).length);
+      console.log('[COBRANCA_MAP] Primeiras chaves:', _keys.join(' | '));
+      _keys.forEach(k => console.log('  fatura', k, '->', JSON.stringify(COBRANCA_MAP[k])));
+      // Diagnóstico específico da fatura 11215923 (Floema)
+      const _floema = COBRANCA_MAP['11215923'];
+      console.log('[COBRANCA_MAP] fatura 11215923 (Floema):', _floema ? JSON.stringify(_floema) : 'NÃO ENCONTRADA');
     }
     
     // 6. Reconstruir DATA preservando campos que não vêm dos CSVs
@@ -4206,31 +4214,31 @@ function renderDevedores() {
   const mesesFiltro = DEV_MES_FILTRO ? [DEV_MES_FILTRO] : meses3;
   const periodoLabel = meses3.map(m => labelMes[m]||m).join(', ');
 
-  // ---- Barra de sub-abas ----
+  // ---- Barra de sub-abas ---- estilo idêntico ao Por Categoria
+  const _safrasBtns = [null, ...meses3].map(m => {
+    const ativo = DEV_MES_FILTRO === m;
+    const onclick = m === null ? "setDevMesFiltro(null)" : "setDevMesFiltro('" + m + "')";
+    const label = m === null ? 'Últimos 3 meses' : (labelMes[m]||m);
+    const cls = 'cat-tab' + (ativo ? ' active' : '');
+    const sty = ativo ? 'background:var(--em);border-color:transparent;color:#fff;' : '';
+    return '<div class="' + cls + '" data-cor="em" onclick="' + onclick + '" style="' + sty + '">' + label + '</div>';
+  }).join('');
+  const _top10Sty = DEV_SUBTAB==='top10' ? 'background:var(--em);border-color:transparent;color:#fff;' : '';
+  const _anaSty  = DEV_SUBTAB==='analitico' ? 'background:var(--em);border-color:transparent;color:#fff;' : '';
+  const _top10Cls = 'cat-tab' + (DEV_SUBTAB==='top10' ? ' active' : '');
+  const _anaCls   = 'cat-tab' + (DEV_SUBTAB==='analitico' ? ' active' : '');
   const subTabBar = `
-    <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--rule2);align-items:flex-end;">
-      <button onclick="switchDevSubtab('top10')"
-        style="padding:8px 22px;border:none;border-bottom:${DEV_SUBTAB==='top10'?'3px solid var(--em)':'3px solid transparent'};
-               background:transparent;font-weight:${DEV_SUBTAB==='top10'?700:500};
-               color:${DEV_SUBTAB==='top10'?'var(--em)':'var(--ink2)'};font-size:14px;cursor:pointer;">
-        🏆 10 Maiores
-      </button>
-      <button onclick="switchDevSubtab('analitico')"
-        style="padding:8px 22px;border:none;border-bottom:${DEV_SUBTAB==='analitico'?'3px solid var(--em)':'3px solid transparent'};
-               background:transparent;font-weight:${DEV_SUBTAB==='analitico'?700:500};
-               color:${DEV_SUBTAB==='analitico'?'var(--em)':'var(--ink2)'};font-size:14px;cursor:pointer;">
-        📋 Analítico
-      </button>
-      <div style="flex:1"></div>
-      <div style="display:flex;align-items:center;gap:6px;padding:0 8px 8px;">
-        <span style="font-size:12px;color:var(--ink3);font-weight:600;">Safra:</span>
-        ${[null, ...meses3].map(m => `
-          <button onclick="setDevMesFiltro(${m===null?'null':`'${m}'`})"
-            style="padding:4px 10px;border-radius:14px;border:1px solid ${(DEV_MES_FILTRO===m)?'var(--em)':'var(--rule2)'};
-                   background:${(DEV_MES_FILTRO===m)?'var(--em)':'transparent'};
-                   color:${(DEV_MES_FILTRO===m)?'#fff':'var(--ink2)'};font-size:12px;font-weight:600;cursor:pointer;">
-            ${m===null?'Últimos 3 meses':(labelMes[m]||m)}
-          </button>`).join('')}
+    <div class="cat-filtros" style="margin-bottom:22px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="cf-label">Visão:</span>
+        <div class="cat-tabs">
+          <div class="${_top10Cls}" data-cor="em" onclick="switchDevSubtab('top10')" style="${_top10Sty}">🏆 10 Maiores</div>
+          <div class="${_anaCls}"   data-cor="em" onclick="switchDevSubtab('analitico')" style="${_anaSty}">📋 Analítico</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="cf-label">Safra:</span>
+        <div class="cat-tabs">${_safrasBtns}</div>
       </div>
     </div>`;
 
