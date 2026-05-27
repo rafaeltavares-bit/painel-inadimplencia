@@ -1276,6 +1276,8 @@ if (document.readyState === 'loading') {
   atualizarContadorSnapshots();
 }
 
+
+
 // ============================================================================
 // MÓDULO DE ATUALIZAÇÃO AUTOMÁTICA DO GOOGLE SHEETS
 // ============================================================================
@@ -1285,6 +1287,14 @@ if (document.readyState === 'loading') {
 const SHEET_ID_PRINCIPAL = '1OholQy3Km1og9z5M8RRFVLiixGsBvIX5';
 const SHEET_ID_INAD_DIARIA = '1g09aZMt-9CWw4jjNGxCAoSZ_YXEhR9eb';
 const SHEET_ID_COBRANCA = '1ica9nJ8d1OCfMPskvQZlWFsDXfrrlOOuMdyBKvpOULc';
+
+// ========== PUBLICAÇÃO AUTOMÁTICA NO GITHUB ==========
+const GITHUB_REPO  = 'rafaeltavares-bit/painel-inadimplencia';
+const GITHUB_FILE  = 'index.html';
+const GITHUB_BRANCH = 'main';
+// Token salvo no localStorage — nunca fica no código enviado a terceiros
+function getGithubToken() { return localStorage.getItem('gh_token') || ''; }
+function setGithubToken(t) { localStorage.setItem('gh_token', t.trim()); }
 
 function gvizCsvUrl(sheetId, tabName) {
   // gviz endpoint - lê por nome de aba, retorna CSV
@@ -2236,6 +2246,80 @@ function processarTodasSafrasInadDiaria(todasAbas, safras) {
 }
 
 // ========== ORQUESTRAÇÃO ==========
+async function publicarNoGithub(btnTxt, btnIcon) {
+  const token = getGithubToken();
+  if (!token) {
+    // Pedir token pela primeira vez
+    const t = prompt('Cole seu token do GitHub para publicar automaticamente:\n(começa com ghp + letras e números)');
+    if (!t || !t.trim()) return;
+    setGithubToken(t);
+  }
+
+  btnTxt.textContent = 'Publicando no GitHub…';
+  btnIcon.textContent = '📤';
+
+  try {
+    const tk = getGithubToken();
+    const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`;
+
+    // 1. Pegar o SHA atual do arquivo (obrigatório para atualizar)
+    const getMeta = await fetch(apiUrl + '?ref=' + GITHUB_BRANCH, {
+      headers: { 'Authorization': 'token ' + tk, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (!getMeta.ok) throw new Error('Erro ao ler arquivo do GitHub: ' + getMeta.status);
+    const meta = await getMeta.json();
+    const sha = meta.sha;
+
+    // 2. Pegar o HTML atual da página (com dados atualizados)
+    const MARKER_START = '/*SNAP_DATA_START*/';
+    const MARKER_END   = '/*SNAP_DATA_END*/';
+    const dataStr = JSON.stringify(DATA).replace(/<\/script>/gi, '\u003c/script>');
+    let htmlAtual = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const ms = htmlAtual.indexOf(MARKER_START);
+    const me = htmlAtual.indexOf(MARKER_END);
+    if (ms === -1 || me === -1) throw new Error('Marcadores DATA não encontrados no HTML.');
+    htmlAtual = htmlAtual.slice(0, ms) + MARKER_START + 'let DATA = ' + dataStr + ';' + MARKER_END + htmlAtual.slice(me + MARKER_END.length);
+
+    // 3. Fechar modais abertos no HTML
+    htmlAtual = htmlAtual
+      .replace(/id="modal-snap-list"([^>]*)style="[^"]*display:[^;"]*;/, 'id="modal-snap-list"$1style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;')
+      .replace(/id="modal-snap-save"([^>]*)style="[^"]*display:[^;"]*;/, 'id="modal-snap-save"$1style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;');
+
+    // 4. Converter para base64 e enviar
+    const b64 = btoa(unescape(encodeURIComponent(htmlAtual)));
+    const now = new Date();
+    const commitMsg = 'Painel atualizado em ' + now.toLocaleDateString('pt-BR') + ' às ' + now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+
+    const putResp = await fetch(apiUrl, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + tk,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: commitMsg, content: b64, sha: sha, branch: GITHUB_BRANCH })
+    });
+
+    if (!putResp.ok) {
+      const err = await putResp.json();
+      // Token inválido — limpar e avisar
+      if (putResp.status === 401) {
+        localStorage.removeItem('gh_token');
+        throw new Error('Token inválido ou expirado. Reabra o painel e tente novamente.');
+      }
+      throw new Error('GitHub respondeu ' + putResp.status + ': ' + (err.message || JSON.stringify(err)));
+    }
+
+    console.log('[GitHub] Publicado com sucesso:', commitMsg);
+    return true;
+
+  } catch(e) {
+    console.error('[GitHub] Erro:', e);
+    alert('Erro ao publicar no GitHub:\n' + e.message);
+    return false;
+  }
+}
+
 async function atualizarDoSheets() {
   const btn = document.getElementById('btn-refresh');
   const btnIcon = document.getElementById('btn-refresh-icon');
@@ -2515,11 +2599,16 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     liveLabel.textContent = 'Ao vivo · Quick Sight/Omie';
     lastUpd.textContent = 'Sincronizado: ' + dataStr;
     bpFonte.textContent = 'Fonte: Quick Sight/Omie · ' + (DATA.data_extrato_analitico || DATA_EXTRATO_ORIGINAL);
+
+    // Publicar automaticamente no GitHub
+    const publicou = await publicarNoGithub(btnTxt, btnIcon);
     
     setTimeout(() => {
       btnIcon.textContent = '🔄';
-      btnTxt.textContent = 'Atualizar dados';
-    }, 3000);
+      btnTxt.textContent = publicou ? 'Atualizar dados' : 'Atualizar dados';
+      btn.disabled = false;
+      btn.style.background = '';
+    }, publicou ? 2000 : 0);
     
   } catch (err) {
     console.error('Erro ao atualizar:', err);
