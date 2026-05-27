@@ -597,10 +597,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
       <button onclick="fecharModalSnap('modal-snap-list')" style="background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink3);">×</button>
     </div>
     <div id="snap-list-body" style="margin-bottom:14px;"></div>
-    <div style="border-top:1px solid var(--rule2);padding-top:12px;">
-      <button onclick="document.getElementById('snap-import-file').click()" style="padding:8px 14px;border-radius:6px;border:1px solid var(--rule2);background:#fff;cursor:pointer;font-size:13px;font-weight:600;">⬆ Importar snapshot (JSON)</button>
-      <input type="file" id="snap-import-file" accept=".json" style="display:none;" onchange="importarSnapshotArquivo(event)">
-    </div>
+
   </div>
 </div>
 
@@ -1270,35 +1267,7 @@ function excluirSnapshot(nome) {
   abrirModalListaSnapshots();  // recarrega a lista
 }
 
-function importarSnapshotArquivo(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const s = JSON.parse(e.target.result);
-      if (!s.nome || !s.DATA || !s.estado) {
-        alert('Arquivo não parece ser um snapshot válido.');
-        return;
-      }
-      const snaps = lerSnapshots();
-      if (snaps[s.nome]) {
-        if (!confirm(`Já existe um snapshot chamado "${s.nome}". Sobrescrever?`)) return;
-      }
-      snaps[s.nome] = s;
-      if (gravarSnapshots(snaps)) {
-        atualizarContadorSnapshots();
-        abrirModalListaSnapshots();
-        alert(`✅ Snapshot "${s.nome}" importado!`);
-      }
-    } catch (err) {
-      alert('Erro ao ler arquivo: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-  // Limpa o input pra permitir reimportar o mesmo arquivo
-  event.target.value = '';
-}
+
 
 // Inicializar contador ao carregar a página
 if (document.readyState === 'loading') {
