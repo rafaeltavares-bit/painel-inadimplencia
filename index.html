@@ -4151,6 +4151,8 @@ function buildAnalitico(mesesAlvo) {
       const cobr = r.fatura ? (COBRANCA_MAP[r.fatura] || null) : null;
       return {
         safra:        r.safra,
+        tier:         r.tier || "—",
+        cnpj:         r.cnpj,
         dt_emissao:   r.dt_emissao,
         parceiro:     r.parceiro,
         documento:    r.documento,
@@ -4175,10 +4177,11 @@ function renderDevedores() {
                      '2026-01':'Jan/26','2026-02':'Fev/26','2025-12':'Dez/25',
                      '2025-11':'Nov/25','2025-10':'Out/25' };
   const mesesFiltro = DEV_MES_FILTRO ? [DEV_MES_FILTRO] : meses3;
+  const periodoLabel = meses3.map(m => labelMes[m]||m).join(', ');
 
   // ---- Barra de sub-abas ----
   const subTabBar = `
-    <div style="display:flex;gap:0;margin-bottom:18px;border-bottom:2px solid var(--rule2);">
+    <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--rule2);align-items:flex-end;">
       <button onclick="switchDevSubtab('top10')"
         style="padding:8px 22px;border:none;border-bottom:${DEV_SUBTAB==='top10'?'3px solid var(--em)':'3px solid transparent'};
                background:transparent;font-weight:${DEV_SUBTAB==='top10'?700:500};
@@ -4192,43 +4195,45 @@ function renderDevedores() {
         📋 Analítico
       </button>
       <div style="flex:1"></div>
-      <!-- Filtro de mês -->
-      <div style="display:flex;align-items:center;gap:6px;padding:0 8px;">
-        <span style="font-size:12px;color:var(--ink3);font-weight:600;">Mês:</span>
+      <div style="display:flex;align-items:center;gap:6px;padding:0 8px 8px;">
+        <span style="font-size:12px;color:var(--ink3);font-weight:600;">Safra:</span>
         ${[null, ...meses3].map(m => `
           <button onclick="setDevMesFiltro(${m===null?'null':`'${m}'`})"
             style="padding:4px 10px;border-radius:14px;border:1px solid ${(DEV_MES_FILTRO===m)?'var(--em)':'var(--rule2)'};
                    background:${(DEV_MES_FILTRO===m)?'var(--em)':'transparent'};
                    color:${(DEV_MES_FILTRO===m)?'#fff':'var(--ink2)'};font-size:12px;font-weight:600;cursor:pointer;">
-            ${m===null?'Todos':(labelMes[m]||m)}
+            ${m===null?'Últimos 3 meses':(labelMes[m]||m)}
           </button>`).join('')}
       </div>
     </div>`;
 
-  // ---- KPI cards comuns ----
+  // ---- KPI cards menores — apenas no top10 ----
   const total = top.reduce((s,d) => s + d.valor_devido, 0);
   const top10v = top.slice(0,10).reduce((s,d) => s + d.valor_devido, 0);
+  const concPct = total > 0 ? top10v/total*100 : 0;
+  const maiorAtraso = top.length ? Math.max(...top.map(d => d.max_dias_atraso)) : 0;
+
   const cards = `
-    <div class="cat-cards" style="margin-bottom:18px;">
-      <div class="cat-card gold">
-        <div class="cc-title">Top 50 Devedores</div>
-        <div class="cc-pct">${fmtRk(total)}</div>
-        <div class="cc-info"><span>Valor total em aberto</span></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">
+      <div class="cat-card gold" style="padding:16px 18px;">
+        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Top 50 Devedores</div>
+        <div class="cc-pct" style="font-size:28px;">${fmtRk(total)}</div>
+        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Valor total em aberto</span></div>
       </div>
-      <div class="cat-card red">
-        <div class="cc-title">Concentração Top 10</div>
-        <div class="cc-pct">${fmtPct(top10v/total*100, 1)}</div>
-        <div class="cc-info"><span>${top10v/total < 0.3 ? 'Pulverizada ✓' : 'Concentrada ⚠'}</span></div>
+      <div class="cat-card red" style="padding:16px 18px;">
+        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Concentração Top 10</div>
+        <div class="cc-pct" style="font-size:28px;">${fmtPct(concPct, 1)}</div>
+        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${concPct < 30 ? 'Pulverizada ✓' : 'Concentrada ⚠'}</span></div>
       </div>
-      <div class="cat-card blue">
-        <div class="cc-title">Maior Devedor</div>
-        <div class="cc-pct">${top.length ? fmtRk(top[0].valor_devido) : '—'}</div>
-        <div class="cc-info"><span>${top.length ? (top[0].razao_social.substring(0,32)+(top[0].razao_social.length>32?'…':'')) : '—'}</span></div>
+      <div class="cat-card blue" style="padding:16px 18px;">
+        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Devedor</div>
+        <div class="cc-pct" style="font-size:28px;">${top.length ? fmtRk(top[0].valor_devido) : '—'}</div>
+        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${top.length ? (top[0].razao_social.substring(0,30)+(top[0].razao_social.length>30?'…':'')) : '—'}</span></div>
       </div>
-      <div class="cat-card purple">
-        <div class="cc-title">Maior Atraso</div>
-        <div class="cc-pct">${top.length ? Math.max(...top.map(d => d.max_dias_atraso)) : '—'} <span style="font-size:18px">dias</span></div>
-        <div class="cc-info"><span>Em alguma fatura do top 50</span></div>
+      <div class="cat-card purple" style="padding:16px 18px;">
+        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Atraso</div>
+        <div class="cc-pct" style="font-size:28px;">${maiorAtraso} <span style="font-size:16px">dias</span></div>
+        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Em alguma fatura do top 50</span></div>
       </div>
     </div>`;
 
@@ -4236,14 +4241,14 @@ function renderDevedores() {
 
   if (DEV_SUBTAB === 'top10') {
     // ---- TOP 10 MAIORES ----
-    // Mostra os 10 maiores do top50 já existente (agrupado por CNPJ, todos os meses)
     const top10 = top.slice(0, 10);
     content = `
+      ${cards}
       <div class="tc">
         <div class="th-row">
           <div>
-            <div class="th-title">🏆 10 Maiores Devedores</div>
-            <div class="th-note">Maior valor em aberto · Todos os meses disponíveis · Clique em Analítico para ver por mês com observações</div>
+            <div class="th-title">🏆 10 Maiores Devedores · ${periodoLabel}</div>
+            <div class="th-note">Maior valor em aberto nos últimos 3 meses · Clique em Analítico para ver por safra com observações de cobrança</div>
           </div>
           <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
         </div>
@@ -4252,97 +4257,112 @@ function renderDevedores() {
             <thead>
               <tr>
                 <th style="min-width:28px">#</th>
-                <th style="min-width:160px">CNPJ</th>
+                <th style="min-width:150px">CNPJ</th>
                 <th style="text-align:left;min-width:220px">Razão Social</th>
                 <th>Parceiro</th>
                 <th>Tier</th>
-                <th>Valor</th>
+                <th>Valor em Aberto</th>
                 <th>Faturas</th>
-                <th>Atraso</th>
+                <th>Maior Atraso</th>
               </tr>
             </thead>
             <tbody id="tbody-dev">
-              ${top10.map((d,i) => `
+              ${top10.map((d,i) => {
+                const medalha = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+                return `
                 <tr data-search="${(d.razao_social+' '+d.cnpj).toLowerCase()}">
-                  <td><strong style="font-size:15px;color:var(--em)">${i+1}</strong></td>
-                  <td style="font-size:13px;white-space:nowrap">${fmtCnpj(d.cnpj)}${renderNotaBtn(d.cnpj, d.razao_social)}</td>
+                  <td><strong style="font-size:15px;color:var(--em)">${medalha||i+1}</strong></td>
+                  <td style="font-size:12px;white-space:nowrap">${fmtCnpj(d.cnpj)}${renderNotaBtn(d.cnpj, d.razao_social)}</td>
                   <td class="b" style="text-align:left;white-space:normal;max-width:280px">${d.razao_social}</td>
                   <td>${d.parceiro}</td>
-                  <td>${d.tier}</td>
+                  <td><span style="font-size:12px;padding:2px 7px;border-radius:10px;background:var(--rule2);color:var(--ink2)">${d.tier}</span></td>
                   <td class="neg" style="font-size:15px;font-weight:700">${fmtR(d.valor_devido)}</td>
-                  <td>${d.qtd_faturas}</td>
-                  <td class="${d.max_dias_atraso >= 90 ? 'neg' : d.max_dias_atraso >= 30 ? 'warn' : ''}" style="white-space:nowrap">${d.max_dias_atraso} dias</td>
-                </tr>
-              `).join('')}
+                  <td style="color:var(--ink2)">${d.qtd_faturas}</td>
+                  <td>
+                    <span style="padding:2px 8px;border-radius:10px;font-size:13px;font-weight:600;
+                      background:${d.max_dias_atraso>=90?'rgba(239,68,68,.1)':d.max_dias_atraso>=30?'rgba(245,158,11,.1)':'rgba(16,185,129,.1)'};
+                      color:${d.max_dias_atraso>=90?'var(--rd)':d.max_dias_atraso>=30?'var(--am)':'var(--em)'}">
+                      ${d.max_dias_atraso} dias
+                    </span>
+                  </td>
+                </tr>`; }).join('')}
             </tbody>
           </table>
         </div>
       </div>`;
+
   } else {
-    // ---- ANALÍTICO ----
+    // ---- ANALÍTICO — sem cards, só a tabela ----
     const rows = buildAnalitico(mesesFiltro);
     const temCobranca = Object.keys(COBRANCA_MAP).length > 0;
+    const periodoFiltro = DEV_MES_FILTRO ? (labelMes[DEV_MES_FILTRO]||DEV_MES_FILTRO) : periodoLabel;
+    const comObs = rows.filter(r => r.comentario || r.responsavel).length;
+
     content = `
       <div class="tc">
-        <div class="th-row">
+        <div class="th-row" style="align-items:flex-start;">
           <div>
-            <div class="th-title">📋 Analítico de Devedores ${DEV_MES_FILTRO ? '· '+(labelMes[DEV_MES_FILTRO]||DEV_MES_FILTRO) : '· '+meses3.map(m=>labelMes[m]||m).join(', ')}</div>
-            <div class="th-note">
+            <div class="th-title">📋 Analítico de Devedores · ${periodoFiltro}</div>
+            <div class="th-note" style="margin-top:4px;">
+              ${rows.length} faturas vencidas
               ${temCobranca
-                ? `Observações de cobrança carregadas (${Object.keys(COBRANCA_MAP).length} registros) · Clique em "Atualizar dados" para atualizar`
-                : '⚠ Clique em "Atualizar dados" para carregar observações de cobrança'}
+                ? ` · <span style="color:var(--em);font-weight:600">${comObs} com observação de cobrança</span>`
+                : ' · <span style="color:var(--am)">⚠ Atualize os dados para carregar observações</span>'}
             </div>
           </div>
           <input type="text" class="search-box" id="dev-search-ana" placeholder="🔍 Buscar..." oninput="filtrarAnalitico()">
         </div>
         <div class="tc-wrap">
-          <table class="in">
+          <table class="in" style="font-size:13px;">
             <thead>
               <tr>
-                <th>#</th>
-                <th>Safra</th>
-                <th style="min-width:160px">CNPJ</th>
+                <th style="width:36px">#</th>
+                <th style="width:70px">Safra</th>
+                <th style="min-width:140px">CNPJ</th>
                 <th style="text-align:left;min-width:200px">Razão Social</th>
-                <th>Parceiro</th>
-                <th>Tier</th>
-                <th>Valor</th>
-                <th style="min-width:80px">Responsável</th>
-                <th style="text-align:left;min-width:250px">Comentário</th>
+                <th style="min-width:70px">Parceiro</th>
+                <th style="min-width:80px">Tier</th>
+                <th style="min-width:100px">Valor</th>
+                <th style="min-width:100px">Responsável</th>
+                <th style="text-align:left;min-width:260px">Observação de Cobrança</th>
               </tr>
             </thead>
             <tbody id="tbody-ana">
               ${rows.map((r,i) => {
                 const temObs = r.comentario || r.responsavel;
+                const tierCor = r.tier==='Tier 1'?'var(--gd)':r.tier==='Tier 2'?'var(--sp)':r.tier==='Tier 3'?'var(--em)':'var(--ink3)';
                 return `
                   <tr data-search="${(r.razao_social+' '+r.cnpj+' '+r.parceiro+' '+(r.responsavel||'')+' '+(r.comentario||'')).toLowerCase()}"
-                    style="${temObs?'background:rgba(var(--em-rgb,239,68,68),0.04)':''}">
-                    <td style="color:var(--ink3)">${i+1}</td>
-                    <td style="white-space:nowrap;font-size:13px">${labelMes[r.safra]||r.safra}</td>
-                    <td style="font-size:12px;white-space:nowrap">${fmtCnpj(r.cnpj)}</td>
-                    <td class="b" style="text-align:left;white-space:normal;max-width:240px;font-size:13px">${r.razao_social}</td>
-                    <td style="font-size:13px">${r.parceiro}</td>
-                    <td style="font-size:12px">${r.tier}</td>
-                    <td class="neg">${fmtR(r.valor)}</td>
-                    <td style="font-weight:${r.responsavel?600:400};color:${r.responsavel?'var(--rd)':'var(--ink3)'}">
-                      ${r.responsavel || '<span style="color:var(--ink3);font-size:12px">—</span>'}
+                    style="${temObs?'background:rgba(16,185,129,0.04);border-left:3px solid var(--em)':''}">
+                    <td style="color:var(--ink3);font-size:12px">${i+1}</td>
+                    <td><span style="font-size:12px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:var(--ink2);font-weight:600;white-space:nowrap">${labelMes[r.safra]||r.safra}</span></td>
+                    <td style="font-size:11px;white-space:nowrap;color:var(--ink2)">${fmtCnpj(r.cnpj)}</td>
+                    <td class="b" style="text-align:left;white-space:normal;max-width:240px">${r.razao_social}</td>
+                    <td style="color:var(--ink2)">${r.parceiro}</td>
+                    <td><span style="font-size:11px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:${tierCor};font-weight:600">${r.tier||'—'}</span></td>
+                    <td class="neg" style="font-weight:700">${fmtR(r.valor)}</td>
+                    <td style="font-weight:${r.responsavel?700:400};color:${r.responsavel?'var(--rd)':'var(--ink3)'}">
+                      ${r.responsavel
+                        ? `<span style="background:rgba(239,68,68,.08);padding:2px 8px;border-radius:9px">${r.responsavel}</span>`
+                        : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
                     </td>
-                    <td style="text-align:left;font-size:13px;max-width:300px;white-space:normal;color:${r.comentario?'var(--ink1)':'var(--ink3)'}">
+                    <td style="text-align:left;max-width:300px;white-space:normal;">
                       ${r.comentario
-                        ? `<span title="${(r.data_obs?'['+r.data_obs+'] ':'')+r.comentario}">${r.data_obs?'<span style="font-size:11px;color:var(--ink3)">['+r.data_obs+']</span> ':''}<span>${r.comentario.length > 80 ? r.comentario.substring(0,80)+'…' : r.comentario}</span></span>`
-                        : '<span style="font-size:12px">—</span>'}
+                        ? `<span style="color:var(--ink1)">${r.data_obs?`<span style="font-size:11px;color:var(--ink3);margin-right:4px">[${r.data_obs}]</span>`:''}<span title="${r.comentario}">${r.comentario.length>90?r.comentario.substring(0,90)+'…':r.comentario}</span></span>`
+                        : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
                     </td>
-                  </tr>`;
-              }).join('')}
+                  </tr>`; }).join('')}
             </tbody>
           </table>
         </div>
-        <div style="margin-top:8px;font-size:12px;color:var(--ink3);">
-          ${rows.length} registros · Linhas com fundo destacado têm observação de cobrança
+        <div style="margin-top:10px;font-size:12px;color:var(--ink3);display:flex;gap:16px;align-items:center;">
+          <span>${rows.length} registros</span>
+          ${comObs > 0 ? `<span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;background:var(--em);border-radius:2px;opacity:.4"></span> Linha destacada = tem observação de cobrança</span>` : ''}
         </div>
       </div>`;
   }
 
-  document.getElementById('sec-devedores').innerHTML = subTabBar + cards + content;
+  document.getElementById('sec-devedores').innerHTML = subTabBar + content;
 }
 
 function filtrarDevedores() {
