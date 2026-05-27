@@ -3710,6 +3710,20 @@ function renderCategoria() {
 function abrirDrillParceiro(parc, safra) {
   // V30: guarda estado pra que o sistema de notas possa re-renderizar este drill
   window._drillAtivo = {parc, safra};
+  // Monta mapa CNPJ → {responsavel, data, comentario} via analitico_devedores + COBRANCA_MAP
+  const _cnpjCobranca = {};
+  if (DATA.analitico_devedores && Object.keys(COBRANCA_MAP).length > 0) {
+    DATA.analitico_devedores.forEach(r => {
+      const cnpj = String(r.cnpj || r.documento || '').trim().replace(/\.0$/, '');
+      if (!cnpj) return;
+      const cobr = COBRANCA_MAP[r.fatura];
+      if (!cobr || !cobr.comentario) return;
+      // Guarda a entrada mais recente por CNPJ
+      if (!_cnpjCobranca[cnpj] || (cobr.data && cobr.data > (_cnpjCobranca[cnpj].data || ''))) {
+        _cnpjCobranca[cnpj] = cobr;
+      }
+    });
+  }
   // Helper de mês legível
   const mesLbl = DATA.kpis_por_safra[safra]?.safra_label || safra;
   
@@ -3780,14 +3794,7 @@ function abrirDrillParceiro(parc, safra) {
           <div class="th-title">🔍 ${parc} · ${mesLbl}</div>
           <div class="th-note">${clientes.length} clientes inadimplentes · R$ ${fmtR(total)} em aberto</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;">
-          <button onclick="abrirNotasPanel()" title="Observações por cliente"
-            style="padding:6px 10px;border-radius:6px;border:1px solid var(--rule2);background:#fff;color:var(--ink3);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;">
-            <span>📝</span>
-            <span id="btn-notas-count-cat" style="color:var(--ink3);">${countNotas()}</span>
-          </button>
-          <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:13px;cursor:pointer;font-weight:600;">Fechar</button>
-        </div>
+        <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:13px;cursor:pointer;font-weight:600;">Fechar</button>
       </div>
       <div style="padding:10px 14px;margin:10px 0;border-left:3px solid ${concentCor};background:rgba(22,61,120,.03);border-radius:6px;font-size:15px;font-weight:600;color:var(--ink2);">
         ${concentIcone} ${concentTxt}
@@ -3795,21 +3802,39 @@ function abrirDrillParceiro(parc, safra) {
       <div class="tc-wrap">
         <table class="in">
           <thead>
-            <tr><th style="min-width:28px">#</th><th style="min-width:160px">CNPJ</th><th style="text-align:left;min-width:220px">Razão Social</th><th>Tier</th><th>Vencto</th><th style="min-width:80px">Atraso</th><th>Valor</th><th>Faturas</th></tr>
+            <tr>
+              <th style="width:28px">#</th>
+              <th style="text-align:left;width:22%">Razão Social</th>
+              <th style="width:68px">Tier</th>
+              <th style="width:80px">Atraso</th>
+              <th style="width:100px">Valor</th>
+              <th style="width:90px">Responsável</th>
+              <th style="text-align:left;">Observação de Cobrança</th>
+            </tr>
           </thead>
           <tbody>
-            ${clientes.map((c,i) => `
-              <tr${i < 3 ? ' style="background:rgba(176,48,32,.04);"' : ''}>
-                <td>${i+1}</td>
-                <td style="font-size:13px;white-space:nowrap">${fmtCnpj(c.cnpj)}${renderNotaBtn(c.cnpj, c.razao_social)}</td>
-                <td class="b" style="text-align:left;white-space:normal;max-width:280px">${c.razao_social}</td>
-                <td>${c.tier}</td>
-                <td style="white-space:nowrap;font-size:14px">${c.dt_venc || '—'}</td>
-                <td class="${(c.aging_dias||0) >= 90 ? 'neg' : (c.aging_dias||0) >= 30 ? 'warn' : ''}" style="white-space:nowrap">${c.aging_dias ? c.aging_dias + ' d' : '—'}</td>
-                <td class="neg">${fmtR(c.valor)}</td>
-                <td>${c.qtd}</td>
-              </tr>
-            `).join('')}
+            ${clientes.map((c,i) => {
+              const cnpjKey = String(c.cnpj||'').trim().replace(/\.0$/,'');
+              const cobr = _cnpjCobranca[cnpjKey] || null;
+              const temObs = cobr && (cobr.comentario || cobr.responsavel);
+              const rowBg = i < 3 ? 'background:rgba(176,48,32,.04);' : (temObs ? 'background:rgba(16,185,129,0.05);' : '');
+              const tierCor = c.tier==='Tier 1'?'#b45309':c.tier==='Tier 2'?'var(--sp)':c.tier==='Tier 3'?'var(--em)':'var(--ink3)';
+              return `
+              <tr style="${rowBg}">
+                <td style="text-align:center;color:var(--ink3)">${i+1}</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="${fmtCnpj(c.cnpj)}">${c.razao_social}</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:${tierCor};font-weight:700">${c.tier||'—'}</span></td>
+                <td class="${(c.aging_dias||0) >= 90 ? 'neg' : (c.aging_dias||0) >= 30 ? 'warn' : ''}" style="white-space:nowrap;text-align:center">${c.aging_dias ? c.aging_dias + ' d' : '—'}</td>
+                <td class="neg" style="font-weight:700">${fmtR(c.valor)}</td>
+                <td style="text-align:center">${cobr && cobr.responsavel
+                  ? `<span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">${cobr.responsavel}</span>`
+                  : '<span style="color:var(--ink3)">—</span>'}</td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  ${cobr && cobr.comentario
+                    ? (cobr.comentario.length > 110 ? cobr.comentario.substring(0,110)+'…' : cobr.comentario)
+                    : '<span style="color:var(--ink3)">—</span>'}
+                </td>
+              </tr>`; }).join('')}
           </tbody>
         </table>
       </div>
