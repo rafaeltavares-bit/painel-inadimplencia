@@ -1341,13 +1341,19 @@ function processarCobranca(rows) {
   console.log('[Cobrança] idx → Fatura:', idxFatura, '| Responsável:', idxResponsavel, '| Data:', idxData, '| Comentário:', idxComentario);
 
   if (idxFatura === -1) { console.warn('[Cobrança] Coluna Fatura não encontrada!'); return {}; }
-  // Converte data "DD/MM/AAAA" para número comparável (AAAAMMDD)
+  // Converte data para número comparável (AAAAMMDD) — aceita DD/MM/AAAA, D/M/AA etc
   const parseDataOrd = (s) => {
     if (!s) return 0;
-    const m = String(s).match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    const str = String(s).trim();
+    // Tenta DD/MM/AAAA ou D/M/AAAA ou com hífen
+    const m = str.match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{2,4})/);
     if (!m) return 0;
-    return parseInt(m[3] + m[2].padStart(2,'0') + m[1].padStart(2,'0'), 10);
+    let ano = parseInt(m[3], 10);
+    if (ano < 100) ano += 2000;
+    return ano * 10000 + parseInt(m[2], 10) * 100 + parseInt(m[1], 10);
   };
+  // Log para diagnóstico da fatura 11215923
+  console.log('[processarCobranca] parseDataOrd test: 25/05/2026 =', parseDataOrd('25/05/2026'), '| 18/05/2026 =', parseDataOrd('18/05/2026'));
   const mapa = {};
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i] || [];
@@ -2600,9 +2606,8 @@ function renderFarol() {
 let MOSTRAR_CURVAS = false; // toggle para curvas D+
 
 function renderGerencial() {
-  const kpi = DATA.kpis_por_safra[MES_CORRENTE];
-  // Guard: se kpi não existe para o mês corrente, usar dados do inad_diaria
-  if (!kpi) {
+  // Guard: se kpi não existe para o mês corrente, criar com dados do inad_diaria
+  if (!DATA.kpis_por_safra[MES_CORRENTE]) {
     const pts = DATA.inad_diaria && DATA.inad_diaria[MES_CORRENTE];
     const ultimoPct = pts && pts.length > 0 ? pts[pts.length - 1].pct : 0;
     DATA.kpis_por_safra[MES_CORRENTE] = {
@@ -2613,6 +2618,7 @@ function renderGerencial() {
       inadimplencia_rs_estimada: 0,
     };
   }
+  const kpi = DATA.kpis_por_safra[MES_CORRENTE];
   const media12 = DATA.estatisticas.media_historica_12m;
   
   const dataAtual = DATAS_COMPARACAO[MES_CORRENTE];
