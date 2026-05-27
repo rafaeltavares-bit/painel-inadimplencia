@@ -634,7 +634,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   <div id="sec-recuperacao" class="section"></div>
 </div>
 
-<div class="footer">
+<div class="footer" style="display:none">
   <span>Projeto Painel · Inadimplência</span>
   <span id="subt-info">Em construção · Drive local</span>
 </div>
@@ -1312,7 +1312,7 @@ function processarCobranca(rows) {
   const idx = (terms) => header.findIndex(h => terms.some(t => h.includes(t)));
   const idxFatura      = idx(['fatura']);
   const idxResponsavel = idx(['respons']);
-  const idxComentario  = idx(['coment', 'observ']);
+  const idxComentario  = idx(['coment', 'observ', 'comment']);
   const idxData        = idx(['data']);
   if (idxFatura === -1) return {};
   const mapa = {};
@@ -1901,6 +1901,8 @@ function processarBaseCompleta(rows) {
         if (!drillAgg._analitico) drillAgg._analitico = [];
         drillAgg._analitico.push({
           safra, parceiro: parc,
+          tier: String(r[idx.tier] || '').trim() || 'Sem Classificação',
+          cnpj: cnpj,
           dt_emissao: String(r[idx.dtEmissao] || '').trim(),
           documento: cnpj,
           fatura: faturaNr,
@@ -4171,7 +4173,6 @@ function buildAnalitico(mesesAlvo) {
 }
 
 function renderDevedores() {
-  const top = DATA.top_devedores || [];
   const meses3 = get3MesesRecentes();
   const labelMes = { '2026-03':'Mar/26','2026-04':'Abr/26','2026-05':'Mai/26',
                      '2026-01':'Jan/26','2026-02':'Fev/26','2025-12':'Dez/25',
@@ -4207,92 +4208,106 @@ function renderDevedores() {
       </div>
     </div>`;
 
-  // ---- KPI cards menores — apenas no top10 ----
-  const total = top.reduce((s,d) => s + d.valor_devido, 0);
-  const top10v = top.slice(0,10).reduce((s,d) => s + d.valor_devido, 0);
-  const concPct = total > 0 ? top10v/total*100 : 0;
-  const maiorAtraso = top.length ? Math.max(...top.map(d => d.max_dias_atraso)) : 0;
+  // Header de tabela compartilhado
+  const tableHeader = `
+    <thead>
+      <tr>
+        <th style="width:36px">#</th>
+        <th style="text-align:left;min-width:100px">Dt Emissão</th>
+        <th style="min-width:130px">CNPJ</th>
+        <th style="text-align:left;min-width:200px">Razão Social</th>
+        <th style="min-width:80px">Parceiro</th>
+        <th style="min-width:80px">Tier</th>
+        <th style="min-width:100px">Valor</th>
+        <th style="min-width:100px">Responsável</th>
+        <th style="text-align:left;min-width:260px">Observação de Cobrança</th>
+      </tr>
+    </thead>`;
 
-  const cards = `
-    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">
-      <div class="cat-card gold" style="padding:16px 18px;">
-        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Top 50 Devedores</div>
-        <div class="cc-pct" style="font-size:28px;">${fmtRk(total)}</div>
-        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Valor total em aberto</span></div>
-      </div>
-      <div class="cat-card red" style="padding:16px 18px;">
-        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Concentração Top 10</div>
-        <div class="cc-pct" style="font-size:28px;">${fmtPct(concPct, 1)}</div>
-        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${concPct < 30 ? 'Pulverizada ✓' : 'Concentrada ⚠'}</span></div>
-      </div>
-      <div class="cat-card blue" style="padding:16px 18px;">
-        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Devedor</div>
-        <div class="cc-pct" style="font-size:28px;">${top.length ? fmtRk(top[0].valor_devido) : '—'}</div>
-        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${top.length ? (top[0].razao_social.substring(0,30)+(top[0].razao_social.length>30?'…':'')) : '—'}</span></div>
-      </div>
-      <div class="cat-card purple" style="padding:16px 18px;">
-        <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Atraso</div>
-        <div class="cc-pct" style="font-size:28px;">${maiorAtraso} <span style="font-size:16px">dias</span></div>
-        <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Em alguma fatura do top 50</span></div>
-      </div>
-    </div>`;
+  // Função para renderizar linha de fatura (compartilhada)
+  const renderLinha = (r, i, destaque) => {
+    const temObs = r.comentario || r.responsavel;
+    const tierCor = r.tier==='Tier 1'?'#b45309':r.tier==='Tier 2'?'var(--sp)':r.tier==='Tier 3'?'var(--em)':'var(--ink3)';
+    const highlightStyle = destaque && temObs ? 'background:rgba(16,185,129,0.05);' : '';
+    return `
+      <tr data-search="${(r.razao_social+' '+r.cnpj+' '+r.parceiro+' '+(r.responsavel||'')+' '+(r.comentario||'')).toLowerCase()}"
+        style="${highlightStyle}">
+        <td style="color:var(--ink3);font-size:12px">${i+1}</td>
+        <td style="text-align:left;font-size:13px;white-space:nowrap;color:var(--ink2)">${r.dt_emissao||'—'}</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink2)">${r.cnpj ? fmtCnpj(r.cnpj) : '—'}</td>
+        <td class="b" style="text-align:left;white-space:normal;max-width:240px;font-size:13px">${r.razao_social}</td>
+        <td style="font-size:13px;color:var(--ink2)">${r.parceiro}</td>
+        <td><span style="font-size:11px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:${tierCor};font-weight:600">${r.tier||'—'}</span></td>
+        <td class="neg" style="font-weight:700">${fmtR(r.valor)}</td>
+        <td>${r.responsavel
+          ? `<span style="background:rgba(239,68,68,.08);padding:2px 8px;border-radius:9px;font-weight:700;color:var(--rd)">${r.responsavel}</span>`
+          : '<span style="font-size:11px;color:var(--ink3)">—</span>'}</td>
+        <td style="text-align:left;max-width:300px;white-space:normal;font-size:13px;">
+          ${r.comentario
+            ? `<span style="color:var(--ink1)" title="${r.comentario}">${r.comentario.length>100?r.comentario.substring(0,100)+'…':r.comentario}</span>`
+            : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
+        </td>
+      </tr>`;
+  };
 
   let content = '';
 
   if (DEV_SUBTAB === 'top10') {
-    // ---- TOP 10 MAIORES ----
-    const top10 = top.slice(0, 10);
+    // ---- TOP 10: top 10 faturas de maior valor nos últimos 3 meses ----
+    const rows = buildAnalitico(meses3); // sempre 3 meses, ignora filtro safra
+    const top10 = rows.slice(0, 10);
+    const totalTop = rows.reduce((s,r) => s + r.valor, 0);
+    const top10v = top10.reduce((s,r) => s + r.valor, 0);
+    const concPct = totalTop > 0 ? top10v/totalTop*100 : 0;
+    const maiorAtraso = rows.length ? Math.max(...rows.map(r => r.aging_dias||0)) : 0;
+    const temCobranca = Object.keys(COBRANCA_MAP).length > 0;
+
+    const cards = `
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">
+        <div class="cat-card gold" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Total em Aberto</div>
+          <div class="cc-pct" style="font-size:28px;">${fmtRk(totalTop)}</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${periodoLabel}</span></div>
+        </div>
+        <div class="cat-card red" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Concentração Top 10</div>
+          <div class="cc-pct" style="font-size:28px;">${fmtPct(concPct, 1)}</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${concPct < 30 ? 'Pulverizada ✓' : 'Concentrada ⚠'}</span></div>
+        </div>
+        <div class="cat-card blue" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Fatura</div>
+          <div class="cc-pct" style="font-size:28px;">${top10.length ? fmtRk(top10[0].valor) : '—'}</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>${top10.length ? (top10[0].razao_social.substring(0,28)+(top10[0].razao_social.length>28?'…':'')) : '—'}</span></div>
+        </div>
+        <div class="cat-card purple" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Atraso</div>
+          <div class="cc-pct" style="font-size:28px;">${maiorAtraso} <span style="font-size:16px">dias</span></div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Na base dos 3 meses</span></div>
+        </div>
+      </div>`;
+
     content = `
       ${cards}
       <div class="tc">
         <div class="th-row">
           <div>
-            <div class="th-title">🏆 10 Maiores Devedores · ${periodoLabel}</div>
-            <div class="th-note">Maior valor em aberto nos últimos 3 meses · Clique em Analítico para ver por safra com observações de cobrança</div>
+            <div class="th-title">🏆 10 Maiores Faturas Vencidas</div>
+            <div class="th-note">Soma dos últimos 3 meses (${periodoLabel}) · ordenado por valor em aberto · ${temCobranca ? 'observações de cobrança carregadas' : '⚠ atualize para carregar observações'}</div>
           </div>
           <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
         </div>
         <div class="tc-wrap">
-          <table class="in">
-            <thead>
-              <tr>
-                <th style="min-width:28px">#</th>
-                <th style="min-width:150px">CNPJ</th>
-                <th style="text-align:left;min-width:220px">Razão Social</th>
-                <th>Parceiro</th>
-                <th>Tier</th>
-                <th>Valor em Aberto</th>
-                <th>Faturas</th>
-                <th>Maior Atraso</th>
-              </tr>
-            </thead>
+          <table class="in" style="font-size:13px;">
+            ${tableHeader}
             <tbody id="tbody-dev">
-              ${top10.map((d,i) => {
-                const medalha = i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
-                return `
-                <tr data-search="${(d.razao_social+' '+d.cnpj).toLowerCase()}">
-                  <td><strong style="font-size:15px;color:var(--em)">${medalha||i+1}</strong></td>
-                  <td style="font-size:12px;white-space:nowrap">${fmtCnpj(d.cnpj)}${renderNotaBtn(d.cnpj, d.razao_social)}</td>
-                  <td class="b" style="text-align:left;white-space:normal;max-width:280px">${d.razao_social}</td>
-                  <td>${d.parceiro}</td>
-                  <td><span style="font-size:12px;padding:2px 7px;border-radius:10px;background:var(--rule2);color:var(--ink2)">${d.tier}</span></td>
-                  <td class="neg" style="font-size:15px;font-weight:700">${fmtR(d.valor_devido)}</td>
-                  <td style="color:var(--ink2)">${d.qtd_faturas}</td>
-                  <td>
-                    <span style="padding:2px 8px;border-radius:10px;font-size:13px;font-weight:600;
-                      background:${d.max_dias_atraso>=90?'rgba(239,68,68,.1)':d.max_dias_atraso>=30?'rgba(245,158,11,.1)':'rgba(16,185,129,.1)'};
-                      color:${d.max_dias_atraso>=90?'var(--rd)':d.max_dias_atraso>=30?'var(--am)':'var(--em)'}">
-                      ${d.max_dias_atraso} dias
-                    </span>
-                  </td>
-                </tr>`; }).join('')}
+              ${top10.map((r,i) => renderLinha(r, i, false)).join('')}
             </tbody>
           </table>
         </div>
       </div>`;
 
   } else {
-    // ---- ANALÍTICO — sem cards, só a tabela ----
+    // ---- ANALÍTICO ----
     const rows = buildAnalitico(mesesFiltro);
     const temCobranca = Object.keys(COBRANCA_MAP).length > 0;
     const periodoFiltro = DEV_MES_FILTRO ? (labelMes[DEV_MES_FILTRO]||DEV_MES_FILTRO) : periodoLabel;
@@ -4307,57 +4322,21 @@ function renderDevedores() {
               ${rows.length} faturas vencidas
               ${temCobranca
                 ? ` · <span style="color:var(--em);font-weight:600">${comObs} com observação de cobrança</span>`
-                : ' · <span style="color:var(--am)">⚠ Atualize os dados para carregar observações</span>'}
+                : ' · <span style="color:var(--am)">⚠ Atualize para carregar observações de cobrança</span>'}
             </div>
           </div>
           <input type="text" class="search-box" id="dev-search-ana" placeholder="🔍 Buscar..." oninput="filtrarAnalitico()">
         </div>
         <div class="tc-wrap">
           <table class="in" style="font-size:13px;">
-            <thead>
-              <tr>
-                <th style="width:36px">#</th>
-                <th style="width:70px">Safra</th>
-                <th style="min-width:140px">CNPJ</th>
-                <th style="text-align:left;min-width:200px">Razão Social</th>
-                <th style="min-width:70px">Parceiro</th>
-                <th style="min-width:80px">Tier</th>
-                <th style="min-width:100px">Valor</th>
-                <th style="min-width:100px">Responsável</th>
-                <th style="text-align:left;min-width:260px">Observação de Cobrança</th>
-              </tr>
-            </thead>
+            ${tableHeader}
             <tbody id="tbody-ana">
-              ${rows.map((r,i) => {
-                const temObs = r.comentario || r.responsavel;
-                const tierCor = r.tier==='Tier 1'?'var(--gd)':r.tier==='Tier 2'?'var(--sp)':r.tier==='Tier 3'?'var(--em)':'var(--ink3)';
-                return `
-                  <tr data-search="${(r.razao_social+' '+r.cnpj+' '+r.parceiro+' '+(r.responsavel||'')+' '+(r.comentario||'')).toLowerCase()}"
-                    style="${temObs?'background:rgba(16,185,129,0.04);border-left:3px solid var(--em)':''}">
-                    <td style="color:var(--ink3);font-size:12px">${i+1}</td>
-                    <td><span style="font-size:12px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:var(--ink2);font-weight:600;white-space:nowrap">${labelMes[r.safra]||r.safra}</span></td>
-                    <td style="font-size:11px;white-space:nowrap;color:var(--ink2)">${fmtCnpj(r.cnpj)}</td>
-                    <td class="b" style="text-align:left;white-space:normal;max-width:240px">${r.razao_social}</td>
-                    <td style="color:var(--ink2)">${r.parceiro}</td>
-                    <td><span style="font-size:11px;padding:2px 7px;border-radius:9px;background:var(--rule2);color:${tierCor};font-weight:600">${r.tier||'—'}</span></td>
-                    <td class="neg" style="font-weight:700">${fmtR(r.valor)}</td>
-                    <td style="font-weight:${r.responsavel?700:400};color:${r.responsavel?'var(--rd)':'var(--ink3)'}">
-                      ${r.responsavel
-                        ? `<span style="background:rgba(239,68,68,.08);padding:2px 8px;border-radius:9px">${r.responsavel}</span>`
-                        : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
-                    </td>
-                    <td style="text-align:left;max-width:300px;white-space:normal;">
-                      ${r.comentario
-                        ? `<span style="color:var(--ink1)">${r.data_obs?`<span style="font-size:11px;color:var(--ink3);margin-right:4px">[${r.data_obs}]</span>`:''}<span title="${r.comentario}">${r.comentario.length>90?r.comentario.substring(0,90)+'…':r.comentario}</span></span>`
-                        : '<span style="font-size:11px;color:var(--ink3)">—</span>'}
-                    </td>
-                  </tr>`; }).join('')}
+              ${rows.map((r,i) => renderLinha(r, i, true)).join('')}
             </tbody>
           </table>
         </div>
-        <div style="margin-top:10px;font-size:12px;color:var(--ink3);display:flex;gap:16px;align-items:center;">
-          <span>${rows.length} registros</span>
-          ${comObs > 0 ? `<span style="display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:10px;height:10px;background:var(--em);border-radius:2px;opacity:.4"></span> Linha destacada = tem observação de cobrança</span>` : ''}
+        <div style="margin-top:10px;font-size:12px;color:var(--ink3);padding:0 16px 12px;">
+          ${rows.length} registros${comObs>0?' · linhas destacadas em verde têm observação de cobrança':''}
         </div>
       </div>`;
   }
