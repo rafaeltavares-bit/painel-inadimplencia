@@ -572,7 +572,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 <!-- Banner que aparece quando o usuário está visualizando um snapshot salvo -->
 <div id="snap-banner" style="display:none;background:#fff4cc;border-top:2px solid #d4a017;border-bottom:2px solid #d4a017;padding:10px 48px;color:#5c4400;font-weight:700;align-items:center;justify-content:space-between;font-size:14px;">
   <div>🔒 <span id="snap-banner-nome">Visualizando snapshot</span> · <span style="font-weight:400;">dados congelados, nada será atualizado</span></div>
-  <div onclick="sairModoSnapshot()" style="background:#d4a017;color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;">← Voltar ao painel ao vivo</div>
+  <div id="btn-voltar-live" onclick="sairModoSnapshot()" style="background:#d4a017;color:#fff;padding:6px 14px;border-radius:6px;font-size:13px;cursor:pointer;">← Voltar ao painel ao vivo</div>
 </div>
 
 <!-- Modal: Salvar snapshot -->
@@ -1220,7 +1220,6 @@ async function exportarSnapshot(nome) {
   htmlBase = htmlBase.slice(0, ms) + MARKER_START + 'let DATA = ' + snapDataStr + ';' + MARKER_END + htmlBase.slice(me + MARKER_END.length);
 
   // 5. Ativar o banner que já existe no HTML (snap-banner)
-  //    Substituir display:none por display:flex e preencher o nome/data
   const bannerNome = nome.replace(/</g,'&lt;').replace(/>/g,'&gt;');
   htmlBase = htmlBase.replace(
     'id="snap-banner-nome">Visualizando snapshot',
@@ -1231,12 +1230,24 @@ async function exportarSnapshot(nome) {
     'id="snap-banner" style="display:flex;'
   );
 
-  // 6. Desabilitar botões ao vivo no HTML exportado
+  // 6. Esconder botão "Voltar ao painel ao vivo" — sem sentido no arquivo exportado
+  htmlBase = htmlBase.replace(
+    'id="btn-voltar-live"',
+    'id="btn-voltar-live" style="display:none!important;"'
+  );
+
+  // 7. Congelar o status "Ao vivo" para mostrar que é snapshot
+  htmlBase = htmlBase
+    .replace(/id="live-label">[^<]*/,  'id="live-label">\uD83D\uDCF8 Snapshot')
+    .replace(/id="last-upd">[^<]*/,    'id="last-upd">Gerado em: ' + dtFmt);
+
+  // 8. Desabilitar botões ao vivo no HTML exportado
   htmlBase = htmlBase
     .replace(/id="btn-refresh"([^>]*)style="([^"]*)"/g, function(m,a,b){ return 'id="btn-refresh"'+a+'style="'+b+';opacity:0.3;pointer-events:none;"'; })
-    .replace(/id="btn-snap-save"([^>]*)style="([^"]*)"/g, function(m,a,b){ return 'id="btn-snap-save"'+a+'style="'+b+';opacity:0.3;pointer-events:none;"'; });
+    .replace(/id="btn-snap-save"([^>]*)style="([^"]*)"/g, function(m,a,b){ return 'id="btn-snap-save"'+a+'style="'+b+';opacity:0.3;pointer-events:none;"'; })
+    .replace(/id="btn-snap-list"([^>]*)style="([^"]*)"/g, function(m,a,b){ return 'id="btn-snap-list"'+a+'style="'+b+';opacity:0.3;pointer-events:none;"'; });
 
-  // 7. Marcar como snapshot no HTML (impede atualização automática)
+  // 9. Marcar como snapshot (impede atualização automática)
   htmlBase = htmlBase.replace('</head>', '<scr'+'ipt>window.IS_SNAPSHOT=true;<'+'/script></head>');
 
   const blob = new Blob([htmlBase], {type: 'text/html;charset=utf-8'});
