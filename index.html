@@ -1209,18 +1209,21 @@ async function exportarSnapshot(nome) {
 
   // Substitui let DATA = {...}; pelo DATA congelado do snapshot
   const snapDataStr = JSON.stringify(s.DATA);
-  // Marcador de início: "let DATA = {" até o fechamento do objeto principal
-  const dataStart = htmlBase.indexOf('let DATA = {');
-  if (dataStart === -1) { alert('Marcador DATA não encontrado no fonte.'); return; }
-  // Encontra o ; que fecha o let DATA — precisa achar o } correto no nível 0
-  let depth = 0, i = dataStart + 10; // posição do "{"
+  const MARKER = 'let DATA = {';
+  const dataStart = htmlBase.indexOf(MARKER);
+  if (dataStart === -1) { alert('Erro: marcador "let DATA = {" nao encontrado no arquivo fonte.'); return; }
+  // braceStart aponta para o { de abertura do objeto
+  const braceStart = dataStart + MARKER.length - 1;
+  let depth = 0, i = braceStart;
   while (i < htmlBase.length) {
     if (htmlBase[i] === '{') depth++;
     else if (htmlBase[i] === '}') { depth--; if (depth === 0) break; }
     i++;
   }
-  const dataEnd = i + 1; // posição após o "}"
-  htmlBase = htmlBase.slice(0, dataStart) + 'let DATA = ' + snapDataStr + htmlBase.slice(dataEnd);
+  // i esta no } final; pula tambem o ; que vem depois
+  let dataEnd = i + 1;
+  if (dataEnd < htmlBase.length && htmlBase[dataEnd] === ';') dataEnd++;
+  htmlBase = htmlBase.slice(0, dataStart) + 'let DATA = ' + snapDataStr + ';' + htmlBase.slice(dataEnd);
 
   // Injeta script que: seta estado, adiciona banner, desabilita botões
   const snapNomeJSON = JSON.stringify(nome);
