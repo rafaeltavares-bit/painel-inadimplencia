@@ -1208,7 +1208,7 @@ async function exportarSnapshot(nome) {
   }
 
   // Substitui let DATA = {...}; pelo DATA congelado do snapshot
-  // CRÍTICO: escapar </script> dentro do JSON para não quebrar a tag script
+  // CRÍTICO: escapar <\/script> dentro do JSON para nao quebrar a tag script
   const snapDataStr = JSON.stringify(s.DATA).replace(/<\/script>/gi, '<\\/script>');
   const MARKER = 'let DATA = {';
   const dataStart = htmlBase.indexOf(MARKER);
@@ -1230,7 +1230,7 @@ async function exportarSnapshot(nome) {
   const snapNomeJSON = JSON.stringify(nome);
   const snapDtJSON = JSON.stringify(dtFmt);
   const estadoSnapJSON = JSON.stringify(estadoSnap);
-  // Escapar </script> nos JSONs injetados para não quebrar a tag script
+  // Escapar <\/script> nos JSONs injetados para nao quebrar a tag script
   const safeNomeJSON   = snapNomeJSON.replace(/<\/script>/gi, '<\\/script>');
   const safeDtJSON     = snapDtJSON.replace(/<\/script>/gi, '<\\/script>');
   const safeEstadoJSON = estadoSnapJSON.replace(/<\/script>/gi, '<\\/script>');
