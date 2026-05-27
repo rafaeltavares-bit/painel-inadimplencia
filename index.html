@@ -23,7 +23,7 @@
 body{background:var(--cream);color:var(--ink);font-family:"Outfit",sans-serif;font-size:16px;min-height:100vh;}
 
 /* HEADER */
-.header{background:#fff;padding:0 48px;display:flex;align-items:center;justify-content:space-between;min-height:56px;position:relative;overflow:hidden;border-bottom:1px solid rgba(0,0,0,.08);}
+.header{background:#fff;padding:0 48px;display:flex;align-items:center;justify-content:space-between;min-height:56px;position:sticky;top:0;z-index:100;overflow:hidden;border-bottom:1px solid rgba(0,0,0,.08);box-shadow:0 2px 8px rgba(0,0,0,.06);}
 .header::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent,transparent 60px,rgba(0,0,0,.012) 60px,rgba(0,0,0,.012) 61px);}
 .hl{display:flex;align-items:center;gap:12px;padding:8px 0;position:relative;z-index:1;}
 .logo-delend{height:32px;}
