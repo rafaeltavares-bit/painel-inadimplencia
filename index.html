@@ -1341,16 +1341,25 @@ function processarCobranca(rows) {
   console.log('[Cobrança] idx → Fatura:', idxFatura, '| Responsável:', idxResponsavel, '| Data:', idxData, '| Comentário:', idxComentario);
 
   if (idxFatura === -1) { console.warn('[Cobrança] Coluna Fatura não encontrada!'); return {}; }
+  // Converte data "DD/MM/AAAA" para número comparável (AAAAMMDD)
+  const parseDataOrd = (s) => {
+    if (!s) return 0;
+    const m = String(s).match(/(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})/);
+    if (!m) return 0;
+    return parseInt(m[3] + m[2].padStart(2,'0') + m[1].padStart(2,'0'), 10);
+  };
   const mapa = {};
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i] || [];
     const fatura = String(row[idxFatura] || '').trim().replace(/\.0$/, '');
     if (!fatura) continue;
-    mapa[fatura] = {
-      responsavel: idxResponsavel >= 0 ? String(row[idxResponsavel] || '').trim() : '',
-      data:        idxData >= 0        ? String(row[idxData] || '').trim() : '',
-      comentario:  idxComentario >= 0  ? String(row[idxComentario] || '').trim() : '',
-    };
+    const dataStr     = idxData >= 0        ? String(row[idxData] || '').trim() : '';
+    const comentario  = idxComentario >= 0  ? String(row[idxComentario] || '').trim() : '';
+    const responsavel = idxResponsavel >= 0 ? String(row[idxResponsavel] || '').trim() : '';
+    // Só sobrescreve se: (a) ainda não existe, ou (b) esta linha é mais recente
+    if (!mapa[fatura] || parseDataOrd(dataStr) >= parseDataOrd(mapa[fatura].data)) {
+      mapa[fatura] = { responsavel, data: dataStr, comentario };
+    }
   }
   return mapa;
 }
