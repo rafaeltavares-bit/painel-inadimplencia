@@ -2273,14 +2273,17 @@ const DATA_EXTRATO_ORIGINAL = DATA.data_extrato_analitico || "";
     // 5b. Cobrança (observações dos operadores) — atualiza COBRANCA_MAP global
     if (cobrancaCsv) {
       COBRANCA_MAP = processarCobranca(cobrancaCsv);
-      // DIAGNÓSTICO: log das primeiras entradas do mapa
-      const _keys = Object.keys(COBRANCA_MAP).slice(0, 5);
-      console.log('[COBRANCA_MAP] Total de faturas:', Object.keys(COBRANCA_MAP).length);
-      console.log('[COBRANCA_MAP] Primeiras chaves:', _keys.join(' | '));
-      _keys.forEach(k => console.log('  fatura', k, '->', JSON.stringify(COBRANCA_MAP[k])));
-      // Diagnóstico específico da fatura 11215923 (Floema)
+      console.log('[COBRANCA_MAP] Total linhas CSV cobrança:', cobrancaCsv.length, '| Faturas mapeadas:', Object.keys(COBRANCA_MAP).length);
+      // Busca todas as linhas do Floema (fatura 11215923) no CSV bruto
+      const _idxFat = cobrancaCsv[0] ? cobrancaCsv[0].findIndex(h => String(h).toLowerCase().includes('fatura')) : -1;
+      const _idxDat = cobrancaCsv[0] ? cobrancaCsv[0].findIndex(h => String(h).trim() === 'DATA') : -1;
+      const _idxCom = cobrancaCsv[0] ? cobrancaCsv[0].findIndex(h => String(h).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').includes('coment')) : -1;
+      console.log('[CSV] idx Fatura:', _idxFat, 'Data:', _idxDat, 'Comentário:', _idxCom);
+      const _linhasFloema = cobrancaCsv.filter((r,i) => i > 0 && String(r[_idxFat]||'').replace(/\.0$/,'') === '11215923');
+      console.log('[CSV] Linhas Floema (11215923):', _linhasFloema.length);
+      _linhasFloema.forEach(r => console.log('  data:', r[_idxDat], 'comentario:', r[_idxCom]));
       const _floema = COBRANCA_MAP['11215923'];
-      console.log('[COBRANCA_MAP] fatura 11215923 (Floema):', _floema ? JSON.stringify(_floema) : 'NÃO ENCONTRADA');
+      console.log('[COBRANCA_MAP] fatura 11215923:', _floema ? JSON.stringify(_floema) : 'NÃO ENCONTRADA');
     }
     
     // 6. Reconstruir DATA preservando campos que não vêm dos CSVs
