@@ -2258,6 +2258,22 @@ function processarTodasSafrasInadDiaria(todasAbas, safras) {
 }
 
 // ========== ORQUESTRAÇÃO ==========
+
+// Helper: fetch com timeout via AbortController
+async function fetchComTimeout(url, opts = {}, ms = 20000) {
+  const ctrl = new AbortController();
+  const tid = setTimeout(() => ctrl.abort(), ms);
+  try {
+    const resp = await fetch(url, { ...opts, signal: ctrl.signal });
+    clearTimeout(tid);
+    return resp;
+  } catch (e) {
+    clearTimeout(tid);
+    if (e.name === 'AbortError') throw new Error('Timeout: sem resposta do GitHub após ' + (ms/1000) + 's. Verifique sua conexão e tente novamente.');
+    throw e;
+  }
+}
+
 async function publicarNoGithub(btnTxt, btnIcon) {
   const token = getGithubToken();
   if (!token) {
