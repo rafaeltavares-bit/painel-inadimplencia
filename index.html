@@ -546,14 +546,14 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
     <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
-    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
+    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">📤</span>
       <span id="btn-refresh-txt">Lendo SHA…</span>
     </button>
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 29/05/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 29/05/2026 às 19:28</div>
+      <div class="lt" id="last-upd">Sincronizado: 29/05/2026 às 19:29</div>
     </div>
   </div>
 </div>
@@ -596,7 +596,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 </div>
 
-<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02);">
+<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02); display: none;">
   <div class="farol-dot"></div>
   <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
   <div class="farol-note">0 de 3 safras configuradas</div>
@@ -604,8 +604,8 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab active" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
-    <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
+    <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
+    <div class="tab active" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
     <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
@@ -613,7 +613,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 </div>
 
 <div class="main">
-  <div id="sec-gerencial" class="section active">
+  <div id="sec-gerencial" class="section">
     <div class="hero-v3">
       <div class="hero-v3-top">
         <div>
@@ -830,7 +830,93 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> o bloco de cima mostra a situação <b>atual</b> da categoria em Mai/26 (mês ainda em andamento, valores parciais). O bloco de baixo mostra o desempenho no <b>último mês fechado</b> (Abr/26) comparado com a média dos 6 meses Nov/25-Abr/26. Mai/26 ainda tem poucos dias de dados — a leitura definitiva do mês só fecha no final.</div></div>
-  <div id="sec-categoria" class="section"></div>
+  <div id="sec-categoria" class="section active">
+    <div class="cat-filtros">
+      <span class="cf-label">Categoria:</span>
+      <div class="cat-tabs">
+        
+          <div class="cat-tab " data-cor="red" onclick="CATEGORIA_ATUAL=0;renderCategoria();">
+            BOMFICA
+          </div>
+        
+          <div class="cat-tab active" data-cor="gold" onclick="CATEGORIA_ATUAL=1;renderCategoria();">
+            Revenda BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="blue" onclick="CATEGORIA_ATUAL=2;renderCategoria();">
+            Concessionário BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="purple" onclick="CATEGORIA_ATUAL=3;renderCategoria();">
+            Acordo Amigável
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="hero-v3 gold">
+      <div class="hero-v3-top">
+        <div>
+          <div class="hero-question">Revenda / BONSAI</div>
+          <div class="hero-pct-big warn">3,50%</div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-mes">Mai/26</div>
+          <div class="hero-comp-sub">
+            <b>11 parceiros</b> na categoria
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hs-label">Faturado da safra</div>
+          <div class="hs-val">R$ 369,3 k</div>
+          <div class="hs-sub">≈ R$ 12,9 k inadimplente</div>
+        </div>
+      </div>
+    </div>
+  
+        <div class="cards-nota" style="border-left-color:var(--em);background:rgba(46,107,77,.04);">
+          <b>✓ Destaque positivo em Abr/26:</b> WTM — melhorou 1,78%pp vs média 6m (17,13% do faturado).
+        </div>
+      
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Parceiro · Revenda / BONSAI</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Parceiro</th>
+              
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left">ACEMP</td><td style="border-left:2px solid var(--rule);">111,7 k</td><td>76,9 k</td><td>88,4 k</td><td>83,3 k</td><td>88,7 k</td><td>83,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">532,9 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2025-12')" title="1,10% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2026-01')" title="0,70% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2026-02')" title="1,50% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2026-03')" title="2,60% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2026-04')" title="3,70% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">3,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ACEMP','2026-05')" title="4,60% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">4,60%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">2,34%</span></td></tr><tr><td class="b" style="text-align:left">CONFI</td><td style="border-left:2px solid var(--rule);">105,8 k</td><td>59,7 k</td><td>72,4 k</td><td>89,2 k</td><td>96,0 k</td><td>85,7 k</td><td class="b" style="background:rgba(22,61,120,.04);">508,8 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2025-12')" title="1,90% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2026-01')" title="0,20% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2026-02')" title="0,50% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2026-03')" title="0,60% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2026-04')" title="0,30% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CONFI','2026-05')" title="2,50% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,50%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">1,06%</span></td></tr><tr><td class="b" style="text-align:left">WTM</td><td style="border-left:2px solid var(--rule);">100,6 k</td><td>68,8 k</td><td>68,1 k</td><td>63,4 k</td><td>69,8 k</td><td>61,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">432,5 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('WTM','2025-12')" title="5,20% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">5,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('WTM','2026-01')" title="4,40% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">4,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('WTM','2026-02')" title="1,10% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('WTM','2026-03')" title="1,40% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('WTM','2026-04')" title="0,80% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('WTM','2026-05')" title="4,30% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">4,30%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">3,05%</span></td></tr><tr><td class="b" style="text-align:left">FORT</td><td style="border-left:2px solid var(--rule);">100,4 k</td><td>59,4 k</td><td>56,8 k</td><td>62,5 k</td><td>59,6 k</td><td>61,0 k</td><td class="b" style="background:rgba(22,61,120,.04);">399,7 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('FORT','2025-12')" title="3,60% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FORT','2026-01')" title="4,20% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">4,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FORT','2026-02')" title="3,00% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">3,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FORT','2026-03')" title="2,60% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FORT','2026-04')" title="1,90% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FORT','2026-05')" title="2,30% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,30%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">2,99%</span></td></tr><tr><td class="b" style="text-align:left">CHEQ</td><td style="border-left:2px solid var(--rule);">39,0 k</td><td>25,3 k</td><td>32,7 k</td><td>28,6 k</td><td>33,9 k</td><td>29,2 k</td><td class="b" style="background:rgba(22,61,120,.04);">188,5 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2025-12')" title="1,90% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2026-01')" title="0,80% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2026-02')" title="1,00% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2026-03')" title="1,00% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2026-04')" title="1,30% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CHEQ','2026-05')" title="2,10% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,10%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">1,39%</span></td></tr><tr><td class="b" style="text-align:left">MAXSM</td><td style="border-left:2px solid var(--rule);">20,6 k</td><td>14,5 k</td><td>13,9 k</td><td>17,3 k</td><td>17,9 k</td><td>17,4 k</td><td class="b" style="background:rgba(22,61,120,.04);">101,7 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2025-12')" title="6,80% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">6,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2026-01')" title="12,20% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">12,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2026-02')" title="6,70% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">6,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2026-03')" title="4,90% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">4,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2026-04')" title="1,60% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MAXSM','2026-05')" title="6,40% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">6,40%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-4">6,22%</span></td></tr><tr><td class="b" style="text-align:left">AGUIA</td><td style="border-left:2px solid var(--rule);">15,5 k</td><td>11,1 k</td><td>12,0 k</td><td>15,8 k</td><td>19,5 k</td><td>12,9 k</td><td class="b" style="background:rgba(22,61,120,.04);">86,8 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2025-12')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2026-01')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2026-02')" title="1,40% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2026-03')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('AGUIA','2026-05')" title="3,20% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">3,20%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">0,67%</span></td></tr><tr><td class="b" style="text-align:left">ALVER</td><td style="border-left:2px solid var(--rule);">15,0 k</td><td>7,2 k</td><td>6,1 k</td><td>5,9 k</td><td>7,3 k</td><td>4,5 k</td><td class="b" style="background:rgba(22,61,120,.04);">46,1 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2025-12')" title="6,90% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">6,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2026-01')" title="12,50% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">12,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2026-02')" title="8,70% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">8,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2026-03')" title="4,30% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">4,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2026-04')" title="0,70% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ALVER','2026-05')" title="11,20% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">11,20%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-4">7,11%</span></td></tr><tr><td class="b" style="text-align:left">GOIAN</td><td style="border-left:2px solid var(--rule);">10,4 k</td><td>6,2 k</td><td>5,5 k</td><td>6,1 k</td><td>7,7 k</td><td>6,7 k</td><td class="b" style="background:rgba(22,61,120,.04);">42,6 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2025-12')" title="1,60% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2026-01')" title="0,90% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2026-03')" title="3,30% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">3,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2026-04')" title="2,00% · Média Revenda BONSAI: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOIAN','2026-05')" title="1,30% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,30%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">1,55%</span></td></tr><tr><td class="b" style="text-align:left">TYBUR</td><td style="border-left:2px solid var(--rule);">6,2 k</td><td>3,4 k</td><td>3,8 k</td><td>4,2 k</td><td>4,9 k</td><td>4,1 k</td><td class="b" style="background:rgba(22,61,120,.04);">26,7 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2025-12')" title="3,30% · Média Revenda BONSAI: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2026-01')" title="3,70% · Média Revenda BONSAI: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2026-02')" title="3,20% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">3,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2026-03')" title="2,90% · Média Revenda BONSAI: 1,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">2,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('TYBUR','2026-05')" title="5,70% · Média Revenda BONSAI: 3,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">5,70%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">3,04%</span></td></tr><tr><td class="b" style="text-align:left">NIVAL</td><td style="border-left:2px solid var(--rule);">2,3 k</td><td>2,1 k</td><td>2,2 k</td><td>2,0 k</td><td>2,1 k</td><td>2,2 k</td><td class="b" style="background:rgba(22,61,120,.04);">13,0 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2025-12')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2026-01')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2026-03')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NIVAL','2026-05')">—</td><td class="b" style="background:rgba(22,61,120,.04);">—</td></tr><tr class="r-total"><td>Total Revenda BONSAI</td><td style="border-left:2px solid var(--rule);">527,5 k</td><td>334,5 k</td><td>362,1 k</td><td>378,5 k</td><td>407,3 k</td><td>369,3 k</td><td style="background:rgba(22,61,120,.06);">2,38 MM</td><td style="border-left:2px solid var(--rule);">2,90%</td><td>2,80%</td><td>1,80%</td><td>1,80%</td><td>1,50%</td><td>3,50%</td><td style="background:rgba(22,61,120,.06);">2,41%</td></tr></tbody></table></div></div>
+    <div class="cards-nota">
+      <b>Como ler a tabela:</b> os parceiros estão ordenados por <b>R$ Faturado total</b> dos 6 meses (maior peso primeiro). As colunas <b>TOTAL</b> mostram o acumulado dos 6 meses (R$ Faturado somado, % Inadimplência ponderada pelo faturado). Clique numa célula de <b>% Inadimplência</b> para ver os clientes inadimplentes daquele mês.
+      <br><b>Nota:</b> Mai/26 ainda está em maturação. Análise de movimento refere-se a Abr/26 (último mês fechado).
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:13px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
+    </div>
+  <div id="drill-detail"></div></div>
   <div id="sec-tier" class="section"></div>
   <div id="sec-devedores" class="section"></div>
   <div id="sec-recuperacao" class="section"></div>
