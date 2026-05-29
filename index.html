@@ -543,8 +543,8 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
-    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-right: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">📤</span>
@@ -553,7 +553,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 29/05/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 29/05/2026 às 19:11</div>
+      <div class="lt" id="last-upd">Sincronizado: 29/05/2026 às 19:16</div>
     </div>
   </div>
 </div>
@@ -565,7 +565,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 </div>
 
 <!-- Modal: Salvar snapshot -->
-<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(440px,90vw);box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <h3 style="margin:0 0 12px 0;font-size:18px;">📸 Salvar snapshot</h3>
     <p style="margin:0 0 16px 0;color:var(--ink2);font-size:14px;">Vai fotografar o estado atual do painel (mês selecionado, datas de comparação, dados visíveis). Você poderá reabrir esta foto a qualquer momento.</p>
@@ -579,7 +579,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 </div>
 
 <!-- Modal: Lista de snapshots -->
-<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(640px,92vw);max-height:85vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <h3 style="margin:0;font-size:18px;">📂 Snapshots salvos</h3>
@@ -830,10 +830,471 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> o bloco de cima mostra a situação <b>atual</b> da categoria em Mai/26 (mês ainda em andamento, valores parciais). O bloco de baixo mostra o desempenho no <b>último mês fechado</b> (Abr/26) comparado com a média dos 6 meses Nov/25-Abr/26. Mai/26 ainda tem poucos dias de dados — a leitura definitiva do mês só fecha no final.</div></div>
-  <div id="sec-categoria" class="section"></div>
-  <div id="sec-tier" class="section"></div>
-  <div id="sec-devedores" class="section"></div>
-  <div id="sec-recuperacao" class="section"></div>
+  <div id="sec-categoria" class="section">
+    <div class="cat-filtros">
+      <span class="cf-label">Categoria:</span>
+      <div class="cat-tabs">
+        
+          <div class="cat-tab active" data-cor="red" onclick="CATEGORIA_ATUAL=0;renderCategoria();">
+            BOMFICA
+          </div>
+        
+          <div class="cat-tab " data-cor="gold" onclick="CATEGORIA_ATUAL=1;renderCategoria();">
+            Revenda BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="blue" onclick="CATEGORIA_ATUAL=2;renderCategoria();">
+            Concessionário BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="purple" onclick="CATEGORIA_ATUAL=3;renderCategoria();">
+            Acordo Amigável
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="hero-v3 red">
+      <div class="hero-v3-top">
+        <div>
+          <div class="hero-question">BOMFICA – REDE OK</div>
+          <div class="hero-pct-big warn">3,70%</div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-mes">Mai/26</div>
+          <div class="hero-comp-sub">
+            <b>4 parceiros</b> na categoria
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hs-label">Faturado da safra</div>
+          <div class="hs-val">R$ 1,78 MM</div>
+          <div class="hs-sub">≈ R$ 66,0 k inadimplente</div>
+        </div>
+      </div>
+    </div>
+  
+        <div class="cards-nota" style="border-left-color:var(--em);background:rgba(46,107,77,.04);">
+          <b>✓ Destaque positivo em Abr/26:</b> HIROM — melhorou 0,48%pp vs média 6m (9,21% do faturado).
+        </div>
+      
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Parceiro · BOMFICA – REDE OK</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Parceiro</th>
+              
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left">CARTEIRA INT</td><td style="border-left:2px solid var(--rule);">1,19 MM</td><td>802,5 k</td><td>876,7 k</td><td>871,2 k</td><td>999,3 k</td><td>961,0 k</td><td class="b" style="background:rgba(22,61,120,.04);">5,70 MM</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2025-12')" title="2,00% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">2,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-01')" title="2,60% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-03')" title="1,40% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-04')" title="1,70% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-05')" title="5,20% · Média BOMFICA: 3,70% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">5,20%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">2,41%</span></td></tr><tr><td class="b" style="text-align:left">ABN</td><td style="border-left:2px solid var(--rule);">740,0 k</td><td>495,8 k</td><td>575,4 k</td><td>594,8 k</td><td>693,6 k</td><td>625,5 k</td><td class="b" style="background:rgba(22,61,120,.04);">3,73 MM</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('ABN','2025-12')" title="0,40% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-01')" title="0,10% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-02')" title="0,30% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-03')" title="1,90% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-04')" title="0,80% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-05')" title="1,50% · Média BOMFICA: 3,70% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,50%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">0,84%</span></td></tr><tr><td class="b" style="text-align:left">HIROM</td><td style="border-left:2px solid var(--rule);">156,7 k</td><td>121,1 k</td><td>151,5 k</td><td>147,1 k</td><td>177,0 k</td><td>149,3 k</td><td class="b" style="background:rgba(22,61,120,.04);">902,6 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2025-12')" title="1,40% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-01')" title="1,90% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-03')" title="1,10% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-04')" title="0,90% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-05')" title="1,90% · Média BOMFICA: 3,70% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,90%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">1,42%</span></td></tr><tr><td class="b" style="text-align:left">GJR</td><td style="border-left:2px solid var(--rule);">38,1 k</td><td>29,1 k</td><td>44,5 k</td><td>46,9 k</td><td>52,5 k</td><td>46,7 k</td><td class="b" style="background:rgba(22,61,120,.04);">257,8 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('GJR','2025-12')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-01')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-03')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-05')" title="10,00% · Média BOMFICA: 3,70% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">10,00%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">1,81%</span></td></tr><tr class="r-total"><td>Total BOMFICA</td><td style="border-left:2px solid var(--rule);">2,12 MM</td><td>1,45 MM</td><td>1,65 MM</td><td>1,66 MM</td><td>1,92 MM</td><td>1,78 MM</td><td style="background:rgba(22,61,120,.06);">10,59 MM</td><td style="border-left:2px solid var(--rule);">1,30%</td><td>1,60%</td><td>1,10%</td><td>1,50%</td><td>1,20%</td><td>3,70%</td><td style="background:rgba(22,61,120,.06);">1,76%</td></tr></tbody></table></div></div>
+    <div class="cards-nota">
+      <b>Como ler a tabela:</b> os parceiros estão ordenados por <b>R$ Faturado total</b> dos 6 meses (maior peso primeiro). As colunas <b>TOTAL</b> mostram o acumulado dos 6 meses (R$ Faturado somado, % Inadimplência ponderada pelo faturado). Clique numa célula de <b>% Inadimplência</b> para ver os clientes inadimplentes daquele mês.
+      <br><b>Nota:</b> Mai/26 ainda está em maturação. Análise de movimento refere-se a Abr/26 (último mês fechado).
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:13px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
+    </div>
+  <div id="drill-detail"></div></div>
+  <div id="sec-tier" class="section"><div class="cat-cards">
+      <div class="cat-card gray">
+        <div class="cc-title">Tier 0</div>
+        <div class="cc-pct">R$ 31,8 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · Mai/26</div>
+        <div class="cc-info"><span>Faturado Mai/26: <b>R$ 932,0 k</b></span></div>
+        <div class="cc-info"><span>% inadimplência Mai/26: <b>3,4%</b></span></div>
+      </div>
+    
+      <div class="cat-card red">
+        <div class="cc-title">Tier 1</div>
+        <div class="cc-pct">R$ 24,5 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · Mai/26</div>
+        <div class="cc-info"><span>Faturado Mai/26: <b>R$ 1,68 MM</b></span></div>
+        <div class="cc-info"><span>% inadimplência Mai/26: <b>1,5%</b></span></div>
+      </div>
+    
+      <div class="cat-card gold">
+        <div class="cc-title">Tier 2</div>
+        <div class="cc-pct">R$ 17,9 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · Mai/26</div>
+        <div class="cc-info"><span>Faturado Mai/26: <b>R$ 564,8 k</b></span></div>
+        <div class="cc-info"><span>% inadimplência Mai/26: <b>3,2%</b></span></div>
+      </div>
+    
+      <div class="cat-card blue">
+        <div class="cc-title">Tier 3</div>
+        <div class="cc-pct">R$ 69,5 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · Mai/26</div>
+        <div class="cc-info"><span>Faturado Mai/26: <b>R$ 733,7 k</b></span></div>
+        <div class="cc-info"><span>% inadimplência Mai/26: <b>9,5%</b></span></div>
+      </div>
+    
+      <div class="cat-card purple">
+        <div class="cc-title">Tier 4</div>
+        <div class="cc-pct">R$ 26,7 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · Mai/26</div>
+        <div class="cc-info"><span>Faturado Mai/26: <b>R$ 376,0 k</b></span></div>
+        <div class="cc-info"><span>% inadimplência Mai/26: <b>7,1%</b></span></div>
+      </div>
+    </div>
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Tier</div>
+          <div class="th-note">Ordenado por hierarquia de tier</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left"><span class="tchip" style="background:#888"></span>Tier 0</td><td style="border-left:2px solid var(--rule);">951,5 k</td><td>731,6 k</td><td>888,2 k</td><td>854,4 k</td><td>971,0 k</td><td>932,0 k</td><td class="b" style="background:rgba(22,61,120,.04);">5,33 MM</td><td style="border-left:2px solid var(--rule);">—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="hm-cell hm-1">3,4%</span></td><td class="b" style="background:rgba(22,61,120,.04);">0,6%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#b03020"></span>Tier 1</td><td style="border-left:2px solid var(--rule);">1,99 MM</td><td>1,36 MM</td><td>1,66 MM</td><td>1,67 MM</td><td>1,90 MM</td><td>1,68 MM</td><td class="b" style="background:rgba(22,61,120,.04);">10,26 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-1">1,1%</span></td><td><span class="hm-cell hm-1">0,6%</span></td><td><span class="hm-cell hm-1">0,5%</span></td><td><span class="hm-cell hm-1">0,6%</span></td><td><span class="hm-cell hm-1">0,9%</span></td><td><span class="hm-cell hm-1">1,5%</span></td><td class="b" style="background:rgba(22,61,120,.04);">0,9%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#9a6c18"></span>Tier 2</td><td style="border-left:2px solid var(--rule);">817,7 k</td><td>529,9 k</td><td>561,4 k</td><td>545,2 k</td><td>578,2 k</td><td>564,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">3,60 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-2">3,7%</span></td><td><span class="hm-cell hm-1">4,7%</span></td><td><span class="hm-cell hm-1">1,9%</span></td><td><span class="hm-cell hm-1">2,6%</span></td><td><span class="hm-cell hm-1">1,2%</span></td><td><span class="hm-cell hm-1">3,2%</span></td><td class="b" style="background:rgba(22,61,120,.04);">2,9%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#163d78"></span>Tier 3</td><td style="border-left:2px solid var(--rule);">975,3 k</td><td>656,3 k</td><td>688,3 k</td><td>703,6 k</td><td>738,5 k</td><td>733,7 k</td><td class="b" style="background:rgba(22,61,120,.04);">4,50 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-1">1,2%</span></td><td><span class="hm-cell hm-1">1,6%</span></td><td><span class="hm-cell hm-1">1,7%</span></td><td><span class="hm-cell hm-1">2,6%</span></td><td><span class="hm-cell hm-3">4,6%</span></td><td><span class="hm-cell hm-3">9,5%</span></td><td class="b" style="background:rgba(22,61,120,.04);">3,5%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#6b2fd4"></span>Tier 4</td><td style="border-left:2px solid var(--rule);">663,0 k</td><td>420,3 k</td><td>394,5 k</td><td>398,1 k</td><td>365,4 k</td><td>376,0 k</td><td class="b" style="background:rgba(22,61,120,.04);">2,62 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-4">7,0%</span></td><td><span class="hm-cell hm-4">14,3%</span></td><td><span class="hm-cell hm-4">10,9%</span></td><td><span class="hm-cell hm-4">10,7%</span></td><td><span class="hm-cell hm-2">3,5%</span></td><td><span class="hm-cell hm-2">7,1%</span></td><td class="b" style="background:rgba(22,61,120,.04);">8,9%</td></tr><tr class="nc-row"><td class="b" style="text-align:left"><span class="tchip" style="background:#888"></span>N/C</td><td style="border-left:2px solid var(--rule);">298</td><td>192</td><td>192</td><td>254</td><td>150</td><td>580</td><td class="b" style="background:rgba(22,61,120,.04);">1,7 k</td><td style="border-left:2px solid var(--rule);">—</td><td>—</td><td>—</td><td><span class="hm-cell ">24,3%</span></td><td>—</td><td><span class="hm-cell ">98,0%</span></td><td class="b" style="background:rgba(22,61,120,.04);">37,9%</td></tr></tbody></table></div></div>
+  
+    <div class="chart-card">
+      <div class="ch">
+        <div>
+          <div class="ct">Onde a inadimplência se concentra · proporcionalidade real</div>
+          <div class="cs">
+            Eixo X = R$ Faturado total (6 meses) · Eixo Y = % Inadimplência (último mês com dado) · 
+            Tamanho da bolha = R$ total inadimplente · N/C omitido para limpar a análise
+          </div>
+        </div>
+      </div>
+      <div class="cw" style="height:440px;"><canvas id="ch-tier-bubble" width="1719" height="550" style="display: block; box-sizing: border-box; height: 440px; width: 1375px;"></canvas></div>
+      <div class="quad-legend">
+        <div class="quad q-star"><div class="quad-title">▼ Abaixo da linha</div><div class="quad-desc">% inadimplência abaixo da média geral do mês — zona saudável.</div></div>
+        <div class="quad q-crit"><div class="quad-title">▲ Acima da linha</div><div class="quad-desc">% inadimplência acima da média geral — requer atenção.</div></div>
+        <div class="quad q-watch"><div class="quad-title">→ Direita do gráfico</div><div class="quad-desc">Alto faturamento — impacto em R$ absoluto é maior.</div></div>
+        <div class="quad q-bleed"><div class="quad-title">● Tamanho da bolha</div><div class="quad-desc">Proporcional ao R$ total inadimplente do tier.</div></div>
+      </div>
+      <div class="tier-insight" id="tier-insight"><b>Leitura · Mai/26:</b> Em R$ inadimplente no mês, <b>Tier 3</b> lidera (R$ 69,5 k). Em <i>taxa de inadimplência</i>, <b>Tier 3</b> apresenta o maior % (9,5%). Maior base faturada (6 meses): <b>Tier 1</b> (R$ 10,26 MM).<br><span style="color:#9a6c18;font-style:italic;">⚠ Mai/26 ainda está em maturação (menos de 30 dias desde o vencimento) — os percentuais tendem a cair com o tempo. Leitura apenas informativa, sem recomendação de ação neste momento.</span></div>
+    </div>
+
+    <style>
+      .dual-tier-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+      .tier-table-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--sh);}
+      .tier-table-card .th-title{font-weight:700;font-size:16px;color:var(--ink);margin-bottom:2px;letter-spacing:.3px;text-transform:uppercase;}
+      .tier-table-card .th-note{font-size:14px;color:var(--ink2);margin-bottom:14px;font-style:italic;}
+      table.tier-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+      table.tier-tbl thead th{background:#2c3e50;color:#fff;padding:8px 10px;text-align:right;font-weight:700;font-size:13px;letter-spacing:.4px;text-transform:uppercase;}
+      table.tier-tbl thead th:first-child{text-align:left;}
+      table.tier-tbl tbody td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;}
+      table.tier-tbl tbody td.tname{text-align:left;font-weight:600;}
+      table.tier-tbl tbody td.b{font-weight:700;}
+      table.tier-tbl tbody tr.nc-row td{color:#9b958a;font-style:italic;background:#fafaf8;}
+      .tchip{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:8px;vertical-align:middle;}
+      .quad-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;font-family:"Outfit",sans-serif;font-size:11.5px;}
+      .quad{padding:9px 11px;border:1px solid var(--rule);border-left:3px solid #ccc;border-radius:4px;}
+      .quad-title{font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:10.5px;margin-bottom:2px;}
+      .quad-desc{color:var(--ink2);font-size:13px;line-height:1.4;}
+      .quad.q-star{border-left-color:#4a7a4a;} .quad.q-star .quad-title{color:#4a7a4a;}
+      .quad.q-watch{border-left-color:#c97b1f;} .quad.q-watch .quad-title{color:#c97b1f;}
+      .quad.q-bleed{border-left-color:#9a6c18;} .quad.q-bleed .quad-title{color:#9a6c18;}
+      .quad.q-crit{border-left-color:#b03020;} .quad.q-crit .quad-title{color:#b03020;}
+      .tier-insight{background:#fff8ee;border-left:3px solid #c97b1f;padding:12px 16px;margin-top:16px;font-size:15px;color:#5a3a10;line-height:1.55;border-radius:0 4px 4px 0;}
+      .tier-insight b{color:#b03020;}
+      @media(max-width:1100px){.dual-tier-wrap{grid-template-columns:1fr;} .quad-legend{grid-template-columns:repeat(2,1fr);}}
+    </style>
+  </div>
+  <div id="sec-devedores" class="section">
+    <div class="cat-filtros" style="margin-bottom:12px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="cf-label">Visão:</span>
+        <div class="cat-tabs">
+          <div class="cat-tab active" data-cor="em" onclick="switchDevSubtab('top10')" style="background:var(--em);border-color:transparent;color:#fff;">🏆 10 Maiores</div>
+          <div class="cat-tab" data-cor="em" onclick="switchDevSubtab('analitico')" style="">📋 Analítico</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="cf-label">Safra:</span>
+        <div class="cat-tabs"><div class="cat-tab active" data-cor="em" onclick="setDevMesFiltro(null)" style="background:var(--em);border-color:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Últimos 3 meses</span><span style="font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)">R$&nbsp;327,1 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-03')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mar/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;84,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-04')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Abr/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;71,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-05')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mai/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;170,9 k</span></div></div>
+      </div>
+    </div>
+      
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">
+        <div class="cat-card gold" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Total em Aberto</div>
+          <div class="cc-pct" style="font-size:28px;">R$ 327,1 k</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Mar/26, Abr/26, Mai/26</span></div>
+        </div>
+        <div class="cat-card red" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Concentração Top 10</div>
+          <div class="cc-pct" style="font-size:28px;">12,6%</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Pulverizada ✓</span></div>
+        </div>
+        <div class="cat-card blue" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Fatura</div>
+          <div class="cc-pct" style="font-size:28px;">R$ 10,3 k</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>ALC SECURITIZADORA LTDA</span></div>
+        </div>
+        <div class="cat-card purple" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Atraso</div>
+          <div class="cc-pct" style="font-size:28px;">80 <span style="font-size:16px">dias</span></div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Na base dos 3 meses</span></div>
+        </div>
+      </div>
+      <div class="tc">
+        <div class="th-row">
+          <div>
+            <div class="th-title">🏆 10 Maiores Faturas Vencidas</div>
+            <div class="th-note">Soma dos últimos 3 meses (Mar/26, Abr/26, Mai/26) · ordenado por valor em aberto · ⚠ atualize para carregar observações</div>
+          </div>
+          <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
+        </div>
+        <div class="tc-wrap">
+          <table class="in" style="font-size:13px;width:100%;table-layout:fixed;">
+            
+    <thead>
+      <tr>
+        <th style="width:32px;text-align:center">#</th>
+        <th style="width:90px">Fatura</th>
+        <th style="text-align:left;width:22%">Razão Social</th>
+        <th style="width:72px">Parceiro</th>
+        <th style="width:68px">Tier</th>
+        <th style="width:100px">Valor (R$)</th>
+        <th style="width:88px">Vencimento</th>
+        <th style="width:96px">Responsável</th>
+        <th style="text-align:left;">Observação de Cobrança</th>
+      </tr>
+    </thead>
+            <tbody id="tbody-dev">
+              
+      <tr data-search="alc securitizadora ltda 61343552000197 abn  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">1</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192512</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 61.343.552/0001-97">ALC SECURITIZADORA LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">ABN</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">10.344,10</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/18/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="floema nutricao vegetal ltda 07026185000152 b&amp;c  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">2</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11215923</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.026.185/0001-52">FLOEMA NUTRICAO VEGETAL LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">B&amp;C</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.887,66</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="cervejaria schornstein ltda 07817573000151 gjr  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">3</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11206848</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.817.573/0001-51">CERVEJARIA SCHORNSTEIN LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">GJR</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.678,21</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="comercio de pecas auto diesel ltda 18299426000153 fgc  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">4</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216090</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 18.299.426/0001-53">COMERCIO DE PECAS AUTO DIESEL LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">FGC</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.090,47</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="master print prestacao de servicos ltda 01272344000112 abn  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">5</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11200012</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 01.272.344/0001-12">MASTER PRINT PRESTACAO DE SERVICOS LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">ABN</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.692,62</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/15/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="telesp telecomunicacoes ltda 01074614000180 carteira int  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">6</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216249</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 01.074.614/0001-80">TELESP TELECOMUNICACOES LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.284,75</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/28/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="j.s.s construtora e materiais para construcao ltda 35974519000155 carteira int  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">7</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11204908</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 35.974.519/0001-55">J.S.S CONSTRUTORA E MATERIAIS PARA CONSTRUCAO LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.147,35</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/20/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="mogi fibra telecomunicacoes slu ltda 48028180000146 tds  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">8</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216106</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 48.028.180/0001-46">MOGI FIBRA TELECOMUNICACOES SLU LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">TDS</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.575,32</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="roma artefatos de chapas de aco ltda 06324038000104 goval  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">9</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192510</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 06.324.038/0001-04">ROMA ARTEFATOS DE CHAPAS DE ACO LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">GOVAL</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.501,47</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/30/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="bandmix concreto e argamassa ltda 15605390000109 carteira int  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">10</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11210975</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 15.605.390/0001-09">BANDMIX CONCRETO E ARGAMASSA LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.116,90</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+            </tbody>
+          </table>
+        </div>
+      </div></div>
+  <div id="sec-recuperacao" class="section">
+    <div class="note-box info">
+      <div class="ni">📅</div>
+      <div class="nt"><b>Período de estudo: fev/26 a mai/26</b> · Títulos liquidados (no prazo ou com atraso) emitidos neste intervalo. Faturas ainda em aberto em 29/05/2026 não entram nos indicadores abaixo.</div>
+    </div>
+    <div class="cat-cards">
+      <div class="cat-card blue" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.06;line-height:1;pointer-events:none">⏱</div>
+        <div class="cc-title" style="font-size:13px;letter-spacing:.08em">PRAZO DE ATRASO</div>
+        <div style="padding:4px 0 0">
+          <div style="font-size:14px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Atraso mais frequente</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span style="font-size:48px;font-weight:800;color:var(--pos);line-height:1">2</span>
+            <span style="font-size:20px;font-weight:400;color:var(--pos)">dias</span>
+          </div>
+          <div style="font-size:15px;color:var(--ink3);margin:4px 0 12px">é o atraso que mais se repete na carteira</div>
+          <div style="display:flex;gap:0;border-top:1px solid var(--border);padding-top:10px">
+            <div style="flex:1;padding-right:12px;border-right:1px solid var(--border)">
+              <div style="font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Metade paga em até</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">5<span style="font-size:16px;font-weight:400;color:var(--ink3)"> dias</span></div>
+            </div>
+            <div style="flex:1;padding-left:12px">
+              <div style="font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Média geral</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">9.5<span style="font-size:16px;font-weight:400;color:var(--ink3)"> dias</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-card gold">
+        <div class="cc-title">Juros/Multa recuperados</div>
+        <div class="cc-pct green">R$ 55,7 k</div>
+        <div class="cc-info"><span>Receita por atrasos pagos</span></div>
+      </div>
+      <div class="cat-card red">
+        <div class="cc-title">Pagas em atraso</div>
+        <div class="cc-pct warn">7.602</div>
+        <div class="cc-info"><span>de 43.515 total</span></div>
+      </div>
+      <div class="cat-card purple">
+        <div class="cc-title">Taxa de atraso</div>
+        <div class="cc-pct">17,5%</div>
+        <div class="cc-info"><span>do total pago</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 20px;padding:0 2px;">
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Atraso mais comum</b><br>
+        Quantos dias de atraso a maioria dos clientes tem na hora de pagar. O número menor na linha abaixo é o prazo em que metade dos pagamentos já foram quitados.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Juros/Multa recuperados</b><br>
+        Total cobrado em juros e multa no período. Calculado como a diferença a maior entre o que foi pago e o valor original da fatura. Valores menores (descontos) são ignorados.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Pagas em atraso</b><br>
+        Quantidade de faturas que foram pagas depois do vencimento, seja 1 dia ou 90 dias. O total ao lado mostra todas as faturas já liquidadas no período.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Taxa de atraso</b><br>
+        De cada 100 faturas pagas, quantas foram pagas com atraso. Não conta as que ainda estão em aberto. Abaixo de 15% é referência saudável para o setor.
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="ch"><div><div class="ct">Distribuição · Dias de Atraso no Pagamento</div></div></div>
+      <div class="cw"><canvas id="ch-recup" width="1719" height="350" style="display: block; box-sizing: border-box; height: 280px; width: 1375px;"></canvas></div>
+    </div>
+
+  </div>
 </div>
 
 <div class="footer" style="display:none">
