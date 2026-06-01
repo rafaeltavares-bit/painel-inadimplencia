@@ -490,7 +490,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 </script>
 
 <!-- V30: Modal de edição de observação por cliente -->
-<div id="obs-tooltip" style="display: none;"></div>
+<div id="obs-tooltip" style="display: none; left: 766px; top: 545px;">Negociamos para pagamento dia 28/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos uma nova previsão de pgto</div>
 <div id="nota-modal-bg" class="nota-modal-bg" onclick="if(event.target===this)fecharNotaModal()">
   <div class="nota-modal">
     <div class="nota-modal-title" id="nota-modal-razao">—</div>
@@ -537,7 +537,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div>
   </div>
   <div class="hr">
-    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
+    <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-right: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
     <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
@@ -547,7 +547,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 29/05/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 01/06/2026 às 09:59</div>
+      <div class="lt" id="last-upd">Sincronizado: 01/06/2026 às 10:01</div>
     </div>
   </div>
 </div>
@@ -837,7 +837,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
       </div>
       <div style="display:flex;align-items:center;gap:6px;">
         <span class="cf-label">Safra:</span>
-        <div class="cat-tabs"><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro(null)" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Últimos 3 meses</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;327,1 k</span></div><div class="cat-tab active" data-cor="em" onclick="setDevMesFiltro('2026-03')" style="background:var(--em);border-color:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mar/26</span><span style="font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)">R$&nbsp;84,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-04')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Abr/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;71,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-05')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mai/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;170,9 k</span></div></div>
+        <div class="cat-tabs"><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro(null)" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Últimos 3 meses</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;327,1 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-03')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mar/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;84,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-04')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Abr/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;71,6 k</span></div><div class="cat-tab active" data-cor="em" onclick="setDevMesFiltro('2026-05')" style="background:var(--em);border-color:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mai/26</span><span style="font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)">R$&nbsp;170,9 k</span></div></div>
       </div>
     </div>
       
@@ -889,7 +889,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </thead>
             <tbody id="tbody-dev">
               
-      <tr data-search="alc securitizadora ltda 61343552000197 abn  " style="">
+      <tr data-search="alc securitizadora ltda 61343552000197 abn parceiro cliente nao vai pagar, já esta cancelado. ele queria isençao total da fatura, pq não concordava com a cobrança de baixa de negativação. não isentamos, ele nao aceitou e cancelou o plano" style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">1</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192512</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 61.343.552/0001-97">ALC SECURITIZADORA LTDA</td>
@@ -897,12 +897,12 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">10.344,10</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/18/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
-        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">PARCEIRO</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;" data-obs="Cliente nao vai pagar, já esta cancelado. Ele queria isençao total da fatura, pq não concordava com a cobrança de baixa de Negativação. Não isentamos, ele nao aceitou e cancelou o plano">
+          Cliente nao vai pagar, já esta cancelado. Ele queria isençao total da fatura, pq não concordava com a cobrança de baixa …
         </td>
       </tr>
-      <tr data-search="floema nutricao vegetal ltda 07026185000152 b&amp;c  " style="">
+      <tr data-search="floema nutricao vegetal ltda 07026185000152 b&amp;c renata informa que vai pagar o mais breve possível. sem data específica de pagamento" style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">2</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11215923</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.026.185/0001-52">FLOEMA NUTRICAO VEGETAL LTDA</td>
@@ -910,12 +910,12 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">4.887,66</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
         <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+          Informa que vai pagar o mais breve possível. Sem data específica de pagamento
         </td>
       </tr>
-      <tr data-search="cervejaria schornstein ltda 07817573000151 gjr  " style="">
+      <tr data-search="cervejaria schornstein ltda 07817573000151 gjr parceiro cliente sempre paga em atraso. a fatura do mês passado foi paga com 20 dias de atraso. ainda não passou a data de pagamento. disse que ira regularizar na 1° semana de junho" style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">3</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11206848</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.817.573/0001-51">CERVEJARIA SCHORNSTEIN LTDA</td>
@@ -923,9 +923,9 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">4.678,21</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
-        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">PARCEIRO</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;" data-obs="Cliente sempre paga em atraso. A fatura do mês passado foi paga com 20 dias de atraso. Ainda não passou a data de pagamento. Disse que ira regularizar na 1° semana de Junho">
+          Cliente sempre paga em atraso. A fatura do mês passado foi paga com 20 dias de atraso. Ainda não passou a data de pagame…
         </td>
       </tr>
       <tr data-search="comercio de pecas auto diesel ltda 18299426000153 fgc jessica cliente suporte chamado aberto para tecnologia verificar ip das consultas" style="">
@@ -941,7 +941,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
           Cliente suporte chamado aberto para tecnologia verificar IP das consultas
         </td>
       </tr>
-      <tr data-search="master print prestacao de servicos ltda 01272344000112 abn  " style="">
+      <tr data-search="master print prestacao de servicos ltda 01272344000112 abn parceiro cliente sem retorno - lucieli não conseguiu contato - provavelmente sera cancelado por inadimplencia - 2 mes sem pagar" style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">5</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11200012</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 01.272.344/0001-12">MASTER PRINT PRESTACAO DE SERVICOS LTDA</td>
@@ -949,9 +949,9 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">3.692,62</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/15/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">PARCEIRO</span></td>
         <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+          Cliente sem retorno - Lucieli não conseguiu contato - provavelmente sera cancelado por inadimplencia - 2 mes sem pagar
         </td>
       </tr>
       <tr data-search="telesp telecomunicacoes ltda 01074614000180 carteira int jessica negociamos para pagamento dia 28/05 e não efetivou o pagamento. em contato para regularização, ainda nao temos uma nova previsão de pgto" style="">
@@ -967,7 +967,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
           Negociamos para pagamento dia 28/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos uma nova …
         </td>
       </tr>
-      <tr data-search="j.s.s construtora e materiais para construcao ltda 35974519000155 carteira int  " style="">
+      <tr data-search="j.s.s construtora e materiais para construcao ltda 35974519000155 carteira int jessica suspeita de fraude - nunca pagou nenhuma fatura" style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">7</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11204908</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 35.974.519/0001-55">J.S.S CONSTRUTORA E MATERIAIS PARA CONSTRUCAO LTDA</td>
@@ -975,9 +975,9 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">3.147,35</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/20/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
         <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+          Suspeita de Fraude - Nunca pagou nenhuma fatura
         </td>
       </tr>
       <tr data-search="mogi fibra telecomunicacoes slu ltda 48028180000146 tds jessica cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando" style="">
@@ -993,7 +993,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
           Cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando
         </td>
       </tr>
-      <tr data-search="roma artefatos de chapas de aco ltda 06324038000104 goval  " style="">
+      <tr data-search="roma artefatos de chapas de aco ltda 06324038000104 goval vania formalizado e-mail com a proposta de desconto / aguardando uma posição de pagamento/ realizado o contato novamente / cobrei o retorno para fechar a negociação./ cobrei novamente sem retorno até o momento / cobrei novamente até o momento sem resposta/ cobrei novamente no dia 27/05 até o momento sem retorno." style="">
         <td style="color:var(--ink3);font-size:12px;text-align:center">9</td>
         <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192510</td>
         <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 06.324.038/0001-04">ROMA ARTEFATOS DE CHAPAS DE ACO LTDA</td>
@@ -1001,9 +1001,9 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
         <td class="neg" style="font-weight:700;font-size:14px">2.501,47</td>
         <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/30/2026</td>
-        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
-        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
-          <span style="color:var(--ink3)">—</span>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;" data-obs="Formalizado e-mail com a proposta de desconto / Aguardando uma posição de pagamento/ realizado o contato novamente / cobrei o retorno para fechar a negociação./ cobrei novamente sem retorno até o momento / cobrei novamente até o momento sem resposta/ cobrei novamente no dia 27/05 até o momento sem retorno.">
+          Formalizado e-mail com a proposta de desconto / Aguardando uma posição de pagamento/ realizado o contato novamente / cob…
         </td>
       </tr>
       <tr data-search="bandmix concreto e argamassa ltda 15605390000109 carteira int jessica cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando" style="">
