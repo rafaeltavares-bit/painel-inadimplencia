@@ -540,14 +540,14 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
     <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
-    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
+    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
     </button>
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 29/05/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 01/06/2026 às 09:57</div>
+      <div class="lt" id="last-upd">Sincronizado: 01/06/2026 às 09:59</div>
     </div>
   </div>
 </div>
@@ -590,24 +590,24 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 </div>
 
-<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02);">
+<div id="farol-bar" class="farol-bar verde" style="display: none;">
   <div class="farol-dot"></div>
-  <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
-  <div class="farol-note">0 de 3 safras configuradas</div>
+  <div class="ft-title" id="f-title" style="">Mai/26 em 29/05/2026 · 3,99% · 24,1% MELHOR que a media das 3 safras anteriores (media 5,26%)</div>
+  <div class="farol-note">Abr/26 em 29/04/2026: 4,25% · Mar/26 em 30/03/2026: 5,90% · Fev/26 em 27/02/2026: 5,62%</div>
 </div>
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab active" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
+    <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
     <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
     <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
-    <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
+    <div class="tab active" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
 </div>
 
 <div class="main">
-  <div id="sec-gerencial" class="section active">
+  <div id="sec-gerencial" class="section">
     <div class="hero-v3">
       <div class="hero-v3-top">
         <div>
@@ -653,40 +653,40 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     
       <div class="comp-card ">
         <div class="cc-safra">Abr/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--am)">
+          4,25%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-04', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option>
+            <option value="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29" selected="">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Mar/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--rd)">
+          5,90%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-03', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option>
+            <option value="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30" selected="">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Fev/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--rd)">
+          5,62%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-02', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
+            <option value="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27" selected="">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
           </select>
         </div>
       </div>
-    </div></div></div>
+    </div><div class="comp-analise">💡 <b>Mai/26</b> em 29/05/2026: <b style="color:var(--em)">MELHOR performance entre as safras comparadas na mesma maturidade.</b></div></div></div>
     <div class="dual-charts">
       <div class="chart-card">
         <div class="ch">
@@ -826,7 +826,203 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     </div><div class="cards-nota"><b>Como ler o card:</b> o bloco de cima mostra a situação <b>atual</b> da categoria em Mai/26 (mês ainda em andamento, valores parciais). O bloco de baixo mostra o desempenho no <b>último mês fechado</b> (Abr/26) comparado com a média dos 6 meses Nov/25-Abr/26. Mai/26 ainda tem poucos dias de dados — a leitura definitiva do mês só fecha no final.</div></div>
   <div id="sec-categoria" class="section"></div>
   <div id="sec-tier" class="section"></div>
-  <div id="sec-devedores" class="section"></div>
+  <div id="sec-devedores" class="section active">
+    <div class="cat-filtros" style="margin-bottom:12px;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <span class="cf-label">Visão:</span>
+        <div class="cat-tabs">
+          <div class="cat-tab active" data-cor="em" onclick="switchDevSubtab('top10')" style="background:var(--em);border-color:transparent;color:#fff;">🏆 10 Maiores</div>
+          <div class="cat-tab" data-cor="em" onclick="switchDevSubtab('analitico')" style="">📋 Analítico</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span class="cf-label">Safra:</span>
+        <div class="cat-tabs"><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro(null)" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Últimos 3 meses</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;327,1 k</span></div><div class="cat-tab active" data-cor="em" onclick="setDevMesFiltro('2026-03')" style="background:var(--em);border-color:transparent;color:#fff;display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mar/26</span><span style="font-size:10px;font-weight:400;color:rgba(255,255,255,0.8)">R$&nbsp;84,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-04')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Abr/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;71,6 k</span></div><div class="cat-tab" data-cor="em" onclick="setDevMesFiltro('2026-05')" style="display:flex;flex-direction:column;align-items:center;gap:1px;padding-top:5px;padding-bottom:5px;"><span>Mai/26</span><span style="font-size:10px;font-weight:400;color:var(--ink3)">R$&nbsp;170,9 k</span></div></div>
+      </div>
+    </div>
+      
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px;">
+        <div class="cat-card gold" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Total em Aberto</div>
+          <div class="cc-pct" style="font-size:28px;">R$ 327,1 k</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Mar/26, Abr/26, Mai/26</span></div>
+        </div>
+        <div class="cat-card red" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Concentração Top 10</div>
+          <div class="cc-pct" style="font-size:28px;">12,6%</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Pulverizada ✓</span></div>
+        </div>
+        <div class="cat-card blue" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Fatura</div>
+          <div class="cc-pct" style="font-size:28px;">R$ 10,3 k</div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>ALC SECURITIZADORA LTDA</span></div>
+        </div>
+        <div class="cat-card purple" style="padding:16px 18px;">
+          <div class="cc-title" style="font-size:11px;margin-bottom:6px;">Maior Atraso</div>
+          <div class="cc-pct" style="font-size:28px;">80 <span style="font-size:16px">dias</span></div>
+          <div class="cc-info" style="font-size:12px;margin-top:6px;"><span>Na base dos 3 meses</span></div>
+        </div>
+      </div>
+      <div class="tc">
+        <div class="th-row">
+          <div>
+            <div class="th-title">🏆 10 Maiores Faturas Vencidas</div>
+            <div class="th-note">Soma dos últimos 3 meses (Mar/26, Abr/26, Mai/26) · ordenado por valor em aberto · observações de cobrança carregadas</div>
+          </div>
+          <input type="text" class="search-box" id="dev-search" placeholder="🔍 Buscar..." oninput="filtrarDevedores()">
+        </div>
+        <div class="tc-wrap">
+          <table class="in" style="font-size:13px;width:100%;table-layout:fixed;">
+            
+    <thead>
+      <tr>
+        <th style="width:32px;text-align:center">#</th>
+        <th style="width:90px">Fatura</th>
+        <th style="text-align:left;width:22%">Razão Social</th>
+        <th style="width:72px">Parceiro</th>
+        <th style="width:68px">Tier</th>
+        <th style="width:100px">Valor (R$)</th>
+        <th style="width:88px">Vencimento</th>
+        <th style="width:96px">Responsável</th>
+        <th style="text-align:left;">Observação de Cobrança</th>
+      </tr>
+    </thead>
+            <tbody id="tbody-dev">
+              
+      <tr data-search="alc securitizadora ltda 61343552000197 abn  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">1</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192512</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 61.343.552/0001-97">ALC SECURITIZADORA LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">ABN</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">10.344,10</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/18/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="floema nutricao vegetal ltda 07026185000152 b&amp;c  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">2</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11215923</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.026.185/0001-52">FLOEMA NUTRICAO VEGETAL LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">B&amp;C</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.887,66</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="cervejaria schornstein ltda 07817573000151 gjr  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">3</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11206848</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 07.817.573/0001-51">CERVEJARIA SCHORNSTEIN LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">GJR</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.678,21</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="comercio de pecas auto diesel ltda 18299426000153 fgc jessica cliente suporte chamado aberto para tecnologia verificar ip das consultas" style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">4</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216090</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 18.299.426/0001-53">COMERCIO DE PECAS AUTO DIESEL LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">FGC</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">4.090,47</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          Cliente suporte chamado aberto para tecnologia verificar IP das consultas
+        </td>
+      </tr>
+      <tr data-search="master print prestacao de servicos ltda 01272344000112 abn  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">5</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11200012</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 01.272.344/0001-12">MASTER PRINT PRESTACAO DE SERVICOS LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">ABN</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.692,62</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/15/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="telesp telecomunicacoes ltda 01074614000180 carteira int jessica negociamos para pagamento dia 28/05 e não efetivou o pagamento. em contato para regularização, ainda nao temos uma nova previsão de pgto" style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">6</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216249</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 01.074.614/0001-80">TELESP TELECOMUNICACOES LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.284,75</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/28/2026</td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;" data-obs="Negociamos para pagamento dia 28/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos uma nova previsão de pgto">
+          Negociamos para pagamento dia 28/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos uma nova …
+        </td>
+      </tr>
+      <tr data-search="j.s.s construtora e materiais para construcao ltda 35974519000155 carteira int  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">7</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11204908</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="4/1/2026 · 35.974.519/0001-55">J.S.S CONSTRUTORA E MATERIAIS PARA CONSTRUCAO LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">3.147,35</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">4/20/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="mogi fibra telecomunicacoes slu ltda 48028180000146 tds jessica cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando" style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">8</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11216106</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 48.028.180/0001-46">MOGI FIBRA TELECOMUNICACOES SLU LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">TDS</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 0</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.575,32</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          Cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando
+        </td>
+      </tr>
+      <tr data-search="roma artefatos de chapas de aco ltda 06324038000104 goval  " style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">9</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11192510</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="3/1/2026 · 06.324.038/0001-04">ROMA ARTEFATOS DE CHAPAS DE ACO LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">GOVAL</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.501,47</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">3/30/2026</td>
+        <td style="text-align:center"><span style="color:var(--ink3)">—</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          <span style="color:var(--ink3)">—</span>
+        </td>
+      </tr>
+      <tr data-search="bandmix concreto e argamassa ltda 15605390000109 carteira int jessica cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando" style="">
+        <td style="color:var(--ink3);font-size:12px;text-align:center">10</td>
+        <td style="font-size:12px;white-space:nowrap;color:var(--ink3);font-variant-numeric:tabular-nums">11210975</td>
+        <td style="text-align:left;white-space:normal;font-size:13px;font-weight:600;line-height:1.3" title="5/1/2026 · 15.605.390/0001-09">BANDMIX CONCRETO E ARGAMASSA LTDA</td>
+        <td style="font-size:12px;color:var(--ink2);text-align:center">Cart. Int.</td>
+        <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+        <td class="neg" style="font-weight:700;font-size:14px">2.116,90</td>
+        <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+        <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:3px 9px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+        <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:12px;cursor:default;">
+          Cliente estava com promessa para 29/05 ainda não nos deu retorno quanto apagamento aguardando
+        </td>
+      </tr>
+            </tbody>
+          </table>
+        </div>
+      </div></div>
   <div id="sec-recuperacao" class="section"></div>
 </div>
 
