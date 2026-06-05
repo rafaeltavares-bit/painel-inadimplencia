@@ -504,7 +504,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 </script>
 
 <!-- V30: Modal de edição de observação por cliente -->
-<div id="obs-tooltip" style="display: none;"></div>
+<div id="obs-tooltip" style="display: none; left: 1076px; top: 281px;">Pediu boleto para pgto doa 28/05 e nao efetivou p gamento. Desde entao nao conseguimos mais contato com o cliente. Chama atençao de um cliente novo (março.26) e não temos contato efetivo</div>
 <div id="nota-modal-bg" class="nota-modal-bg" onclick="if(event.target===this)fecharNotaModal()">
   <div class="nota-modal">
     <div class="nota-modal-title" id="nota-modal-razao">—</div>
@@ -552,16 +552,16 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   </div>
   <div class="hr">
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
-    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
+    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
     </button>
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 05/06/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 18:10</div>
+      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 18:26</div>
     </div>
   </div>
 </div>
@@ -604,29 +604,29 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 </div>
 
-<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02);">
+<div id="farol-bar" class="farol-bar amarelo" style="display: none;">
   <div class="farol-dot"></div>
-  <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
-  <div class="farol-note">0 de 3 safras configuradas</div>
+  <div class="ft-title" id="f-title" style="">Mai/26 em 29/05/2026 · 3,75% · em linha com a media das 3 safras anteriores (media 3,92%)</div>
+  <div class="farol-note">Abr/26 em 07/05/2026: 3,50% · Mar/26 em 07/04/2026: 3,99% · Fev/26 em 05/03/2026: 4,26%</div>
 </div>
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab active" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
+    <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
     <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
     <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
-    <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
+    <div class="tab active" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
 </div>
 
 <div class="main">
-  <div id="sec-gerencial" class="section active">
+  <div id="sec-gerencial" class="section">
     <div class="hero-v3">
       <div class="hero-v3-top">
         <div>
           <div class="hero-question">Inadimplência</div>
-          <div class="hero-pct-big ">3,75%</div>
+          <div class="hero-pct-big ">2,95%</div>
         </div>
         <div class="hero-info">
           <div class="hero-mes">Mai/26</div>
@@ -655,52 +655,52 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   
       <div class="comp-card atual">
         <div class="cc-safra">Mai/26 · ATUAL</div>
-        <div class="cc-pct" style="color:var(--am)">
-          3,75%
+        <div class="cc-pct" style="">
+          2,95%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-05', this.value)">
-            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29" selected="">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05" selected="">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Abr/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--am)">
+          3,50%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-04', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07" selected="">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Mar/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--am)">
+          3,99%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-03', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07" selected="">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Fev/26 </div>
-        <div class="cc-pct" style="">
-          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
+        <div class="cc-pct" style="color:var(--am)">
+          4,26%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-02', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
+            <option value="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05" selected="">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
           </select>
         </div>
       </div>
-    </div></div></div>
+    </div><div class="comp-analise">💡 <b>Mai/26</b> em 05/06/2026: <b style="color:var(--em)">MELHOR performance entre as safras comparadas na mesma maturidade.</b></div></div></div>
     <div class="dual-charts">
       <div class="chart-card">
         <div class="ch">
@@ -838,10 +838,1492 @@ table.in tr.r-total td:first-child{color:var(--ink);}
         <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> o bloco de cima mostra o desempenho no <b>mês anterior</b> (Mai/26). O bloco de baixo mostra a inadimplência em <b>Abr/26</b> comparada com a média dos 6 meses Nov/25-Abr/26. <i>Meses com menos de 15 dias de vencimentos não são exibidos.</i></div></div>
-  <div id="sec-categoria" class="section"></div>
+  <div id="sec-categoria" class="section">
+    <div class="cat-filtros">
+      <span class="cf-label">Categoria:</span>
+      <div class="cat-tabs">
+        
+          <div class="cat-tab active" data-cor="red" onclick="CATEGORIA_ATUAL=0;renderCategoria();">
+            BOMFICA
+          </div>
+        
+          <div class="cat-tab " data-cor="gold" onclick="CATEGORIA_ATUAL=1;renderCategoria();">
+            Revenda BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="blue" onclick="CATEGORIA_ATUAL=2;renderCategoria();">
+            Concessionário BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="purple" onclick="CATEGORIA_ATUAL=3;renderCategoria();">
+            Acordo Amigável
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="hero-v3 red">
+      <div class="hero-v3-top">
+        <div>
+          <div class="hero-question">BOMFICA – REDE OK</div>
+          <div class="hero-pct-big green">2,20%</div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-mes">Mai/26</div>
+          <div class="hero-comp-sub">
+            <b>4 parceiros</b> na categoria
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hs-label">Faturado da safra</div>
+          <div class="hs-val">R$ 1,80 MM</div>
+          <div class="hs-sub">≈ R$ 39,7 k inadimplente</div>
+        </div>
+      </div>
+    </div>
+  
+      <div class="cards-nota" style="border-left-color:var(--rd);background:rgba(176,48,32,.04);">
+        <b>⚠ Principal driver em Mai/26:</b> CARTEIRA INT — piorou 0,72%pp vs média 6m e representa 53,88% do faturado da categoria.
+      </div>
+    
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Parceiro · BOMFICA – REDE OK</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Parceiro</th>
+              
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left">CARTEIRA INT</td><td style="border-left:2px solid var(--rule);">1,19 MM</td><td>802,5 k</td><td>876,7 k</td><td>871,2 k</td><td>999,6 k</td><td>971,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">5,71 MM</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2025-12')" title="2,00% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">2,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-01')" title="2,60% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-03')" title="1,40% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-04')" title="1,60% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-05')" title="2,70% · Média BOMFICA: 2,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,70%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">1,97%</span></td></tr><tr><td class="b" style="text-align:left">ABN</td><td style="border-left:2px solid var(--rule);">740,0 k</td><td>495,8 k</td><td>575,4 k</td><td>594,8 k</td><td>693,6 k</td><td>632,3 k</td><td class="b" style="background:rgba(22,61,120,.04);">3,73 MM</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('ABN','2025-12')" title="0,40% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-01')" title="0,10% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-02')" title="0,30% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-03')" title="1,90% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-04')" title="0,80% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-05')" title="1,20% · Média BOMFICA: 2,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,20%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">0,79%</span></td></tr><tr><td class="b" style="text-align:left">HIROM</td><td style="border-left:2px solid var(--rule);">156,7 k</td><td>121,1 k</td><td>151,5 k</td><td>147,1 k</td><td>177,0 k</td><td>152,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">906,2 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2025-12')" title="1,40% · Média BOMFICA: 1,30% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-01')" title="1,90% · Média BOMFICA: 1,60% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-03')" title="1,10% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-04')" title="0,90% · Média BOMFICA: 1,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-05')" title="1,60% · Média BOMFICA: 2,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,60%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-1">1,37%</span></td></tr><tr><td class="b" style="text-align:left">GJR</td><td style="border-left:2px solid var(--rule);">38,1 k</td><td>29,1 k</td><td>44,5 k</td><td>46,9 k</td><td>52,5 k</td><td>46,7 k</td><td class="b" style="background:rgba(22,61,120,.04);">257,8 k</td><td style="border-left:2px solid var(--rule);cursor:pointer;" onclick="abrirDrillParceiro('GJR','2025-12')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-01')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-03')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-05')" title="10,00% · Média BOMFICA: 2,20% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">10,00%</span></td><td class="b" style="background:rgba(22,61,120,.04);"><span class="hm-cell hm-2">1,81%</span></td></tr><tr class="r-total"><td>Total BOMFICA</td><td style="border-left:2px solid var(--rule);">2,12 MM</td><td>1,45 MM</td><td>1,65 MM</td><td>1,66 MM</td><td>1,92 MM</td><td>1,80 MM</td><td style="background:rgba(22,61,120,.06);">10,61 MM</td><td style="border-left:2px solid var(--rule);">1,30%</td><td>1,60%</td><td>1,10%</td><td>1,50%</td><td>1,20%</td><td>2,20%</td><td style="background:rgba(22,61,120,.06);">1,50%</td></tr></tbody></table></div></div>
+    <div class="cards-nota">
+      <b>Como ler a tabela:</b> os parceiros estão ordenados por <b>R$ Faturado total</b> dos 6 meses (maior peso primeiro). As colunas <b>TOTAL</b> mostram o acumulado dos 6 meses (R$ Faturado somado, % Inadimplência ponderada pelo faturado). Clique numa célula de <b>% Inadimplência</b> para ver os clientes inadimplentes daquele mês.
+      
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:13px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
+    </div>
+  <div id="drill-detail">
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">🔍 CARTEIRA INT · Mai/26</div>
+          <div class="th-note">118 clientes inadimplentes · R$ R$ 25.895,51 em aberto</div>
+        </div>
+        <button onclick="document.getElementById('drill-detail').innerHTML='';" style="padding:6px 14px;border-radius:6px;border:1px solid var(--rule2);background:var(--paper);color:var(--ink3);font-size:13px;cursor:pointer;font-weight:600;">Fechar</button>
+      </div>
+      <div style="padding:10px 14px;margin:10px 0;border-left:3px solid var(--sp);background:rgba(22,61,120,.03);border-radius:6px;font-size:15px;font-weight:600;color:var(--ink2);">
+        📊 PULVERIZADO · Top 3 clientes = 24,20% (problema distribuído em 118 clientes)
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th style="width:28px">#</th>
+              <th style="text-align:left;width:22%">Razão Social</th>
+              <th style="width:68px">Tier</th>
+              <th style="width:90px">Vencimento</th>
+              <th style="width:100px">Valor</th>
+              <th style="width:90px">Responsável</th>
+              <th style="text-align:left;">Observação de Cobrança</th>
+            </tr>
+          </thead>
+          <tbody>
+            
+              <tr style="background:rgba(176,48,32,.04);">
+                <td style="text-align:center;color:var(--ink3)">1</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.074.614/0001-80">TELESP TELECOMUNICACOES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/28/2026</td>
+                <td class="neg" style="font-weight:700">R$ 3.284,75</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="Pediu boleto para pgto doa 28/05 e nao efetivou p gamento. Desde entao nao conseguimos mais contato com o cliente. Chama atençao de um cliente novo (março.26) e não temos contato efetivo">
+                  Pediu boleto para pgto doa 28/05 e nao efetivou p gamento. Desde entao nao conseguimos mais contato com o clie…
+                </td>
+              </tr>
+              <tr style="background:rgba(176,48,32,.04);">
+                <td style="text-align:center;color:var(--ink3)">2</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="15.605.390/0001-09">BANDMIX CONCRETO E ARGAMASSA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 2.116,90</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="Negociamos para pagamento dia 29/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos uma nova previsão de pgto">
+                  Negociamos para pagamento dia 29/05 e não efetivou o pagamento. Em contato para regularização, ainda nao temos…
+                </td>
+              </tr>
+              <tr style="background:rgba(176,48,32,.04);">
+                <td style="text-align:center;color:var(--ink3)">3</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="57.803.220/0001-70">LV COMERCIO DE DOCES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 864,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="cliente devendo mês 4 e 5, desconhece o contrato, informa que não tem conhecimento e pede o cancelamento e exclusão das faturas.">
+                  cliente devendo mês 4 e 5, desconhece o contrato, informa que não tem conhecimento e pede o cancelamento e exc…
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">4</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="06.162.862/0001-05">CLIQUE COMERCIO E INSTALACOES ELETRICAS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 849,79</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado por e-mail e WhatsApp, porém sem sucesso no retorno. Realizado contato também via telefone.
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">5</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="35.974.519/0001-55">J.S.S CONSTRUTORA E MATERIAIS PARA CONSTRUCAO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 849,79</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Suspeita de Fraude - Nunca pagou nenhuma fatura
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">6</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="62.197.923/0001-32">62.197.923 VALDIR DE MELO OLIVEIRA JUNIOR</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 546,94</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Sem contato cliente novo primeiro boleto
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">7</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="28.247.570/0001-08">28.247.570 ADAO RICARDO DA ROSA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 540,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via e-mail / tentativa de contato por telefone sem sucesso
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">8</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="28.618.579/0001-70">MONICA SANTOS GONCALVES DE LIMA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 540,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Suspeita de fraude - nunca pagou nenhuma fatura
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">9</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="05.245.422/0001-40">WANDERSON TRANSPORTES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
+                <td class="neg" style="font-weight:700">R$ 530,06</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado via whatsapp .
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">10</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.341.769/0001-61">CRISTAL POCOS ARTESIANOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 509,37</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado por e-mail e WhatsApp, porém sem sucesso no retorno. Realizado contato também via telefone.
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">11</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="29.919.164/0001-07">AFE TINTAS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 468,19</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado por e-mail e WhatsApp, porém sem sucesso no retorno. Realizado contato também via telefone.
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">12</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.459.400/0001-22">MARANHAO MOTORES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 435,67</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado por e-mail e WhatsApp, porém sem sucesso no retorno. Realizado contato também via telefone.
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">13</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="52.512.035/0001-03">AUTO ELETRICA IRMAOS MADEIRA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 355,87</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  cliente devendo os meses 09, 12,01, 03,04 e 05 sem sucesso
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">14</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="72.791.049/0001-10">POLIEX DO BRASIL INDUSTRIA E COMERCIO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 316,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via whatsapp/ em contato via telefone, informa que o pagamento ocorre dia 25/5
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">15</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="07.051.646/0001-47">ALDROVANDI ADMINISTRADORA DE BENS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 286,56</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado via whatsapp .
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">16</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="41.517.738/0001-08">MEGACABLE IND COMERCIO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 272,73</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">17</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="48.329.265/0001-64">R. G. GUIMARAES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 259,28</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via whatsapp/ sem sucesso ao ligar
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">18</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="13.828.647/0001-58">PITONNET PROVEDORES E SERVICOS DE TELECOMUNICACOES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/25/2026</td>
+                <td class="neg" style="font-weight:700">R$ 258,52</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado via whatsapp .
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">19</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="44.528.224/0001-46">JORGE CUNHA FORMACAO PROFISSIONAL E COSMETICOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 257,30</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="Notificado via whatsapp/ sem sucesso ao entrar em contato/ cobrei novamente até o momento sem retorno no whatsapp">
+                  Notificado via whatsapp/ sem sucesso ao entrar em contato/ cobrei novamente até o momento sem retorno no whats…
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">20</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="17.469.713/0001-00">SOUL LEVE INDUSTRIA DE PRODUTOS NATURAIS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 251,32</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado via whatsapp .
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">21</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="65.907.653/0001-02">65.907.653 TAKAYANO MIRANDA DA PAIXAO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 235,34</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">22</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="33.302.936/0001-26">MADEIREIRA SAO LUIZ LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 223,61</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="Notificado via e-mail e whatsapp ao ligar cai na caixa postal/ Atendeu e desligou / informa ue vai veriifcar como finanaceiro sobre o pagamento/ cobrei novamente até o momento sem retorno">
+                  Notificado via e-mail e whatsapp ao ligar cai na caixa postal/ Atendeu e desligou / informa ue vai veriifcar c…
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">23</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.156.768/0001-47">ANDREA ALVES DOS SANTOS EDUCANDARIO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 221,10</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via e-mail/ Sem sucesso ao ligar
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">24</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="34.917.796/0001-63">TALITA MOTA DA SILVA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 220,26</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">25</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="18.135.567/0001-30">JACARE DIESEL LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 218,01</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">26</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="63.675.268/0001-43">C S CONSTRUCAO CONSERVACAO E SERVICOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 217,88</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via whatsapp
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">27</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="00.697.590/0001-53">VG SERVICOS PREDIAIS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 216,46</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">28</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="51.992.444/0001-91">SUPERMERCADO UBIRAJARENSE LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 214,59</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">29</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="43.930.468/0001-98">CONDOMINIO RESIDENCIAL COLORADO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 213,04</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px" data-obs="Cliente informa cancelmento do contrato/ informa que não vai pagar pois discorda do valor cobrado./ cobrei novamente via whatsapp, sem sucesso ao ligar">
+                  Cliente informa cancelmento do contrato/ informa que não vai pagar pois discorda do valor cobrado./ cobrei nov…
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">30</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="60.031.127/0001-08">MANIPULA PHARMA SANTA LUZIA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 210,56</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">31</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="02.885.707/0001-58">DROGARIA CANDIDO &amp; CANDIDO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 208,50</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">32</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="19.062.892/0001-83">ARTEFATOS DE CIMENTO MENDONCA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 208,50</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">KETLYN</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via e-mail (aviso de negativação enviado) / aguardando uma posição de pagamento
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">33</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.242.773/0001-47">COMERCIAL TEJIMAR LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 205,63</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">KETLYN</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via e-mail
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">34</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="09.667.228/0001-04">BIG CAR SOM E ACESSORIOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 205,23</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">35</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="23.732.345/0001-35">VARGAS &amp; HOISLER LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 203,47</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Boleto enviado via whatsapp/ tentativa de contato sem sucesso por telefone/ cobrei novamente
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">36</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="04.190.798/0001-32">CONCEITOS ASSESSORIA E CONSULTORIA EMPRESARIAL LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 203,40</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">37</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="11.095.234/0001-86">ANA MARIA DE ALMEIDA AMARAL</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 203,29</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">38</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="93.248.318/0001-77">TUBIELLO INDUSTRIA COMERCIO E ELETROMECANICA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 203,29</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">39</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="04.366.711/0001-35">AUTO POSTO TRANSCAP LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 199,19</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">40</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="07.206.160/0001-30">DUARTE DE SOUZA &amp; SANTOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 196,21</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">41</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="33.325.588/0001-02">MAICON JORGE MORETTI 00935791019</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 194,21</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">42</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="61.794.772/0001-37">PAPELARIA MARPAL LIMITADA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 186,74</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">43</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="68.933.563/0001-76">GRAPHITAS COMERCIO E REPRESENTACOES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 185,21</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">44</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="13.385.334/0001-72">INOVAX ESQUADRIAS DE ALUMINIO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:#b45309;font-weight:700">Tier 1</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 182,71</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">45</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="43.357.289/0001-03">COSTA COMERCIO DE ALIMENTOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 175,13</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">46</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.181.459/0001-40">AVALIACAO DE RISCO TECNORISK LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 174,13</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">47</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="29.559.542/0001-80">RENOVARE NEGOCIOS IMOBILIARIOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 173,32</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">48</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="05.281.442/0001-77">NADIA PEREIRA GUIMARAES</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 171,93</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">49</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="02.529.695/0001-29">RETIFICA DE MOTORES SOUZA RAMOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 171,80</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">50</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="06.877.929/0001-80">J L ASSESSORIA CONTABIL LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 171,12</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">51</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="66.473.600/0001-85">66.473.600 MARCELO AUGUSTO DOS SANTOS</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Sem Classificação</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 161,60</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">52</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.520.017/0001-68">SERVICE DIESEL PECAS E SERVICOS DIESEL LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 158,26</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">53</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.804.684/0001-72">MADEIREIRA TARDIN DE BOM JARDIM LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 158,26</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">54</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="12.351.392/0001-12">DANILO RAMALHO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 158,26</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">55</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.311.705/0001-92">ADELICIA RIBEIRO DA SILVA OLIVEIRA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 151,10</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">56</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="48.425.110/0001-21">HAMAZAKI E FILHO OFICINA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 151,10</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">57</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="07.988.949/0001-90">SOARES IMAMURA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 147,71</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">58</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.753.761/0001-26">GEOTEX COMERCIO DE GEOSSINTETICOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 147,23</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">59</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.533.608/0001-70">SANDRA PORTO DO VALE</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 145,89</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">60</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="02.904.693/0001-72">CIMAG INDUSTRIA E COMERCIO DE MAQUINAS AGRICOLAS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 141,20</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Boleto enviado via whatsapp/ aguardando o pagamento (promessa dia 02/06)
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">61</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.903.426/0001-67">JOELMA VITORIANO DE BRITO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 132,54</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">62</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="56.900.928/0001-87">AXLLUB DISTRIBUIDORA DE LUBRIFICANTES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 129,20</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">63</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="42.179.773/0001-27">HPS PRE-MOLDADOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 126,19</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">64</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="52.660.337/0001-29">52.660.337 ALEXANDRE MENDES DINIZ</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 124,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">65</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="42.693.123/0001-03">PDG IMPORTACAO E EXPORTACAO DE ALIMENTOS E BEBIDAS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 123,38</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">66</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="11.601.257/0001-15">CONSTRUBORGES MATERIAIS PARA CONSTRUCAO LTDA.</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 119,99</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">67</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="68.306.406/0001-30">MAURO CESAR LUSVARDI &amp; CIA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 118,27</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">68</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="05.541.987/0001-75">GARBINI SERVICOS ESPECIALIZADOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 117,73</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">69</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="17.300.011/0001-90">M. B. OLIVEIRA LIMA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 117,73</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">70</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="27.531.515/0001-74">27.531.515 MARCOS KAUE ROCHA SILVA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 117,73</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">71</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="23.707.783/0001-43">SEGREDO PORTAS AUTOMATICAS E DISTRIBUIDORA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/25/2026</td>
+                <td class="neg" style="font-weight:700">R$ 113,18</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">Vania</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Cliente notificado via e-mail e whatsapp/ sem sucesso ao ligar/ cobrei novamente até o momento sem retorno
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">72</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.881.705/0001-28">TELETRON TELECOMUNICACOES E INFORMATICA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 111,11</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">73</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="07.774.916/0001-48">ALLIANCE SERVICOS AUTOMOTIVOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 111,11</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">74</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="13.198.001/0001-34">AMAZONLINK MONITORAMENTO E RASTREAMENTO DE VEICULOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 111,11</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">75</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.883.678/0002-52">F.PEZZATO AGRICOLA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 110,10</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">76</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="20.322.551/0001-89">20.322.551 FARAILDE LINDOSO DOS SANTOS</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 109,90</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">77</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="27.601.513/0001-04">R S LUCENA MATERIAIS DE PISCINA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 109,90</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">78</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="28.111.349/0001-10">R8 BRASIL CLUBE DE BENEFICIOS</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 109,90</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">KETLYN</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  Notificado via e-mail
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">79</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="51.048.019/0001-49">NOVA HORIZONTE PRESTACAO DE SERVICOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 108,00</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">80</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="35.013.162/0001-49">ARRUDA VIDROS E ACESSORIOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 105,26</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">81</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="36.022.952/0001-53">ESCOLA NEST - NUCLEO EDUCACIONAL SOCIO TRANSFORMADOR LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 104,87</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">82</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="14.775.162/0001-06">MARIA APARECIDA DA SILVA ARAUJO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/27/2026</td>
+                <td class="neg" style="font-weight:700">R$ 104,15</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">83</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="06.342.245/0001-83">D FERREIRA &amp; CIA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 103,30</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">84</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="18.793.483/0001-94">F. VIZCAINO SERVICOS FINANCEIROS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 102,63</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">85</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="05.435.073/0003-91">SUPERVIZA SUPERMERCADOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 101,82</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">86</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.817.534/0001-17">ELIZANGELA JOSINA DE MELO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 87,23</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">87</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="59.622.431/0001-32">SINDICATO DOS EMPREGADOS RURAIS DE SAO CARLOS</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 86,73</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">88</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="59.197.830/0001-01">TRATORCEASA PECAS, IMPLEMENTOS E MAQUINAS AGRICOLAS LTDA.</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 85,90</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">89</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="00.358.890/0001-08">ISAUTO POSTO GUAPIARA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 76,74</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">90</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="04.509.147/0001-62">S G DA SILVA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
+                <td class="neg" style="font-weight:700">R$ 76,55</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">91</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="23.761.133/0001-86">CASA DAS PECAS RESENDE E SILVA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 73,36</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">92</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.310.399/0001-19">RAMOS FERREIRA &amp; SILVA SUPERMERCADO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 69,39</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">93</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="33.069.741/0001-88">SEBASTIAO CARLOS PIM</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 67,86</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">94</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="14.805.662/0001-43">PONTO DOS COLCHOES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 67,38</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">95</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="15.050.897/0001-35">RECANTO SONHADO EDUCACIONAL LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 67,38</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">96</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="06.029.280/0001-47">ELISANGELA APARECIDA ZAMBON MOTOKI</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 60,95</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">97</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="09.218.543/0001-54">SIDNEY ANTEVRE - MECANICA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 60,95</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">98</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="13.476.864/0001-26">LINCOLN CLINICA MEDICA E ODONTOLOGICA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 56,50</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">99</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="69.555.944/0001-21">F DE A A FEITOSA E CIA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 56,36</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">100</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.957.027/0001-89">EVEREST COMERCIO DE PECAS AUTOMOTIVAS E IMPORTACAO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/20/2026</td>
+                <td class="neg" style="font-weight:700">R$ 54,36</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">101</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="10.453.923/0001-52">L. F. SCHWINDT COMERCIO E SERVICOS</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/27/2026</td>
+                <td class="neg" style="font-weight:700">R$ 52,07</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">102</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="71.972.277/0001-24">DORIVAL FRANCISCO CABRELLI RADIADORES</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--sp);font-weight:700">Tier 2</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 46,17</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">103</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="17.422.656/0001-03">GEOSER PIGOSO</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 45,49</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">104</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="01.116.962/0001-73">BARULHO AUTO CENTER LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 44,39</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">105</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="10.306.999/0001-55">AUTO POSTO DAS COBRAS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 44,39</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">106</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="15.371.841/0001-82">L. M. DE CARVALHO LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 44,39</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">107</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="47.826.266/0002-32">ALWAYS COMERCIAL IMPORTADORA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 44,39</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">108</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="48.386.520/0001-00">LEARNBASE GESTAO E CONSULTORIA EDUCACIONAL S.A.</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 42,30</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">109</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="59.081.819/0001-73">NOSSA CASA ASSESSORIA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 42,30</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">110</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="04.028.830/0001-88">BOMBONAS SANTA RITA LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 42,30</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">111</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="04.257.385/0004-70">UNIAO FRANCISCANA DE EDUCACAO E CULTURA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 40,02</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">112</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="26.053.096/0001-40">WWW NEGOCIOS IMOBILIARIOS LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 39,99</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">113</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="19.129.159/0001-39">19.129.159 JONATHAN MATHEUS DA SILVA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 38,80</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">114</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="28.044.838/0001-04">HANNA &amp; HALF SERVICOS E INVESTIMENTOS S/S</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Sem Classificação</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/15/2026</td>
+                <td class="neg" style="font-weight:700">R$ 33,19</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">115</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="08.224.043/0001-62">W. O. SOUZA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--em);font-weight:700">Tier 3</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 30,16</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">116</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="09.299.522/0001-00">LIG-LIMPE E CATA ENTULHO MATAO COMERCIO E LOCACOES LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/11/2026</td>
+                <td class="neg" style="font-weight:700">R$ 23,33</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">117</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="03.877.913/0001-89">CLAUDIO LUIZ PESSOA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Sem Classificação</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/18/2026</td>
+                <td class="neg" style="font-weight:700">R$ 12,07</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">RENATA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+              <tr style="background:rgba(16,185,129,0.05);">
+                <td style="text-align:center;color:var(--ink3)">118</td>
+                <td class="b" style="text-align:left;white-space:normal;font-size:13px" title="11.310.870/0001-83">CLINICA E LAB QUALITY LTDA</td>
+                <td style="text-align:center"><span style="font-size:11px;padding:2px 6px;border-radius:8px;background:var(--rule2);color:var(--ink3);font-weight:700">Tier 4</span></td>
+                <td style="font-size:12px;text-align:center;color:var(--ink2);font-variant-numeric:tabular-nums">5/27/2026</td>
+                <td class="neg" style="font-weight:700">R$ 11,51</td>
+                <td style="text-align:center"><span style="background:rgba(239,68,68,.1);padding:2px 8px;border-radius:10px;font-weight:700;color:var(--rd);font-size:13px;white-space:nowrap">JESSICA</span></td>
+                <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px">
+                  <span style="color:var(--ink3)">—</span>
+                </td>
+              </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div></div>
   <div id="sec-tier" class="section"></div>
   <div id="sec-devedores" class="section"></div>
-  <div id="sec-recuperacao" class="section"></div>
+  <div id="sec-recuperacao" class="section active">
+    <div class="note-box info">
+      <div class="ni">📅</div>
+      <div class="nt"><b>Período de estudo: fev/26 a mai/26</b> · Títulos liquidados (no prazo ou com atraso) emitidos neste intervalo. Faturas ainda em aberto em 05/06/2026 não entram nos indicadores abaixo.</div>
+    </div>
+    <div class="cat-cards">
+      <div class="cat-card blue" style="position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-18px;right:-14px;font-size:72px;opacity:.06;line-height:1;pointer-events:none">⏱</div>
+        <div class="cc-title" style="font-size:13px;letter-spacing:.08em">PRAZO DE ATRASO</div>
+        <div style="padding:4px 0 0">
+          <div style="font-size:14px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Atraso mais frequente</div>
+          <div style="display:flex;align-items:baseline;gap:6px">
+            <span style="font-size:48px;font-weight:800;color:var(--pos);line-height:1">2</span>
+            <span style="font-size:20px;font-weight:400;color:var(--pos)">dias</span>
+          </div>
+          <div style="font-size:15px;color:var(--ink3);margin:4px 0 12px">é o atraso que mais se repete na carteira</div>
+          <div style="display:flex;gap:0;border-top:1px solid var(--border);padding-top:10px">
+            <div style="flex:1;padding-right:12px;border-right:1px solid var(--border)">
+              <div style="font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Metade paga em até</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">5<span style="font-size:16px;font-weight:400;color:var(--ink3)"> dias</span></div>
+            </div>
+            <div style="flex:1;padding-left:12px">
+              <div style="font-size:13px;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px">Média geral</div>
+              <div style="font-size:24px;font-weight:700;color:var(--ink1)">9.9<span style="font-size:16px;font-weight:400;color:var(--ink3)"> dias</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cat-card gold">
+        <div class="cc-title">Juros/Multa recuperados</div>
+        <div class="cc-pct green">R$ 57,7 k</div>
+        <div class="cc-info"><span>Receita por atrasos pagos</span></div>
+      </div>
+      <div class="cat-card red">
+        <div class="cc-title">Pagas em atraso</div>
+        <div class="cc-pct warn">7.805</div>
+        <div class="cc-info"><span>de 43.733 total</span></div>
+      </div>
+      <div class="cat-card purple">
+        <div class="cc-title">Taxa de atraso</div>
+        <div class="cc-pct">17,8%</div>
+        <div class="cc-info"><span>do total pago</span></div>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:4px 0 20px;padding:0 2px;">
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Atraso mais comum</b><br>
+        Quantos dias de atraso a maioria dos clientes tem na hora de pagar. O número menor na linha abaixo é o prazo em que metade dos pagamentos já foram quitados.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Juros/Multa recuperados</b><br>
+        Total cobrado em juros e multa no período. Calculado como a diferença a maior entre o que foi pago e o valor original da fatura. Valores menores (descontos) são ignorados.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Pagas em atraso</b><br>
+        Quantidade de faturas que foram pagas depois do vencimento, seja 1 dia ou 90 dias. O total ao lado mostra todas as faturas já liquidadas no período.
+      </div>
+      <div style="background:var(--bg2);border-radius:6px;padding:10px 12px;font-size:15px;color:var(--ink3);line-height:1.6;">
+        <b style="color:var(--ink2);font-size:15px;">Taxa de atraso</b><br>
+        De cada 100 faturas pagas, quantas foram pagas com atraso. Não conta as que ainda estão em aberto. Abaixo de 15% é referência saudável para o setor.
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="ch"><div><div class="ct">Distribuição · Dias de Atraso no Pagamento</div></div></div>
+      <div class="cw"><canvas id="ch-recup" width="1719" height="350" style="display: block; box-sizing: border-box; height: 280px; width: 1375px;"></canvas></div>
+    </div>
+
+  </div>
 </div>
 
 <div class="footer" style="display:none">
