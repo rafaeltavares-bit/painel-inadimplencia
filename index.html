@@ -487,10 +487,10 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   window.verificarSenha = function() {
     const input = document.getElementById('senha-input');
     const erro = document.getElementById('senha-erro');
-    // Hash simples para não expor a senha em texto claro
     const h = Array.from(input.value).reduce((a,c) => Math.imul(31,a)+c.charCodeAt(0)|0, 0);
     if (h === 1612612507) { // hash de "T3mpoAza"
       document.getElementById('login-screen').style.display = 'none';
+      sessionStorage.setItem('painel_auth', '1');
     } else {
       erro.textContent = 'Senha incorreta. Tente novamente.';
       input.value = '';
@@ -498,12 +498,11 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     }
   };
 
-  // Senha é pedida toda vez que o painel abre (igual ao painel DFC).
-  // Forçamos a tela de login visível a cada carregamento, independente do
-  // estado que tenha sido "fotografado" no HTML publicado. Assim, mesmo que
-  // a publicação capture a tela já escondida (após o dono logar), o terceiro
-  // que abrir o link sempre verá a tela de senha. Só a senha correta esconde.
+  // travarLogin: garante que a foto publicada nunca expõe o painel sem senha.
+  // sessionStorage persiste enquanto a aba estiver aberta (F5 não pede senha).
+  // Fechar a aba ou abrir link novo limpa o sessionStorage → pede senha.
   function travarLogin() {
+    if (sessionStorage.getItem('painel_auth') === '1') return; // mesma sessão, já autenticou
     var ls = document.getElementById('login-screen');
     if (ls) ls.style.display = 'flex';
     var inp = document.getElementById('senha-input');
@@ -4225,7 +4224,7 @@ function renderTier() {
     const inadShow = inadMes > 0 ? inadMes : (t.total.valor_inadimplencia);
     const labelShow = inadMes > 0 ? mesLbl : '6 meses';
     html += `
-      <div class="cat-card ${corClass(t.tier)}" onclick="abrirDrillTier('${t.tier.replace(/'/g,\'\')}')" style="cursor:pointer;">
+      <div class="cat-card ${corClass(t.tier)}" onclick="abrirDrillTier('${t.tier}')" style="cursor:pointer;">
         <div class="cc-title">${t.tier}</div>
         <div class="cc-pct">${fmtRk(inadShow)}</div>
         <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:6px;">R$ inadimplente · ${labelShow}</div>
