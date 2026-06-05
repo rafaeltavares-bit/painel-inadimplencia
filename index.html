@@ -3115,13 +3115,8 @@ function renderGerencial() {
   const safrasOrder = Object.keys(DATA.categorias_por_safra).sort();
   const idxAtual = safrasOrder.indexOf(MES_CORRENTE);
   let safraComp, catsComp, kpiComp;
-  if (safraCorrenteMadura) {
-    // Safra atual madura: usa ela mesma pra comparar
-    safraComp = MES_CORRENTE;
-    catsComp = cats;
-    kpiComp = kpi;
-  } else if (idxAtual > 0) {
-    // Imatura: pega o mês anterior (fechado)
+  if (idxAtual > 0) {
+    // Comparação sempre com o mês anterior ao selecionado
     safraComp = safrasOrder[idxAtual - 1];
     catsComp = DATA.categorias_por_safra[safraComp] || [];
     kpiComp = DATA.kpis_por_safra[safraComp];
@@ -3135,12 +3130,7 @@ function renderGerencial() {
   const labelComp = kpiComp ? kpiComp.safra_label : safraComp;
   
   // === Cabeçalho da seção: indica claramente o que é o que ===
-  let headerTexto;
-  if (safraCorrenteMadura) {
-    headerTexto = `📊 Inadimplência por Categoria · ${kpi.safra_label}`;
-  } else {
-    headerTexto = `📊 Inadimplência por Categoria · ${kpi.safra_label} <span style="color:var(--ink3);font-weight:500;text-transform:none;letter-spacing:0;">⟶ comparação com ${labelComp} (mês anterior)</span>`;
-  }
+  const headerTexto = `📊 Inadimplência por Categoria · ${kpi.safra_label} <span style="color:var(--ink3);font-weight:500;text-transform:none;letter-spacing:0;">⟶ comparação com ${labelComp} (mês anterior)</span>`;
   
   html += `
     <div style="margin:24px 0 14px;font-size:14px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-weight:700;">
