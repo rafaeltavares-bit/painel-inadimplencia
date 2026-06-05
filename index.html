@@ -4166,7 +4166,7 @@ function abrirDrillTier(tierNome) {
                   : '<span style="color:var(--ink3)">—</span>'}</td>
                 <td style="text-align:left;white-space:normal;font-size:13px;color:var(--ink1);line-height:1.4;padding-right:10px"
                     ${cobr && cobr.comentario && cobr.comentario.length > 110
-                      ? \`data-obs="\${cobr.comentario.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}"\`
+                      ? `data-obs="${cobr.comentario.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}"`
                       : ''}>
                   ${cobr && cobr.comentario
                     ? (cobr.comentario.length > 110 ? cobr.comentario.substring(0,110)+'…' : cobr.comentario)
