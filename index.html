@@ -574,7 +574,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 05/06/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 21:21</div>
+      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 23:00</div>
     </div>
   </div>
 </div>
@@ -586,7 +586,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
 </div>
 
 <!-- Modal: Salvar snapshot -->
-<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(440px,90vw);box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <h3 style="margin:0 0 12px 0;font-size:18px;">📸 Salvar snapshot</h3>
     <p style="margin:0 0 16px 0;color:var(--ink2);font-size:14px;">Vai fotografar o estado atual do painel (mês selecionado, datas de comparação, dados visíveis). Você poderá reabrir esta foto a qualquer momento.</p>
@@ -600,7 +600,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
 </div>
 
 <!-- Modal: Lista de snapshots -->
-<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(640px,92vw);max-height:85vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <h3 style="margin:0;font-size:18px;">📂 Snapshots salvos</h3>
@@ -617,7 +617,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
 
 </div>
 
-<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02); display: none;">
+<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02);">
   <div class="farol-dot"></div>
   <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
   <div class="farol-note">0 de 3 safras configuradas</div>
@@ -625,21 +625,21 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
+    <div class="tab active" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
     <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
-    <div class="tab active" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
+    <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
 </div>
 
 <div class="main">
-  <div id="sec-gerencial" class="section">
+  <div id="sec-gerencial" class="section active">
     <div class="hero-v3">
       <div class="hero-v3-top">
         <div>
           <div class="hero-question">Inadimplência</div>
-          <div class="hero-pct-big ">2,95%</div>
+          <div class="hero-pct-big ">3,81%</div>
         </div>
         <div class="hero-info">
           <div class="hero-mes">Mai/26</div>
@@ -668,12 +668,12 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
   
       <div class="comp-card atual">
         <div class="cc-safra">Mai/26 · ATUAL</div>
-        <div class="cc-pct" style="">
-          2,95%
+        <div class="cc-pct" style="color:var(--am)">
+          3,81%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-05', this.value)">
-            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05" selected="">05/06/2026 (Fri)</option>
+            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29" selected="">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
@@ -722,7 +722,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
             <div class="cs">Visão focada · destaque do mês selecionado</div>
           </div>
         </div>
-        <div class="cw" style="height:320px"><canvas id="ch-focado" width="819" height="400" style="display: block; box-sizing: border-box; height: 320px; width: 655px;"></canvas></div>
+        <div class="cw" style="height:320px"><canvas id="ch-focado" width="745" height="320" style="display: block; box-sizing: border-box; height: 320px; width: 745px;"></canvas></div>
       </div>
       <div class="chart-card">
         <div class="ch">
@@ -736,7 +736,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
             <span class="lc-item"><span class="lc-dot" style="background:#1a1612"></span>% Atual</span>
           </div>
         </div>
-        <div class="cw" style="height:320px"><canvas id="ch-3linhas" width="819" height="400" style="display: block; box-sizing: border-box; height: 320px; width: 655px;"></canvas></div>
+        <div class="cw" style="height:320px"><canvas id="ch-3linhas" width="745" height="320" style="display: block; box-sizing: border-box; height: 320px; width: 745px;"></canvas></div>
       </div>
     </div>
   
@@ -816,7 +816,7 @@ console.log("%c ██ BUILD v25·06/06-B ██ drill-fix ativo ██ ", "back
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> mostra a inadimplência de <b>Mai/26</b> por categoria — % sobre o faturado, R$ faturado e R$ inadimplente. <i>Meses com menos de 15 dias de vencimentos não são exibidos.</i></div></div>
   <div id="sec-categoria" class="section"></div>
-  <div id="sec-tier" class="section active"><div class="cat-cards tier-cards">
+  <div id="sec-tier" class="section"><div class="cat-cards tier-cards">
       <div class="cat-card gray" data-tier="Tier 0" style="cursor:pointer;">
         <div class="cc-title">Tier 0</div>
         <div class="cc-pct">R$ 19,2 k</div>
@@ -5431,5 +5431,6 @@ function fecharDrillTierModal(){
 <div id="drill-tier-overlay" onclick="if(event.target===this)fecharDrillTierModal()">
   <div id="drill-tier-modal"></div>
 </div>
+
 
 </body></html>
