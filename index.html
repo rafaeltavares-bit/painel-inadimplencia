@@ -573,7 +573,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 05/06/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 21:20</div>
+      <div class="lt" id="last-upd">Sincronizado: 05/06/2026 às 21:21</div>
     </div>
   </div>
 </div>
@@ -616,7 +616,7 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 </div>
 
-<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02);">
+<div id="farol-bar" class="farol-bar" style="background: rgba(0, 0, 0, 0.02); display: none;">
   <div class="farol-dot"></div>
   <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
   <div class="farol-note">0 de 3 safras configuradas</div>
@@ -624,21 +624,21 @@ table.in tr.r-total td:first-child{color:var(--ink);}
 
 <div class="tabs-wrap">
   <div class="tabs">
-    <div class="tab active" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
+    <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
     <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
-    <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
+    <div class="tab active" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
 </div>
 
 <div class="main">
-  <div id="sec-gerencial" class="section active">
+  <div id="sec-gerencial" class="section">
     <div class="hero-v3">
       <div class="hero-v3-top">
         <div>
           <div class="hero-question">Inadimplência</div>
-          <div class="hero-pct-big ">3,81%</div>
+          <div class="hero-pct-big ">2,95%</div>
         </div>
         <div class="hero-info">
           <div class="hero-mes">Mai/26</div>
@@ -667,12 +667,12 @@ table.in tr.r-total td:first-child{color:var(--ink);}
   
       <div class="comp-card atual">
         <div class="cc-safra">Mai/26 · ATUAL</div>
-        <div class="cc-pct" style="color:var(--am)">
-          3,81%
+        <div class="cc-pct" style="">
+          2,95%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-05', this.value)">
-            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29" selected="">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05" selected="">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
@@ -815,7 +815,119 @@ table.in tr.r-total td:first-child{color:var(--ink);}
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> mostra a inadimplência de <b>Mai/26</b> por categoria — % sobre o faturado, R$ faturado e R$ inadimplente. <i>Meses com menos de 15 dias de vencimentos não são exibidos.</i></div></div>
   <div id="sec-categoria" class="section"></div>
-  <div id="sec-tier" class="section"></div>
+  <div id="sec-tier" class="section active"><div class="cat-cards tier-cards">
+      <div class="cat-card gray" data-tier="Tier 0" style="cursor:pointer;">
+        <div class="cc-title">Tier 0</div>
+        <div class="cc-pct">R$ 19,2 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:4px;">inadimplente · Mai/26</div>
+        <div class="cc-info"><span>% inad. Mai/26: <b>2,0%</b></span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink3);font-style:italic;">▼ ver clientes</div>
+      </div>
+    
+      <div class="cat-card red" data-tier="Tier 1" style="cursor:pointer;">
+        <div class="cc-title">Tier 1</div>
+        <div class="cc-pct">R$ 18,5 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:4px;">inadimplente · Mai/26</div>
+        <div class="cc-info"><span>% inad. Mai/26: <b>1,1%</b></span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink3);font-style:italic;">▼ ver clientes</div>
+      </div>
+    
+      <div class="cat-card gold" data-tier="Tier 2" style="cursor:pointer;">
+        <div class="cc-title">Tier 2</div>
+        <div class="cc-pct">R$ 11,4 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:4px;">inadimplente · Mai/26</div>
+        <div class="cc-info"><span>% inad. Mai/26: <b>2,0%</b></span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink3);font-style:italic;">▼ ver clientes</div>
+      </div>
+    
+      <div class="cat-card blue" data-tier="Tier 3" style="cursor:pointer;">
+        <div class="cc-title">Tier 3</div>
+        <div class="cc-pct">R$ 56,7 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:4px;">inadimplente · Mai/26</div>
+        <div class="cc-info"><span>% inad. Mai/26: <b>7,7%</b></span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink3);font-style:italic;">▼ ver clientes</div>
+      </div>
+    
+      <div class="cat-card purple" data-tier="Tier 4" style="cursor:pointer;">
+        <div class="cc-title">Tier 4</div>
+        <div class="cc-pct">R$ 21,2 k</div>
+        <div class="cc-info" style="font-size:13px;color:var(--ink3);margin-bottom:4px;">inadimplente · Mai/26</div>
+        <div class="cc-info"><span>% inad. Mai/26: <b>5,6%</b></span></div>
+        <div style="margin-top:6px;font-size:12px;color:var(--ink3);font-style:italic;">▼ ver clientes</div>
+      </div>
+    </div><div id="drill-tier-detail" style="display:none"></div>
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Tier</div>
+          <div class="th-note">Ordenado por hierarquia de tier</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Tier</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th style="background:rgba(22,61,120,.06);">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left"><span class="tchip" style="background:#888"></span>Tier 0</td><td style="border-left:2px solid var(--rule);">951,5 k</td><td>731,6 k</td><td>888,2 k</td><td>854,4 k</td><td>971,0 k</td><td>947,8 k</td><td class="b" style="background:rgba(22,61,120,.04);">5,34 MM</td><td style="border-left:2px solid var(--rule);">—</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="hm-cell hm-1">2,0%</span></td><td class="b" style="background:rgba(22,61,120,.04);">0,4%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#b03020"></span>Tier 1</td><td style="border-left:2px solid var(--rule);">1,99 MM</td><td>1,36 MM</td><td>1,66 MM</td><td>1,67 MM</td><td>1,90 MM</td><td>1,69 MM</td><td class="b" style="background:rgba(22,61,120,.04);">10,27 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-1">1,1%</span></td><td><span class="hm-cell hm-1">0,6%</span></td><td><span class="hm-cell hm-1">0,5%</span></td><td><span class="hm-cell hm-1">0,6%</span></td><td><span class="hm-cell hm-1">0,9%</span></td><td><span class="hm-cell hm-1">1,1%</span></td><td class="b" style="background:rgba(22,61,120,.04);">0,8%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#9a6c18"></span>Tier 2</td><td style="border-left:2px solid var(--rule);">817,7 k</td><td>529,9 k</td><td>561,4 k</td><td>545,2 k</td><td>578,5 k</td><td>566,9 k</td><td class="b" style="background:rgba(22,61,120,.04);">3,60 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-2">3,7%</span></td><td><span class="hm-cell hm-1">4,6%</span></td><td><span class="hm-cell hm-1">1,9%</span></td><td><span class="hm-cell hm-1">2,6%</span></td><td><span class="hm-cell hm-1">1,1%</span></td><td><span class="hm-cell hm-1">2,0%</span></td><td class="b" style="background:rgba(22,61,120,.04);">2,7%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#163d78"></span>Tier 3</td><td style="border-left:2px solid var(--rule);">975,3 k</td><td>656,3 k</td><td>688,3 k</td><td>703,6 k</td><td>738,5 k</td><td>733,9 k</td><td class="b" style="background:rgba(22,61,120,.04);">4,50 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-1">1,2%</span></td><td><span class="hm-cell hm-1">1,5%</span></td><td><span class="hm-cell hm-1">1,7%</span></td><td><span class="hm-cell hm-1">2,6%</span></td><td><span class="hm-cell hm-3">4,4%</span></td><td><span class="hm-cell hm-4">7,7%</span></td><td class="b" style="background:rgba(22,61,120,.04);">3,1%</td></tr><tr><td class="b" style="text-align:left"><span class="tchip" style="background:#6b2fd4"></span>Tier 4</td><td style="border-left:2px solid var(--rule);">663,2 k</td><td>420,3 k</td><td>394,5 k</td><td>398,1 k</td><td>365,4 k</td><td>378,2 k</td><td class="b" style="background:rgba(22,61,120,.04);">2,62 MM</td><td style="border-left:2px solid var(--rule);"><span class="hm-cell hm-4">6,9%</span></td><td><span class="hm-cell hm-4">14,2%</span></td><td><span class="hm-cell hm-4">10,8%</span></td><td><span class="hm-cell hm-4">10,6%</span></td><td><span class="hm-cell hm-2">3,2%</span></td><td><span class="hm-cell hm-3">5,6%</span></td><td class="b" style="background:rgba(22,61,120,.04);">8,5%</td></tr></tbody></table></div></div>
+  
+    <div class="chart-card">
+      <div class="ch">
+        <div>
+          <div class="ct">Onde a inadimplência se concentra · proporcionalidade real</div>
+          <div class="cs">
+            Eixo X = R$ Faturado total (6 meses) · Eixo Y = % Inadimplência (último mês com dado) · 
+            Tamanho da bolha = R$ total inadimplente · N/C omitido para limpar a análise
+          </div>
+        </div>
+      </div>
+      <div class="cw" style="height:440px;"><canvas id="ch-tier-bubble" width="1719" height="550" style="display: block; box-sizing: border-box; height: 440px; width: 1375px;"></canvas></div>
+      <div class="quad-legend">
+        <div class="quad q-star"><div class="quad-title">▼ Abaixo da linha</div><div class="quad-desc">% inadimplência abaixo da média geral do mês — zona saudável.</div></div>
+        <div class="quad q-crit"><div class="quad-title">▲ Acima da linha</div><div class="quad-desc">% inadimplência acima da média geral — requer atenção.</div></div>
+        <div class="quad q-watch"><div class="quad-title">→ Direita do gráfico</div><div class="quad-desc">Alto faturamento — impacto em R$ absoluto é maior.</div></div>
+        <div class="quad q-bleed"><div class="quad-title">● Tamanho da bolha</div><div class="quad-desc">Proporcional ao R$ total inadimplente do tier.</div></div>
+      </div>
+      <div class="tier-insight" id="tier-insight"><b>Leitura · Mai/26:</b> Em R$ inadimplente no mês, <b>Tier 3</b> lidera (R$ 56,7 k). Em <i>taxa de inadimplência</i>, <b>Tier 3</b> apresenta o maior % (7,7%). Maior base faturada (6 meses): <b>Tier 1</b> (R$ 10,27 MM).</div>
+    </div>
+
+    <style>
+      .dual-tier-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+      .tier-table-card{background:#fff;border:1px solid var(--rule);border-radius:14px;padding:20px;box-shadow:var(--sh);}
+      .tier-table-card .th-title{font-weight:700;font-size:16px;color:var(--ink);margin-bottom:2px;letter-spacing:.3px;text-transform:uppercase;}
+      .tier-table-card .th-note{font-size:14px;color:var(--ink2);margin-bottom:14px;font-style:italic;}
+      table.tier-tbl{width:100%;border-collapse:collapse;font-size:12.5px;}
+      table.tier-tbl thead th{background:#2c3e50;color:#fff;padding:8px 10px;text-align:right;font-weight:700;font-size:13px;letter-spacing:.4px;text-transform:uppercase;}
+      table.tier-tbl thead th:first-child{text-align:left;}
+      table.tier-tbl tbody td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--rule);font-variant-numeric:tabular-nums;}
+      table.tier-tbl tbody td.tname{text-align:left;font-weight:600;}
+      table.tier-tbl tbody td.b{font-weight:700;}
+      table.tier-tbl tbody tr.nc-row td{color:#9b958a;font-style:italic;background:#fafaf8;}
+      .tchip{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:8px;vertical-align:middle;}
+      .quad-legend{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px;font-family:"Outfit",sans-serif;font-size:11.5px;}
+      .quad{padding:9px 11px;border:1px solid var(--rule);border-left:3px solid #ccc;border-radius:4px;}
+      .quad-title{font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:10.5px;margin-bottom:2px;}
+      .quad-desc{color:var(--ink2);font-size:13px;line-height:1.4;}
+      .quad.q-star{border-left-color:#4a7a4a;} .quad.q-star .quad-title{color:#4a7a4a;}
+      .quad.q-watch{border-left-color:#c97b1f;} .quad.q-watch .quad-title{color:#c97b1f;}
+      .quad.q-bleed{border-left-color:#9a6c18;} .quad.q-bleed .quad-title{color:#9a6c18;}
+      .quad.q-crit{border-left-color:#b03020;} .quad.q-crit .quad-title{color:#b03020;}
+      .tier-insight{background:#fff8ee;border-left:3px solid #c97b1f;padding:12px 16px;margin-top:16px;font-size:15px;color:#5a3a10;line-height:1.55;border-radius:0 4px 4px 0;}
+      .tier-insight b{color:#b03020;}
+      @media(max-width:1100px){.dual-tier-wrap{grid-template-columns:1fr;} .quad-legend{grid-template-columns:repeat(2,1fr);}}
+    </style>
+  </div>
   <div id="sec-devedores" class="section"></div>
   <div id="sec-recuperacao" class="section"></div>
 </div>
