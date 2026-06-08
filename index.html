@@ -565,7 +565,7 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
   </div>
   <div class="hr">
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; margin-right: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background:var(--em);color:#fff;border-radius:10px;padding:1px 6px;font-size:11px;display:none;">0</span></button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background: var(--em); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; display: inline-block;">1</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
@@ -574,7 +574,7 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 05/06/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 08/06/2026 às 10:44</div>
+      <div class="lt" id="last-upd">Sincronizado: 08/06/2026 às 11:05</div>
     </div>
   </div>
 </div>
@@ -586,7 +586,7 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
 </div>
 
 <!-- Modal: Salvar snapshot -->
-<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(440px,90vw);box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <h3 style="margin:0 0 12px 0;font-size:18px;">📸 Salvar snapshot</h3>
     <p style="margin:0 0 16px 0;color:var(--ink2);font-size:14px;">Vai fotografar o estado atual do painel (mês selecionado, datas de comparação, dados visíveis). Você poderá reabrir esta foto a qualquer momento.</p>
@@ -600,7 +600,7 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
 </div>
 
 <!-- Modal: Lista de snapshots -->
-<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(640px,92vw);max-height:85vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <h3 style="margin:0;font-size:18px;">📂 Snapshots salvos</h3>
@@ -617,10 +617,10 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
 
 </div>
 
-<div id="farol-bar" class="farol-bar amarelo" style="display: none;">
+<div id="farol-bar" class="farol-bar" style="display: none; background: rgba(0, 0, 0, 0.02);">
   <div class="farol-dot"></div>
-  <div class="ft-title" id="f-title" style="">Mai/26 em 29/05/2026 · 3,81% · em linha com a media das 3 safras anteriores (media 3,92%)</div>
-  <div class="farol-note">Abr/26 em 07/05/2026: 3,50% · Mar/26 em 07/04/2026: 3,99% · Fev/26 em 05/03/2026: 4,26%</div>
+  <div class="ft-title" id="f-title" style="color: var(--ink3);">● Selecione as datas de comparação nas safras anteriores para ativar o farol</div>
+  <div class="farol-note">0 de 3 safras configuradas</div>
 </div>
 
 <div class="tabs-wrap">
@@ -680,40 +680,40 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
     
       <div class="comp-card ">
         <div class="cc-safra">Abr/26 </div>
-        <div class="cc-pct" style="color:var(--am)">
-          3,50%
+        <div class="cc-pct" style="">
+          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-04', this.value)">
-            <option value="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07" selected="">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="" selected="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Mar/26 </div>
-        <div class="cc-pct" style="color:var(--am)">
-          3,99%
+        <div class="cc-pct" style="">
+          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-03', this.value)">
-            <option value="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07" selected="">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="" selected="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
     
       <div class="comp-card ">
         <div class="cc-safra">Fev/26 </div>
-        <div class="cc-pct" style="color:var(--am)">
-          4,26%
+        <div class="cc-pct" style="">
+          <span style="color:var(--ink3);font-size:15px;">— selecione</span>
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-02', this.value)">
-            <option value="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05" selected="">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
+            <option value="" selected="">— (não comparar)</option><option value="2026-02-11">11/02/2026 (Wed)</option><option value="2026-02-12">12/02/2026 (Thu)</option><option value="2026-02-13">13/02/2026 (Fri)</option><option value="2026-02-18">18/02/2026 (Wed)</option><option value="2026-02-19">19/02/2026 (Thu)</option><option value="2026-02-20">20/02/2026 (Fri)</option><option value="2026-02-23">23/02/2026 (Mon)</option><option value="2026-02-24">24/02/2026 (Tue)</option><option value="2026-02-25">25/02/2026 (Wed)</option><option value="2026-02-26">26/02/2026 (Thu)</option><option value="2026-02-27">27/02/2026 (Fri)</option><option value="2026-03-02">02/03/2026 (Mon)</option><option value="2026-03-03">03/03/2026 (Tue)</option><option value="2026-03-04">04/03/2026 (Wed)</option><option value="2026-03-05">05/03/2026 (Thu)</option><option value="2026-03-06">06/03/2026 (Fri)</option><option value="2026-03-09">09/03/2026 (Mon)</option><option value="2026-03-10">10/03/2026 (Tue)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option>
           </select>
         </div>
       </div>
-    </div><div class="comp-analise">💡 <b>Mai/26</b> em 05/06/2026: <b style="color:var(--em)">MELHOR performance entre as safras comparadas na mesma maturidade.</b></div></div></div>
+    </div></div></div>
     <div class="dual-charts">
       <div class="chart-card">
         <div class="ch">
@@ -722,7 +722,7 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
             <div class="cs">Visão focada · destaque do mês selecionado</div>
           </div>
         </div>
-        <div class="cw" style="height:320px"><canvas id="ch-focado" width="839" height="400" style="display: block; box-sizing: border-box; height: 320px; width: 671px;"></canvas></div>
+        <div class="cw" style="height:320px"><canvas id="ch-focado" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
       </div>
       <div class="chart-card">
         <div class="ch">
@@ -736,35 +736,16 @@ table.in td.b-col{background:rgba(22,61,120,.03) !important;}
             <span class="lc-item"><span class="lc-dot" style="background:#1a1612"></span>% Atual</span>
           </div>
         </div>
-        <div class="cw" style="height:320px"><canvas id="ch-3linhas" width="839" height="400" style="display: block; box-sizing: border-box; height: 320px; width: 671px;"></canvas></div>
+        <div class="cw" style="height:320px"><canvas id="ch-3linhas" height="0" style="display: block; box-sizing: border-box; height: 0px; width: 0px;" width="0"></canvas></div>
       </div>
     </div>
   
     <div class="toggle-curvas">
-      <button class="aberto" onclick="MOSTRAR_CURVAS=!MOSTRAR_CURVAS;renderGerencial();">
-        ▲ Ocultar 📊 Análise Gráfica
+      <button class="" onclick="MOSTRAR_CURVAS=!MOSTRAR_CURVAS;renderGerencial();">
+        ▼ 📊 Análise Gráfica
       </button>
     </div>
   
-      <div class="chart-card">
-        <div class="ch">
-          <div>
-            <div class="ct">🔬 Curvas Diárias por Safra · evolução desde o início</div>
-            <div class="cs">Eixo X: dias desde o início da safra · cada linha é uma safra</div>
-          </div>
-        </div>
-        <div class="cw tall"><canvas id="ch-curvas" width="1739" height="475" style="display: block; box-sizing: border-box; height: 380px; width: 1391px;"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="ch">
-          <div>
-            <div class="ct">🎯 Categorias · Faturamento vs Inadimplência</div>
-            <div class="cs">Eixo X = R$ Faturado · Eixo Y = % Inad. · Bolha = R$ inadimplente · linha = inadimplência geral do mês</div>
-          </div>
-        </div>
-        <div style="position:relative;height:380px;"><canvas id="ch-cat-bubble" width="1739" height="475" style="display: block; box-sizing: border-box; height: 380px; width: 1391px;"></canvas></div>
-      </div>
-    
     <div style="margin:24px 0 14px;font-size:14px;color:var(--ink3);letter-spacing:.08em;text-transform:uppercase;font-weight:700;">
       📊 Inadimplência por Categoria · Mai/26 <span style="color:var(--ink3);font-weight:500;text-transform:none;letter-spacing:0;">⟶ comparação com Abr/26 (mês anterior)</span>
     </div>
