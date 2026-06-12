@@ -655,7 +655,7 @@ function mostrarHealthDetail() {
   </div>
   <div class="hr">
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
-    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background: var(--em); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; display: inline-block;">1</span></button>
+    <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: transparent; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background: var(--em); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; display: inline-block;">1</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
     <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
@@ -664,7 +664,7 @@ function mostrarHealthDetail() {
     <span class="bp bp-r" id="bp-fonte">Fonte: Quick Sight/Omie · 12/06/2026</span>
     <div class="live">
       <div class="lr"><div class="ld" id="live-dot" style="background: var(--em);"></div><span class="ll" id="live-label">Ao vivo · Quick Sight/Omie</span></div>
-      <div class="lt" id="last-upd">Sincronizado: 12/06/2026 às 18:17</div>
+      <div class="lt" id="last-upd">Sincronizado: 12/06/2026 às 18:32</div>
       <div id="health-indicator" style="display:flex;align-items:center;gap:4px;margin-top:3px;cursor:pointer;" onclick="mostrarHealthDetail()" title="Status do painel">
         <div id="health-dot" style="width: 7px; height: 7px; border-radius: 50%; background: rgb(34, 197, 94); flex-shrink: 0; box-shadow: rgb(34, 197, 94) 0px 0px 4px;"></div>
         <span id="health-label" style="font-size: 10px; color: rgb(34, 197, 94); font-weight: 500;">Conciliação OK</span>
@@ -680,7 +680,7 @@ function mostrarHealthDetail() {
 </div>
 
 <!-- Modal: Salvar snapshot -->
-<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-save" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(440px,90vw);box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <h3 style="margin:0 0 12px 0;font-size:18px;">📸 Salvar snapshot</h3>
     <p style="margin:0 0 16px 0;color:var(--ink2);font-size:14px;">Vai fotografar o estado atual do painel (mês selecionado, datas de comparação, dados visíveis). Você poderá reabrir esta foto a qualquer momento.</p>
@@ -694,7 +694,7 @@ function mostrarHealthDetail() {
 </div>
 
 <!-- Modal: Lista de snapshots -->
-<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
+<div id="modal-snap-list" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;padding:24px;width:min(640px,92vw);max-height:85vh;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
       <h3 style="margin:0;font-size:18px;">📂 Snapshots salvos</h3>
@@ -720,8 +720,8 @@ function mostrarHealthDetail() {
 <div class="tabs-wrap">
   <div class="tabs">
     <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
-    <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
-    <div class="tab active" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
+    <div class="tab active" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
+    <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
@@ -733,7 +733,7 @@ function mostrarHealthDetail() {
       <div class="hero-v3-top">
         <div>
           <div class="hero-question">Inadimplência</div>
-          <div class="hero-pct-big ">2,95%</div>
+          <div class="hero-pct-big ">2,42%</div>
         </div>
         <div class="hero-info">
           <div class="hero-mes">Mai/26</div>
@@ -744,8 +744,8 @@ function mostrarHealthDetail() {
         <div class="hero-side">
           <div class="hs-label">Inadimplência R$</div>
           
-              <div class="hs-val">R$ 127,3 k</div>
-              <div class="hs-sub">≈ 127k em aberto · 05/06/2026</div>
+              <div class="hs-val">R$ 104,5 k</div>
+              <div class="hs-sub">≈ 104k em aberto · 12/06/2026</div>
             
         </div>
       </div>
@@ -763,11 +763,11 @@ function mostrarHealthDetail() {
       <div class="comp-card atual">
         <div class="cc-safra">Mai/26 · ATUAL</div>
         <div class="cc-pct" style="">
-          2,95%
+          2,42%
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-05', this.value)">
-            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05" selected="">05/06/2026 (Fri)</option>
+            <option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option><option value="2026-06-08">08/06/2026 (Mon)</option><option value="2026-06-09">09/06/2026 (Tue)</option><option value="2026-06-10">10/06/2026 (Wed)</option><option value="2026-06-11">11/06/2026 (Thu)</option><option value="2026-06-12" selected="">12/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
@@ -779,7 +779,7 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-04', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="" selected="">— (não comparar)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option><option value="2026-06-08">08/06/2026 (Mon)</option><option value="2026-06-09">09/06/2026 (Tue)</option><option value="2026-06-10">10/06/2026 (Wed)</option><option value="2026-06-11">11/06/2026 (Thu)</option><option value="2026-06-12">12/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
@@ -791,7 +791,7 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-data-sel">
           <select onchange="onChangeDataComparacao('2026-03', this.value)">
-            <option value="" selected="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option>
+            <option value="" selected="">— (não comparar)</option><option value="2026-03-11">11/03/2026 (Wed)</option><option value="2026-03-12">12/03/2026 (Thu)</option><option value="2026-03-13">13/03/2026 (Fri)</option><option value="2026-03-16">16/03/2026 (Mon)</option><option value="2026-03-17">17/03/2026 (Tue)</option><option value="2026-03-18">18/03/2026 (Wed)</option><option value="2026-03-19">19/03/2026 (Thu)</option><option value="2026-03-20">20/03/2026 (Fri)</option><option value="2026-03-23">23/03/2026 (Mon)</option><option value="2026-03-24">24/03/2026 (Tue)</option><option value="2026-03-25">25/03/2026 (Wed)</option><option value="2026-03-26">26/03/2026 (Thu)</option><option value="2026-03-27">27/03/2026 (Fri)</option><option value="2026-03-30">30/03/2026 (Mon)</option><option value="2026-03-31">31/03/2026 (Tue)</option><option value="2026-04-01">01/04/2026 (Wed)</option><option value="2026-04-02">02/04/2026 (Thu)</option><option value="2026-04-06">06/04/2026 (Mon)</option><option value="2026-04-07">07/04/2026 (Tue)</option><option value="2026-04-08">08/04/2026 (Wed)</option><option value="2026-04-09">09/04/2026 (Thu)</option><option value="2026-04-10">10/04/2026 (Fri)</option><option value="2026-04-13">13/04/2026 (Mon)</option><option value="2026-04-14">14/04/2026 (Tue)</option><option value="2026-04-15">15/04/2026 (Wed)</option><option value="2026-04-16">16/04/2026 (Thu)</option><option value="2026-04-17">17/04/2026 (Fri)</option><option value="2026-04-20">20/04/2026 (Mon)</option><option value="2026-04-22">22/04/2026 (Wed)</option><option value="2026-04-23">23/04/2026 (Thu)</option><option value="2026-04-24">24/04/2026 (Fri)</option><option value="2026-04-27">27/04/2026 (Mon)</option><option value="2026-04-28">28/04/2026 (Tue)</option><option value="2026-04-29">29/04/2026 (Wed)</option><option value="2026-04-30">30/04/2026 (Thu)</option><option value="2026-05-04">04/05/2026 (Mon)</option><option value="2026-05-05">05/05/2026 (Tue)</option><option value="2026-05-06">06/05/2026 (Wed)</option><option value="2026-05-07">07/05/2026 (Thu)</option><option value="2026-05-08">08/05/2026 (Fri)</option><option value="2026-05-11">11/05/2026 (Mon)</option><option value="2026-05-12">12/05/2026 (Tue)</option><option value="2026-05-13">13/05/2026 (Wed)</option><option value="2026-05-14">14/05/2026 (Thu)</option><option value="2026-05-15">15/05/2026 (Fri)</option><option value="2026-05-18">18/05/2026 (Mon)</option><option value="2026-05-19">19/05/2026 (Tue)</option><option value="2026-05-20">20/05/2026 (Wed)</option><option value="2026-05-21">21/05/2026 (Thu)</option><option value="2026-05-22">22/05/2026 (Fri)</option><option value="2026-05-25">25/05/2026 (Mon)</option><option value="2026-05-26">26/05/2026 (Tue)</option><option value="2026-05-27">27/05/2026 (Wed)</option><option value="2026-05-28">28/05/2026 (Thu)</option><option value="2026-05-29">29/05/2026 (Fri)</option><option value="2026-06-01">01/06/2026 (Mon)</option><option value="2026-06-02">02/06/2026 (Tue)</option><option value="2026-06-03">03/06/2026 (Wed)</option><option value="2026-06-05">05/06/2026 (Fri)</option><option value="2026-06-08">08/06/2026 (Mon)</option><option value="2026-06-09">09/06/2026 (Tue)</option><option value="2026-06-10">10/06/2026 (Wed)</option><option value="2026-06-11">11/06/2026 (Thu)</option><option value="2026-06-12">12/06/2026 (Fri)</option>
           </select>
         </div>
       </div>
@@ -851,10 +851,10 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-block">
           <div class="cc-block-label atual">Mai/26 · fechado</div>
-          <div class="cc-pct-atual green">2,20%</div>
+          <div class="cc-pct-atual green">1,90%</div>
           <div class="cc3-info" style="border-top:none;padding-top:4px;">
             <span>Faturado: <b>R$ 1,80 MM</b></span>
-            <span>Inadimpl.: <b>R$ 39,7 k</b></span>
+            <span>Inadimpl.: <b>R$ 34,3 k</b></span>
           </div>
         </div>
         
@@ -867,10 +867,10 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-block">
           <div class="cc-block-label atual">Mai/26 · fechado</div>
-          <div class="cc-pct-atual warn">3,70%</div>
+          <div class="cc-pct-atual warn">3,40%</div>
           <div class="cc3-info" style="border-top:none;padding-top:4px;">
             <span>Faturado: <b>R$ 373,6 k</b></span>
-            <span>Inadimpl.: <b>R$ 13,8 k</b></span>
+            <span>Inadimpl.: <b>R$ 12,7 k</b></span>
           </div>
         </div>
         
@@ -883,10 +883,10 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-block">
           <div class="cc-block-label atual">Mai/26 · fechado</div>
-          <div class="cc-pct-atual green">2,80%</div>
+          <div class="cc-pct-atual green">2,40%</div>
           <div class="cc3-info" style="border-top:none;padding-top:4px;">
-            <span>Faturado: <b>R$ 938,6 k</b></span>
-            <span>Inadimpl.: <b>R$ 26,3 k</b></span>
+            <span>Faturado: <b>R$ 939,9 k</b></span>
+            <span>Inadimpl.: <b>R$ 22,6 k</b></span>
           </div>
         </div>
         
@@ -899,18 +899,104 @@ function mostrarHealthDetail() {
         </div>
         <div class="cc-block">
           <div class="cc-block-label atual">Mai/26 · fechado</div>
-          <div class="cc-pct-atual warn">3,90%</div>
+          <div class="cc-pct-atual green">2,80%</div>
           <div class="cc3-info" style="border-top:none;padding-top:4px;">
             <span>Faturado: <b>R$ 1,20 MM</b></span>
-            <span>Inadimpl.: <b>R$ 47,0 k</b></span>
+            <span>Inadimpl.: <b>R$ 33,6 k</b></span>
           </div>
         </div>
         
         <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> mostra a inadimplência de <b>Mai/26</b> por categoria — % sobre o faturado, R$ faturado e R$ inadimplente. <i>Meses com menos de 15 dias de vencimentos não são exibidos.</i></div></div>
-  <div id="sec-categoria" class="section"></div>
-  <div id="sec-tier" class="section active"><div class="cat-cards tier-cards">
+  <div id="sec-categoria" class="section active">
+    <div class="cat-filtros">
+      <span class="cf-label">Categoria:</span>
+      <div class="cat-tabs">
+        
+          <div class="cat-tab active" data-cor="red" onclick="CATEGORIA_ATUAL=0;renderCategoria();">
+            BOMFICA
+          </div>
+        
+          <div class="cat-tab " data-cor="gold" onclick="CATEGORIA_ATUAL=1;renderCategoria();">
+            Revenda BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="blue" onclick="CATEGORIA_ATUAL=2;renderCategoria();">
+            Concessionário BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="purple" onclick="CATEGORIA_ATUAL=3;renderCategoria();">
+            Acordo Amigável
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="hero-v3 red">
+      <div class="hero-v3-top">
+        <div>
+          <div class="hero-question">BOMFICA – REDE OK</div>
+          <div class="hero-pct-big green">1,90%</div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-mes">Mai/26</div>
+          <div class="hero-comp-sub">
+            <b>4 parceiros</b> na categoria
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hs-label">Faturado da safra</div>
+          <div class="hs-val">R$ 1,80 MM</div>
+          <div class="hs-sub">≈ R$ 34,3 k inadimplente</div>
+        </div>
+      </div>
+    </div>
+  
+        <div class="cards-nota" style="border-left-color:var(--em);background:rgba(46,107,77,.04);">
+          <b>✓ Destaque positivo em Abr/26:</b> HIROM — melhorou 0,48%pp vs média 6m (9,21% do faturado).
+        </div>
+      
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Parceiro · BOMFICA – REDE OK</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Parceiro</th>
+              
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th class="b-col">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th class="b-col">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left">CARTEIRA INT</td><td style="border-left:2px solid var(--rule);">1,19 MM</td><td>802,5 k</td><td>876,7 k</td><td>871,2 k</td><td>999,6 k</td><td>971,8 k</td><td class="b b-col">5,71 MM</td><td style="border-left:2px solid var(--rule);opacity:.65;" title="1,90% · Sem drill analítico para este mês"><span class="hm-cell hm-2">1,90%</span></td><td style="opacity:.65;" title="2,60% · Sem drill analítico para este mês"><span class="hm-cell hm-3">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-03')" title="1,40% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-04')" title="1,50% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('CARTEIRA INT','2026-05')" title="2,30% · Média BOMFICA: 1,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,30%</span></td><td class="b b-col"><span class="hm-cell hm-2">1,87%</span></td></tr><tr><td class="b" style="text-align:left">ABN</td><td style="border-left:2px solid var(--rule);">740,0 k</td><td>495,8 k</td><td>575,4 k</td><td>594,8 k</td><td>693,6 k</td><td>632,3 k</td><td class="b b-col">3,73 MM</td><td style="border-left:2px solid var(--rule);opacity:.65;" title="0,40% · Sem drill analítico para este mês"><span class="hm-cell hm-1">0,40%</span></td><td style="opacity:.65;" title="0,10% · Sem drill analítico para este mês"><span class="hm-cell hm-1">0,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-02')" title="0,30% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,30%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-03')" title="1,90% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-04')" title="0,70% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ABN','2026-05')" title="0,90% · Média BOMFICA: 1,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,90%</span></td><td class="b b-col"><span class="hm-cell hm-1">0,74%</span></td></tr><tr><td class="b" style="text-align:left">HIROM</td><td style="border-left:2px solid var(--rule);">156,7 k</td><td>121,1 k</td><td>151,5 k</td><td>147,0 k</td><td>177,0 k</td><td>152,8 k</td><td class="b b-col">906,2 k</td><td style="border-left:2px solid var(--rule);opacity:.65;" title="1,40% · Sem drill analítico para este mês"><span class="hm-cell hm-2">1,40%</span></td><td style="opacity:.65;" title="1,90% · Sem drill analítico para este mês"><span class="hm-cell hm-2">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-02')" title="1,60% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">1,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-03')" title="1,10% · Média BOMFICA: 1,50% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-04')" title="0,90% · Média BOMFICA: 1,10% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('HIROM','2026-05')" title="1,60% · Média BOMFICA: 1,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,60%</span></td><td class="b b-col"><span class="hm-cell hm-1">1,37%</span></td></tr><tr><td class="b" style="text-align:left">GJR</td><td style="border-left:2px solid var(--rule);">38,1 k</td><td>29,1 k</td><td>44,5 k</td><td>46,9 k</td><td>52,5 k</td><td>46,7 k</td><td class="b b-col">257,8 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-03')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-04')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GJR','2026-05')" title="10,00% · Média BOMFICA: 1,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">10,00%</span></td><td class="b b-col"><span class="hm-cell hm-2">1,81%</span></td></tr><tr class="r-total"><td>Total BOMFICA</td><td style="border-left:2px solid var(--rule);">2,12 MM</td><td>1,45 MM</td><td>1,65 MM</td><td>1,66 MM</td><td>1,92 MM</td><td>1,80 MM</td><td>10,61 MM</td><td style="border-left:2px solid var(--rule);">1,30%</td><td>1,60%</td><td>1,10%</td><td>1,50%</td><td>1,10%</td><td>1,90%</td><td>1,43%</td></tr></tbody></table></div></div>
+    <div class="cards-nota">
+      <b>Como ler a tabela:</b> ordenado por R$ Faturado total (6 meses). Clique em <b>% Inadimplência</b> para ver os clientes — <span style="opacity:.55;font-size:11px;">drill disponível a partir de Fev/26</span>.
+      <br><b>Nota:</b> Mai/26 ainda está em maturação. Análise de movimento refere-se a Abr/26 (último mês fechado).
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:13px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
+    </div>
+  <div id="drill-detail"></div></div>
+  <div id="sec-tier" class="section"><div class="cat-cards tier-cards">
       <div class="cat-card gray" data-tier="Tier 0" style="cursor:pointer;" onclick="abrirDrillTier(this.dataset.tier)">
         <div class="cc-title">Tier 0</div>
         <div class="cc-pct">R$ 18,0 k</div>
