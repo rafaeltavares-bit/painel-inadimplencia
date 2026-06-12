@@ -657,7 +657,7 @@ function mostrarHealthDetail() {
     <button id="btn-snap-save" onclick="abrirModalSalvarSnapshot()" title="Salvar foto do painel para reabrir depois" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;margin-right:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📸 Salvar snapshot</button>
     <button id="btn-snap-list" onclick="abrirModalListaSnapshots()" title="Ver snapshots salvos" style="padding:4px 8px;border:none;background:transparent;color:var(--ink2);font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:4px;border-radius:6px;transition:background .15s;" onmouseover="this.style.background='rgba(0,0,0,0.04)'" onmouseout="this.style.background='transparent'">📂 Snapshots <span id="snap-count" style="background: var(--em); color: rgb(255, 255, 255); border-radius: 10px; padding: 1px 6px; font-size: 11px; display: inline-block;">1</span></button>
     <span style="width:1px;height:18px;background:var(--rule2);margin:0 4px;flex-shrink:0;"></span>
-    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; background: var(--em); color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s;" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
+    <button id="btn-refresh" onclick="atualizarDoSheets()" style="padding: 4px 8px; border-width: medium; border-style: none; border-color: currentcolor; border-image: initial; color: var(--ink2); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; border-radius: 6px; transition: background 0.15s; background: var(--em);" onmouseover="this.style.background='rgba(0,0,0,0.06)'" onmouseout="this.style.background='transparent'">
       <span id="btn-refresh-icon">🔄</span>
       <span id="btn-refresh-txt">Atualizar dados</span>
     </button>
@@ -720,8 +720,8 @@ function mostrarHealthDetail() {
 <div class="tabs-wrap">
   <div class="tabs">
     <div class="tab" data-id="gerencial" onclick="switchTab('gerencial',this)">📊 Visão Gerencial</div>
-    <div class="tab" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
-    <div class="tab active" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
+    <div class="tab active" data-id="categoria" onclick="switchTab('categoria',this)">🏢 Por Categoria</div>
+    <div class="tab" data-id="tier" onclick="switchTab('tier',this)">🎯 Por Tier</div>
     <div class="tab" data-id="devedores" onclick="switchTab('devedores',this)">🔍 Devedores</div>
     <div class="tab" data-id="recuperacao" onclick="switchTab('recuperacao',this)">♻️ Recuperação</div>
   </div>
@@ -909,8 +909,90 @@ function mostrarHealthDetail() {
         <div class="cc3-link" style="margin-top:14px;">Detalhar por parceiro</div>
       </div>
     </div><div class="cards-nota"><b>Como ler o card:</b> mostra a inadimplência de <b>Mai/26</b> por categoria — % sobre o faturado, R$ faturado e R$ inadimplente. <i>Meses com menos de 15 dias de vencimentos não são exibidos.</i></div></div>
-  <div id="sec-categoria" class="section"></div>
-  <div id="sec-tier" class="section active"><div class="cat-cards tier-cards">
+  <div id="sec-categoria" class="section active">
+    <div class="cat-filtros">
+      <span class="cf-label">Categoria:</span>
+      <div class="cat-tabs">
+        
+          <div class="cat-tab " data-cor="red" onclick="CATEGORIA_ATUAL=0;renderCategoria();">
+            BOMFICA
+          </div>
+        
+          <div class="cat-tab " data-cor="gold" onclick="CATEGORIA_ATUAL=1;renderCategoria();">
+            Revenda BONSAI
+          </div>
+        
+          <div class="cat-tab " data-cor="blue" onclick="CATEGORIA_ATUAL=2;renderCategoria();">
+            Concessionário BONSAI
+          </div>
+        
+          <div class="cat-tab active" data-cor="purple" onclick="CATEGORIA_ATUAL=3;renderCategoria();">
+            Acordo Amigável
+          </div>
+        
+      </div>
+    </div>
+  
+    <div class="hero-v3 purple">
+      <div class="hero-v3-top">
+        <div>
+          <div class="hero-question">Acordo Amigável</div>
+          <div class="hero-pct-big green">2,80%</div>
+        </div>
+        <div class="hero-info">
+          <div class="hero-mes">Mai/26</div>
+          <div class="hero-comp-sub">
+            <b>9 parceiros</b> na categoria
+          </div>
+        </div>
+        <div class="hero-side">
+          <div class="hs-label">Faturado da safra</div>
+          <div class="hs-val">R$ 1,20 MM</div>
+          <div class="hs-sub">≈ R$ 33,6 k inadimplente</div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="tc">
+      <div class="th-row">
+        <div>
+          <div class="th-title">📋 Detalhamento por Parceiro · Acordo Amigável</div>
+          <div class="th-note">Ordenado por <b>R$ Faturado total</b> (maior peso primeiro)</div>
+        </div>
+      </div>
+      <div class="tc-wrap">
+        <table class="in">
+          <thead>
+            <tr>
+              <th>Parceiro</th>
+              
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">R$ FATURADO</th>
+              <th colspan="7" style="text-align:center;border-left:2px solid var(--rule);">% INADIMPLÊNCIA</th>
+            </tr>
+            <tr>
+              <th></th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th class="b-col">TOTAL</th>
+              <th style="border-left:2px solid var(--rule);">Dez/25</th><th>Jan/26</th><th>Fev/26</th><th>Mar/26</th><th>Abr/26</th><th>Mai/26</th>
+              <th class="b-col">TOTAL</th>
+            </tr>
+          </thead>
+          <tbody>
+  <tr><td class="b" style="text-align:left">GOVAL</td><td style="border-left:2px solid var(--rule);">5,5 k</td><td>6,7 k</td><td>6,8 k</td><td>289,1 k</td><td>321,5 k</td><td>328,0 k</td><td class="b b-col">957,7 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOVAL','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOVAL','2026-03')" title="3,40% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOVAL','2026-04')" title="1,50% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('GOVAL','2026-05')" title="1,10% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,10%</span></td><td class="b b-col"><span class="hm-cell hm-1">1,92%</span></td></tr><tr><td class="b" style="text-align:left">LIBRE</td><td style="border-left:2px solid var(--rule);">10,4 k</td><td>8,2 k</td><td>7,8 k</td><td>294,5 k</td><td>287,1 k</td><td>275,2 k</td><td class="b b-col">883,2 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('LIBRE','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('LIBRE','2026-03')" title="2,60% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,60%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('LIBRE','2026-04')" title="1,90% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('LIBRE','2026-05')" title="2,40% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,40%</span></td><td class="b b-col"><span class="hm-cell hm-1">2,23%</span></td></tr><tr><td class="b" style="text-align:left">NEI</td><td style="border-left:2px solid var(--rule);">7,6 k</td><td>9,8 k</td><td>6,1 k</td><td>164,7 k</td><td>155,5 k</td><td>149,8 k</td><td class="b b-col">493,5 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NEI','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NEI','2026-03')" title="4,20% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">4,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NEI','2026-04')" title="4,20% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">4,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('NEI','2026-05')" title="5,10% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">5,10%</span></td><td class="b b-col"><span class="hm-cell hm-3">4,27%</span></td></tr><tr><td class="b" style="text-align:left">RECH</td><td style="border-left:2px solid var(--rule);">3,8 k</td><td>4,2 k</td><td>3,7 k</td><td>120,1 k</td><td>124,5 k</td><td>120,3 k</td><td class="b b-col">376,6 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RECH','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RECH','2026-03')" title="3,00% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,00%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RECH','2026-04')" title="1,20% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RECH','2026-05')" title="2,30% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,30%</span></td><td class="b b-col"><span class="hm-cell hm-1">2,08%</span></td></tr><tr><td class="b" style="text-align:left">RJSP</td><td style="border-left:2px solid var(--rule);">1,6 k</td><td>2,7 k</td><td>975</td><td>108,8 k</td><td>111,9 k</td><td>92,8 k</td><td class="b b-col">318,8 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RJSP','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RJSP','2026-03')" title="0,70% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,70%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RJSP','2026-04')" title="0,10% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('RJSP','2026-05')" title="0,20% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,20%</span></td><td class="b b-col"><span class="hm-cell hm-1">0,35%</span></td></tr><tr><td class="b" style="text-align:left">FGC</td><td style="border-left:2px solid var(--rule);">4,8 k</td><td>8,3 k</td><td>3,4 k</td><td>84,2 k</td><td>91,6 k</td><td>88,7 k</td><td class="b b-col">281,1 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FGC','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FGC','2026-03')" title="5,50% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">5,50%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FGC','2026-04')" title="2,90% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('FGC','2026-05')" title="3,60% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">3,60%</span></td><td class="b b-col"><span class="hm-cell hm-2">3,73%</span></td></tr><tr><td class="b" style="text-align:left">ANJOS</td><td style="border-left:2px solid var(--rule);">1,8 k</td><td>2,8 k</td><td>2,2 k</td><td>72,7 k</td><td>65,3 k</td><td>59,5 k</td><td class="b b-col">204,3 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ANJOS','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ANJOS','2026-03')" title="2,80% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ANJOS','2026-04')" title="4,80% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">4,80%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('ANJOS','2026-05')" title="5,30% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-3">5,30%</span></td><td class="b b-col"><span class="hm-cell hm-3">4,05%</span></td></tr><tr><td class="b" style="text-align:left">MDI</td><td style="border-left:2px solid var(--rule);">235</td><td>280</td><td>240</td><td>69,0 k</td><td>58,2 k</td><td>58,6 k</td><td class="b b-col">186,5 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MDI','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MDI','2026-03')" title="0,10% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,10%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MDI','2026-04')" title="0,20% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">0,20%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('MDI','2026-05')" title="1,20% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">1,20%</span></td><td class="b b-col"><span class="hm-cell hm-1">0,48%</span></td></tr><tr><td class="b" style="text-align:left">B&amp;C</td><td style="border-left:2px solid var(--rule);">1,3 k</td><td>669</td><td>429</td><td>34,7 k</td><td>32,3 k</td><td>26,9 k</td><td class="b b-col">96,3 k</td><td style="border-left:2px solid var(--rule);opacity:.65;">—</td><td style="opacity:.65;">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('B&amp;C','2026-02')">—</td><td style="cursor:pointer;" onclick="abrirDrillParceiro('B&amp;C','2026-03')" title="2,40% · Média Acordo Amigável: 2,90% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-1">2,40%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('B&amp;C','2026-04')" title="2,90% · Média Acordo Amigável: 2,00% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-2">2,90%</span></td><td style="cursor:pointer;" onclick="abrirDrillParceiro('B&amp;C','2026-05')" title="22,80% · Média Acordo Amigável: 2,80% · Clique para ver os clientes inadimplentes"><span class="hm-cell hm-4">22,80%</span></td><td class="b b-col"><span class="hm-cell hm-4">8,23%</span></td></tr><tr class="r-total"><td>Total Acordo Amigável</td><td style="border-left:2px solid var(--rule);">37,0 k</td><td>43,7 k</td><td>31,7 k</td><td>1,24 MM</td><td>1,25 MM</td><td>1,20 MM</td><td>3,80 MM</td><td style="border-left:2px solid var(--rule);">0,00%</td><td>0,00%</td><td>0,00%</td><td>2,90%</td><td>2,00%</td><td>2,80%</td><td>2,52%</td></tr></tbody></table></div></div>
+    <div class="cards-nota">
+      <b>Como ler a tabela:</b> ordenado por R$ Faturado total (6 meses). Clique em <b>% Inadimplência</b> para ver os clientes — <span style="opacity:.55;font-size:11px;">drill disponível a partir de Fev/26</span>.
+      <br><b>Nota:</b> Mai/26 ainda está em maturação. Análise de movimento refere-se a Abr/26 (último mês fechado).
+      <br><b>Legenda de cores</b> (relativa à média da categoria no mesmo mês):
+      <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:4px;">
+        <span class="hm-cell hm-1" style="min-width:auto;padding:1px 8px">🟢 ≤ média da categoria</span>
+        <span class="hm-cell hm-2" style="min-width:auto;padding:1px 8px">🟡 até 1,5× a média</span>
+        <span class="hm-cell hm-3" style="min-width:auto;padding:1px 8px">🔴 até 2× a média</span>
+        <span class="hm-cell hm-4" style="min-width:auto;padding:1px 8px">🔴 acima de 2× a média</span>
+      </span>
+      <span style="font-size:13px;color:var(--ink3);margin-left:4px;">Passe o mouse sobre as células para ver a comparação com a média.</span>
+    </div>
+  <div id="drill-detail"></div></div>
+  <div id="sec-tier" class="section"><div class="cat-cards tier-cards">
       <div class="cat-card gray" data-tier="Tier 0" style="cursor:pointer;" onclick="abrirDrillTier(this.dataset.tier)">
         <div class="cc-title">Tier 0</div>
         <div class="cc-pct">R$ 18,0 k</div>
